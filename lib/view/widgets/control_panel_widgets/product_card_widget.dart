@@ -1,0 +1,77 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/utils/utils.dart';
+import 'package:shan_shan/model/response_models/product_model.dart';
+
+///product card widget from control panel
+Widget productCardWidget({
+  required ProductModel product,
+  required Function() onEdit,
+  required Function() onDelete,
+}) {
+  return Container(
+    padding: EdgeInsets.only(
+      top: SizeConst.kHorizontalPadding - 3,
+      bottom: SizeConst.kHorizontalPadding - 3,
+      left: 15,
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.name!.length > 20
+                      ? "${product.name}..".substring(0, 20)
+                      : "${product.name}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  "${formatNumber(product.price as num)} MMK",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16 + 3,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+            InkWell(
+              onTap: onEdit,
+              child: Container(
+                padding: EdgeInsets.all(15),
+                child: Icon(
+                  Icons.edit,
+                  size: 20,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: onDelete,
+              child: Container(
+                padding: EdgeInsets.all(15),
+                child: Icon(
+                  CupertinoIcons.delete,
+                  size: 20,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+          ],
+        ),
+      ],
+    ),
+  );
+}
