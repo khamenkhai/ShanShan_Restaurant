@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_state.dart';
 import 'package:shan_shan/model/response_models/sale_history_model.dart';
 import 'package:shan_shan/service/history_service.dart';

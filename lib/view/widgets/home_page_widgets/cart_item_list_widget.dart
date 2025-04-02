@@ -7,12 +7,12 @@ import 'package:shan_shan/view/widgets/home_page_widgets/quantity_dialog_control
 import 'package:shan_shan/view/widgets/home_page_widgets/weight_dialog_control.dart';
 
 ///cart item list widget
-Container cartItemListWidget({
+ cartItemListWidget({
   required Size screenSize,
   required CartState state,
   required BuildContext context,
 }) {
-  return Container(
+  return SizedBox(
     height: screenSize.height * 0.48,
     child: SingleChildScrollView(
       

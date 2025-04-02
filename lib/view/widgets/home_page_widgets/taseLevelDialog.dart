@@ -5,13 +5,15 @@ import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_state.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/model/data_models/spicy_level.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
 class TasteChooseDialog extends StatefulWidget {
-  TasteChooseDialog({super.key});
+  const TasteChooseDialog({super.key});
 
   @override
   State<TasteChooseDialog> createState() => _TasteChooseDialogState();
@@ -35,19 +37,17 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ahtoneLevelColumn(width: dialogWidth / 2.5),
-                  spicyLevelColumn(width: dialogWidth / 2.5),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ahtoneLevelColumn(width: dialogWidth / 2.5),
+                spicyLevelColumn(width: dialogWidth / 2.5),
+              ],
             ),
             SizedBox(height: 20),
             Text(
-              "${errorText}",
+              "$errorText",
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 15),
@@ -61,7 +61,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
                   },
                 ),
                 SizedBox(width: 10),
-                custamizableElevated(
+                CustomElevatedButton(
                   child: Text("ထည့်ရန်"),
                   onPressed: () {
                     addTasteLevels();
@@ -102,7 +102,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
                           width: width,
                         ),
                       )
-                      .toList()
+            ,
                 ],
               );
             }
@@ -136,7 +136,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
                 children: [
                   ...state.spicy_level
                       .map((e) => _spicyLevelRadio(value: e, width: width))
-                      .toList()
+                      
                 ],
               );
             }
@@ -152,7 +152,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
     required SpicyLevelModel value,
     required double width,
   }) {
-    return Container(
+    return SizedBox(
       width: width,
       child: RadioListTile(
         contentPadding: EdgeInsets.zero,
@@ -163,7 +163,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
           setState(() {
             selectedSpicyLevel = value!;
           });
-          print("athone : ${selectedSpicyLevel}");
+          customPrint("athone : $selectedSpicyLevel");
         },
       ),
     );
@@ -174,7 +174,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
     required AhtoneLevelModel value,
     required double width,
   }) {
-    return Container(
+    return SizedBox(
       width: width,
       child: RadioListTile(
         contentPadding: EdgeInsets.zero,
@@ -185,7 +185,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
           setState(() {
             selectedAthoneLevel = value!;
           });
-          print("athone : ${selectedAthoneLevel}");
+          customPrint("athone : $selectedAthoneLevel");
         },
       ),
     );
@@ -227,7 +227,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
           'athoneLevel': getSelectedAhtoneLevel(athoneLevels),
         });
       } catch (e) {
-        print("error : ${e}");
+        customPrint("error : $e");
       }
     }
 

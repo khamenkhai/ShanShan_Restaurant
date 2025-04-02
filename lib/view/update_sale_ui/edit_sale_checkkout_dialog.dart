@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/model/data_models/remark_model.dart';
@@ -196,7 +197,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                         },
                       ),
                       SizedBox(width: 10),
-                      custamizableElevated(
+                      CustomElevatedButton(
                         child: Text("အတည်ပြုရန်"),
                         onPressed: () {
                           String remarkString = "${remarkController.text}";
@@ -238,7 +239,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                               );
                             } else if (!widget.cashPayment &&
                                 widget.KpayPayment) {
-                              return redirectTo(
+                               redirectTo(
                                 context: context,
                                 //replacement: true,
                                 form: EditKpayScreen(
@@ -265,7 +266,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                               );
                             } else if (widget.cashPayment &&
                                 widget.KpayPayment) {
-                              return redirectTo(
+                               redirectTo(
                                 context: context,
                                 form: EditKpayAndCashScreen(
                                   date: widget.date,

@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/core/utils/utils.dart';
@@ -164,7 +166,7 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
                       width: 200,
                       height: 50,
                       margin: EdgeInsets.only(right: 15),
-                      child: custamizableElevated(
+                      child: CustomElevatedButton(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -287,10 +289,10 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
     return BlocBuilder<SaleProcessCubit, SaleProcessState>(
       builder: (context, state) {
         if (state is SaleProcessLoadingState) {
-          return loadingWidget();
+          return LoadingWidget();
         } else {
-          return custamizableElevated(
-            enabled: isCheckoutEnabled(),
+          return CustomElevatedButton(
+            isEnabled: isCheckoutEnabled(),
             width: double.infinity,
             elevation: 0,
             height: 70,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/auth_cubit/auth_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
@@ -163,7 +164,7 @@ class _LoginState extends State<Login> {
         }
       },
       builder: (context, state) {
-        if (state is ShopLoadingState) return loadingWidget();
+        if (state is ShopLoadingState) return LoadingWidget();
 
         return CustomElevatedButton(
           width: double.infinity,

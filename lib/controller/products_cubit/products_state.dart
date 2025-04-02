@@ -7,6 +7,12 @@ final class ProductsInitial extends ProductsState {}
 
 final class ProductsLoadingState extends ProductsState {}
 
+final class ProductsAddingState extends ProductsState {}
+
+final class ProductsUpdatingState extends ProductsState {}
+
+final class ProductsDeletingState extends ProductsState {}
+
 final class ProductAddedState extends ProductsState {}
 
 final class ProductUpdatedState extends ProductsState {}

@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/model/response_models/product_model.dart';
 import 'package:shan_shan/service/products_service.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 
 part 'products_state.dart';
 
@@ -53,7 +53,7 @@ class ProductsCubit extends Cubit<ProductsState> {
   Future<void> addNewProduct({
     required Map<String, dynamic> requestBody,
   }) async {
-    emit(ProductsLoadingState());
+    emit(ProductsAddingState());
     final result = await productService.addNewProduct(requestBody: requestBody);
     result.fold(
       (failure) => emit(ProductsErrorState(error: 'Failed to add product: $failure')),
@@ -69,7 +69,7 @@ class ProductsCubit extends Cubit<ProductsState> {
     required String id,
     required Map<String, dynamic> requestBody,
   }) async {
-    emit(ProductsLoadingState());
+    emit(ProductsUpdatingState());
     final result = await productService.updateProduct(id: id, requestBody: requestBody);
     result.fold(
       (failure) => emit(ProductsErrorState(error: 'Failed to update product: $failure')),

@@ -24,7 +24,7 @@ class PaymentButton extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          "${title}",
+          "$title",
           style: TextStyle(
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             color: isSelected ? ColorConstants.primaryColor : Colors.grey,

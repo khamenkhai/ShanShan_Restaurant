@@ -84,7 +84,7 @@ CartItem? checkDefaultProduct(
     {required List<ProductModel> products, required BuildContext context}) {
   try {
     ProductModel? defaultProduct =
-        products.where((element) => element.is_default == true).first;
+        products.where((element) => element.isDefault == true).first;
     print("default product : ${defaultProduct}");
     CartItem? defaultItem;
 
@@ -96,7 +96,7 @@ CartItem? checkDefaultProduct(
         price: defaultProduct.price ?? 0,
         qty: 1,
         totalPrice: defaultProduct.price ?? 0,
-        is_gram: defaultProduct.is_gram ?? false,
+        is_gram: defaultProduct.isGram ?? false,
       );
 
       context

@@ -342,7 +342,7 @@ class _HistoryState extends State<History> {
                         discount: history.discount,
                         remark: history.remark,
                         menu: history.menu.name.toString(),
-                        table_number: int.parse(history.tableNumber),
+                        tableNumber: int.parse(history.tableNumber),
                         showEditButton: true,
                       ),
                     ],

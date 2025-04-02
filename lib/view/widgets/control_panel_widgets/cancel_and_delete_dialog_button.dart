@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class CancelAndDeleteDialogButton extends StatelessWidget {
   const CancelAndDeleteDialogButton({super.key, required this.onDelete});
-  final Future Function() onDelete;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +19,10 @@ class CancelAndDeleteDialogButton extends StatelessWidget {
           },
         ),
         SizedBox(width: 10),
-        custamizableElevated(
+        CustomElevatedButton(
           bgColor: Colors.red,
+          onPressed: onDelete,
           child: Text("ဖျက်မည်"),
-          onPressed: () async {
-            await onDelete();
-            print("testing delete");
-          },
         ),
       ],
     );

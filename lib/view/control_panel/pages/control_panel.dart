@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/view/pages/control_panel/ahtonelevel_crud_page.dart';
-import 'package:shan_shan/view/pages/control_panel/category_crud_page.dart';
-import 'package:shan_shan/view/pages/control_panel/menu_crud_page.dart';
-import 'package:shan_shan/view/pages/control_panel/products_crud_page.dart';
-import 'package:shan_shan/view/pages/control_panel/spicylevel_crud_page.dart';
+import 'package:shan_shan/view/control_panel/pages/htone_level_control_page.dart';
+import 'package:shan_shan/view/control_panel/pages/categories_control_page.dart';
+import 'package:shan_shan/view/control_panel/pages/menu_control_page.dart';
+import 'package:shan_shan/view/control_panel/pages/products_control_page.dart';
+import 'package:shan_shan/view/control_panel/pages/spicy_level_control_page.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class ControlPanel extends StatefulWidget {
@@ -37,14 +37,15 @@ class _ControlPanelState extends State<ControlPanel> {
   ///main form
   Container _mainForm(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding, vertical: 5),
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
       child: Column(
         children: [
           Row(
             children: [
               _cardWidget(
                 name: "ပစ္စည်းများ",
-                redirectForm: ProductCRUDPage(
+                redirectForm: ProductsControlPage(
                   title: "ပစ္စည်းများ",
                 ),
                 widget: Icon(
@@ -55,7 +56,7 @@ class _ControlPanelState extends State<ControlPanel> {
               SizedBox(width: SizeConst.kHorizontalPadding),
               _cardWidget(
                 name: "အမျိုးအစားများ",
-                redirectForm: CategoryCRUDScreen(title: "အမျိုးအစားများ"),
+                redirectForm: CategoriesControlPage(title: "အမျိုးအစားများ"),
                 widget: Icon(
                   CupertinoIcons.square_list,
                   size: 35,
@@ -77,7 +78,7 @@ class _ControlPanelState extends State<ControlPanel> {
               SizedBox(width: SizeConst.kHorizontalPadding),
               _cardWidget(
                 name: "အထုံ Level",
-                redirectForm: AhtoneLevelScreen(
+                redirectForm: HtoneLevelControlPage(
                   title: "အထုံ Level",
                 ),
                 widget: Icon(
@@ -139,7 +140,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               SizedBox(width: 15),
               Text(
-                "${name}",
+                "$name",
                 style: TextStyle(fontSize: 20),
               ),
             ],

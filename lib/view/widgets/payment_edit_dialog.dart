@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/payment_button.dart';
 
 class PaymentEditDialog extends StatefulWidget {
@@ -20,7 +20,7 @@ class PaymentEditDialog extends StatefulWidget {
 }
 
 class _PaymentEditDialogState extends State<PaymentEditDialog> {
-  bool KpayPayment = false;
+  bool kpayPayment = false;
   bool cashPayment = false;
   String paymentType = "";
 
@@ -31,7 +31,7 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
   }
 
   int getCashAmount() {
-    if (cashPayment == true && KpayPayment == false) {
+    if (cashPayment == true && kpayPayment == false) {
       return widget.saleModel.grand_total;
     } else {
       return 0;
@@ -39,7 +39,7 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
   }
 
   int getKpayAmount() {
-    if (cashPayment == false && KpayPayment == true) {
+    if (cashPayment == false && kpayPayment == true) {
       return widget.saleModel.grand_total;
     } else {
       return 0;
@@ -87,7 +87,7 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
                     onTap: () {
                       setState(() {
                         cashPayment = !cashPayment;
-                        KpayPayment = false;
+                        kpayPayment = false;
                       });
                     },
                     child: PaymentButton(
@@ -103,12 +103,12 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
                     splashColor: Colors.transparent,
                     onTap: () {
                       setState(() {
-                        KpayPayment = !KpayPayment;
+                        kpayPayment = !kpayPayment;
                         cashPayment = false;
                       });
                     },
                     child: PaymentButton(
-                      isSelected: KpayPayment,
+                      isSelected: kpayPayment,
                       title: "KBZ Pay",
                     ),
                   ),
@@ -119,10 +119,10 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                custamizableElevated(
+                CustomElevatedButton(
                   child: Text("အတည်ပြုရန်"),
                   onPressed: () async {
-                    if (cashPayment && KpayPayment) {
+                    if (cashPayment && kpayPayment) {
                     } else {
                       await context
                           .read<SaleProcessCubit>()
@@ -159,10 +159,10 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
     }
 
     if (widget.paymentType == "Kpay") {
-      KpayPayment = true;
+      kpayPayment = true;
     }
     if (widget.paymentType == "Cash / Kpay") {
-      KpayPayment = false;
+      kpayPayment = false;
       cashPayment = false;
     }
 

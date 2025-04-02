@@ -2,21 +2,21 @@ class ProductModel {
   final int? id;
   final String? name;
   final int? price;
-  final int? category_id;
-  final is_gram;
+  final int? categoryId;
+  final isGram;
   final int? qty;
   final String? category;
-  final bool? is_default;
+  final bool? isDefault;
 
   ProductModel({
     this.id,
     this.name,
     this.price,
-    this.category_id,
-    this.is_gram,
+    this.categoryId,
+    this.isGram,
     this.qty,
     this.category,
-    this.is_default,
+    this.isDefault,
   });
 
   factory ProductModel.fromMap(Map<String, dynamic> json) {
@@ -24,22 +24,22 @@ class ProductModel {
       id: json['id'] ?? "",
       name: json['name'] ?? "",
       price: json['prices'] ?? 0,
-      is_gram: json['is_gram'] ?? "",
+      isGram: json['is_gram'] ?? "",
       category: json['category'] ?? "",
       qty: json['qty'] ?? 0,
-      is_default: json['is_default'] ?? false,
-      category_id: json['category_id'] ,
+      isDefault: json['is_default'] ?? false,
+      categoryId: json['category_id'] ,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "category_id": category_id,
+      "category_id": categoryId,
       "name": name,
       "qty": qty.toString(),
-      "is_gram": is_gram,
+      "is_gram": isGram,
       "prices": price,
-      "is_default": is_default,
+      "is_default": isDefault,
     };
   }
 
@@ -53,7 +53,7 @@ class ProductModel {
       id: id ?? this.id,
       name: name ?? this.name,
       price: price ?? this.price,
-      is_gram: is_gram,
+      isGram: isGram,
     );
   }
 }

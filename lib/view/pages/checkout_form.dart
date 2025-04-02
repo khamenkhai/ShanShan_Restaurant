@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
@@ -201,17 +203,17 @@ class _CheckOutFormState extends State<CheckOutForm> {
   Widget _processButtons(Size screenSize, BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: (screenSize.width / 2.8),
           height: 60,
-          child: custamizableElevated(
+          child: CustomElevatedButton(
             child: Text("ဘောက်ချာထုတ်ယူရန်"),
             onPressed: () async {
               _printReceipt();
             },
           ),
         ),
-        Container(
+        SizedBox(
           width: (screenSize.width / 2.8),
           height: 60,
           child: customizableOTButton(
@@ -293,7 +295,7 @@ class _CheckOutFormState extends State<CheckOutForm> {
                     VoucherWidget(
                       showEditButton: true,
                       paymentType: widget.paymentType,
-                      table_number: saleData.table_number,
+                      tableNumber: saleData.table_number,
                       remark: widget.remark,
                       discount: saleData.discount ?? 0,
                       cashAmount: saleData.paid_cash,
@@ -315,7 +317,7 @@ class _CheckOutFormState extends State<CheckOutForm> {
                 ),
               );
             } else if (state is SaleProcessLoadingState) {
-              return loadingWidget();
+              return LoadingWidget();
             } else {
               return Container();
             }

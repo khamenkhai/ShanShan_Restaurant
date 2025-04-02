@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
 class TableNumberDialog extends StatelessWidget {
   final TextEditingController tableController;
 
   const TableNumberDialog({
-    Key? key,
+    super.key,
     required this.tableController,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +79,7 @@ class TableNumberDialog extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    custamizableElevated(
+                    CustomElevatedButton(
                       onPressed: () {
                         cartCubit.addTableNumber(
                           tableNumber: int.parse(tableController.text),
@@ -87,7 +88,7 @@ class TableNumberDialog extends StatelessWidget {
                         if (cartCubit.state.tableNumber != 0) {
                           Navigator.pop(context);
                         } else {
-                          print(
+                          customPrint(
                               "table number : ${cartCubit.state.tableNumber}");
                         }
                         tableController.clear();

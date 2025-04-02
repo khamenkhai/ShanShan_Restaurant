@@ -12,6 +12,7 @@ import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
@@ -635,7 +636,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
       child: BlocBuilder<CategoryCubit, CategoryState>(
         builder: (context, state) {
           if (state is CategoryLoadingState) {
-            return loadingWidget();
+            return LoadingWidget();
           } else if (state is CategoryLoadedState) {
             return SingleChildScrollView(
               child: Wrap(
@@ -709,11 +710,11 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
               child: BlocBuilder<ProductsCubit, ProductsState>(
                 builder: (context, state) {
                   if (state is ProductsLoadingState) {
-                    return loadingWidget();
+                    return LoadingWidget();
                   } else if (state is ProductsLoadedState) {
                     try {
                       ProductModel? defaultProduct = state.products
-                          .where((element) => element.is_default == true)
+                          .where((element) => element.isDefault == true)
                           .first;
 
                       // ignore: unnecessary_null_comparison
@@ -724,7 +725,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                           price: defaultProduct.price ?? 0,
                           qty: 1,
                           totalPrice: defaultProduct.price ?? 0,
-                          is_gram: defaultProduct.is_gram ?? false,
+                          is_gram: defaultProduct.isGram ?? false,
                         );
                       }
                     } catch (e) {
@@ -734,7 +735,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                     List<ProductModel> productList = state.products
                         .where((element) =>
                             element.category == category.name &&
-                            element.is_default == false)
+                            element.isGram == false)
                         .toList();
 
                     return _productListScrollBar(
@@ -796,7 +797,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
               child: BlocBuilder<MenuCubit, MenuState>(
                 builder: (context, state) {
                   if (state is MenuLoadingState) {
-                    return loadingWidget();
+                    return LoadingWidget();
                   } else if (state is MenuLoadedState) {
                     List<MenuModel> menuList = state.menuList;
 

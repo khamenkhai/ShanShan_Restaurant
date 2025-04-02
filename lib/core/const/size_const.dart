@@ -15,7 +15,7 @@ class SizeConst {
 
   /// Border radius (this can't be `const` directly for dynamic radius)
   static const BorderRadius kBorderRadius = BorderRadius.all(
-    Radius.circular(0),
+    Radius.circular(15),
   );
 
   /// Input field padding (can't be `const` for dynamic values)

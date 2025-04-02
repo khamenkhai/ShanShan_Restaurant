@@ -177,7 +177,7 @@ Widget cartMenuWidget({
                 : Row(
                     children: [
                       SizedBox(width: 7),
-                      Container(
+                      SizedBox(
                         width: 80,
                         child: Text(
                           "အစပ် Level ",
@@ -204,7 +204,7 @@ Widget cartMenuWidget({
                 : Row(
                     children: [
                       SizedBox(width: 7),
-                      Container(
+                      SizedBox(
                         width: 80,
                         child: Text(
                           "အထုံ Level",

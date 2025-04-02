@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/model/data_models/spicy_level.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
-import 'package:shan_shan/view/widgets/control_panel_widgets/common_crud_card.dart';
+import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/delete_warning_dialog.dart';
-import 'package:shan_shan/view/widgets/control_panel_widgets/spicy_level_crud_dialog.dart';
+import 'package:shan_shan/view/control_panel/widgets/spicy_level_crud_dialog.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class SpicyLevelScreen extends StatefulWidget {
   const SpicyLevelScreen({super.key});
@@ -67,47 +70,45 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
     return BlocBuilder<SpicyLevelCubit, SpicyLevelCrudState>(
       builder: (context, state) {
         if (state is SpicyLevelLoading) {
-          return loadingWidget();
+          return Skeletonizer(
+            enabled: true,
+            child: GridView.builder(
+              padding: EdgeInsets.only(bottom: 20, top: 7.5),
+              gridDelegate: _gridDelegate(screenSize),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return CrudCard(title: "Hello world");
+              },
+            ),
+          );
         } else if (state is SpicyLevelLoaded) {
           return GridView.builder(
-            
             padding: EdgeInsets.only(bottom: 20, top: 7.5),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: SizeConst.kHorizontalPadding,
-              crossAxisSpacing: SizeConst.kHorizontalPadding,
-              childAspectRatio: screenSize.width * 0.002,
-            ),
+            gridDelegate: _gridDelegate(screenSize),
             itemCount: state.spicy_level.length,
             itemBuilder: (context, index) {
               SpicyLevelModel spicyLevel = state.spicy_level[index];
-              return Material(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: SizeConst.kBorderRadius,
-                ),
-                child: commonCrudCard(
-                  title: spicyLevel.name ?? "",
-                  description: spicyLevel.description ?? "",
-                  onEdit: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return SpicyLevelCRUDDialog(
-                          screenSize: screenSize,
-                          SpicyLevel: spicyLevel,
-                        );
-                      },
-                    );
-                  },
-                  onDelete: () {
-                    _deleteWarningDialog(
-                      context: context,
-                      screenSize: screenSize,
-                      spicy_level_id: spicyLevel.id.toString(),
-                    );
-                  },
-                ),
+              return CrudCard(
+                title: spicyLevel.name ?? "",
+                description: spicyLevel.description ?? "",
+                onEdit: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return SpicyLevelCRUDDialog(
+                        screenSize: screenSize,
+                        spicyLevel: spicyLevel,
+                      );
+                    },
+                  );
+                },
+                onDelete: () {
+                  _deleteWarningDialog(
+                    context: context,
+                    screenSize: screenSize,
+                    id: spicyLevel.id.toString(),
+                  );
+                },
               );
             },
           );
@@ -118,11 +119,20 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
     );
   }
 
+  SliverGridDelegateWithFixedCrossAxisCount _gridDelegate(Size screenSize) {
+    return SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 4,
+      mainAxisSpacing: SizeConst.kHorizontalPadding,
+      crossAxisSpacing: SizeConst.kHorizontalPadding,
+      childAspectRatio: screenSize.width * 0.002,
+    );
+  }
+
   ///delete  warning dialog box
   Future<dynamic> _deleteWarningDialog({
     required BuildContext context,
     required Size screenSize,
-    required String spicy_level_id,
+    required String id,
   }) {
     return deleteWarningDialog(
       context: context,
@@ -130,7 +140,7 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
       child: BlocBuilder<SpicyLevelCubit, SpicyLevelCrudState>(
         builder: (context, state) {
           if (state is SpicyLevelLoading) {
-            return loadingWidget();
+            return LoadingWidget();
           } else {
             return Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -143,11 +153,11 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
                   },
                 ),
                 SizedBox(width: 10),
-                custamizableElevated(
+                CustomElevatedButton(
                   bgColor: Colors.red,
                   child: Text("ဖျက်မည်"),
                   onPressed: () async {
-                    await deleteSpicyLevelData(context, spicy_level_id);
+                    await deleteSpicyLevelData(context, id);
                   },
                 ),
               ],
@@ -161,10 +171,10 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
   ///delete spicy level data
   Future<void> deleteSpicyLevelData(
     BuildContext context,
-    String spicy_level_id,
+    String id,
   ) async {
     await context.read<SpicyLevelCubit>().deleteSpicyLevel(
-          id: spicy_level_id,
+          id: id,
         );
   }
 }

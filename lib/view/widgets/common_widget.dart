@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
 import 'package:shan_shan/core/const/const_export.dart';
@@ -17,9 +16,9 @@ InputDecoration customTextDecoration({
   bool floatLabel = false,
 }) {
   return InputDecoration(
-    labelText: "${labelText}",
+    labelText: "$labelText",
     labelStyle: TextStyle(
-      color: labelColor == null ? ColorConstants.greyColor : labelColor,
+      color: labelColor ?? ColorConstants.greyColor,
       fontSize: fontSize,
     ),
     floatingLabelBehavior:
@@ -80,9 +79,9 @@ InputDecoration customTextDecoration2(
     bool floatLabel = false,
     double verticalPadding = 0}) {
   return InputDecoration(
-    labelText: "${labelText}",
+    labelText: "$labelText",
     labelStyle: TextStyle(
-      color: labelColor == null ? ColorConstants.greyColor : labelColor,
+      color: labelColor ?? ColorConstants.greyColor,
       fontSize: fontSize,
     ),
     floatingLabelBehavior:
@@ -128,38 +127,38 @@ InputDecoration customTextDecoration2(
 }
 
 ///custumizable elevated button
-Container custamizableElevated({
-  Color fgColor = Colors.white,
-  Color? bgColor,
-  required Widget child,
-  double width = 100,
-  double radius = 15,
-  double height = 45,
-  double elevation = 0,
-  required Function() onPressed,
-  double fontSize = 16,
-  bool enabled = true,
-}) {
-  return Container(
-    padding: EdgeInsets.symmetric(vertical: 5),
-    //width: width,
-    height: height,
-    constraints: BoxConstraints(minWidth: width),
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        textStyle: TextStyle(fontWeight: FontWeight.normal, fontSize: fontSize),
-        elevation: elevation,
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: SizeConst.kBorderRadius,
-        ),
-        backgroundColor: bgColor == null ? ColorConstants.primaryColor : bgColor,
-      ),
-      onPressed: enabled ? onPressed : null,
-      child: child,
-    ),
-  );
-}
+// Container CustomElevatedButton({
+//   Color fgColor = Colors.white,
+//   Color? bgColor,
+//   required Widget child,
+//   double width = 100,
+//   double radius = 15,
+//   double height = 45,
+//   double elevation = 0,
+//   required Function() onPressed,
+//   double fontSize = 16,
+//   bool enabled = true,
+// }) {
+//   return Container(
+//     padding: EdgeInsets.symmetric(vertical: 5),
+//     //width: width,
+//     height: height,
+//     constraints: BoxConstraints(minWidth: width),
+//     child: ElevatedButton(
+//       style: ElevatedButton.styleFrom(
+//         textStyle: TextStyle(fontWeight: FontWeight.normal, fontSize: fontSize),
+//         elevation: elevation,
+//         foregroundColor: Colors.white,
+//         shape: RoundedRectangleBorder(
+//           borderRadius: SizeConst.kBorderRadius,
+//         ),
+//         backgroundColor: bgColor == null ? ColorConstants.primaryColor : bgColor,
+//       ),
+//       onPressed: enabled ? onPressed : null,
+//       child: child,
+//     ),
+//   );
+// }
 
 ///shimmer loading widget
 Shimmer categoryShimmer({double height = 35}) {
@@ -214,11 +213,11 @@ Container customizableOTButton({
     child: OutlinedButton(
       style: OutlinedButton.styleFrom(
         elevation: elevation,
-        foregroundColor: fgColor == null ? ColorConstants.greyColor : fgColor,
+        foregroundColor: fgColor ?? ColorConstants.greyColor,
         shape: RoundedRectangleBorder(
           borderRadius: SizeConst.kBorderRadius,
         ),
-        backgroundColor: bgColor == null ? Colors.white : bgColor,
+        backgroundColor: bgColor ?? Colors.white,
       ),
       onPressed: onPressed,
       child: child,
@@ -273,19 +272,19 @@ InkWell appBarLeading({required Function() onTap}) {
 }
 
 ///locading Circle widget
-Widget loadingWidget({
-  Color? color,
-  double? size,
-  double? height,
-}) {
-  return Center(
-    //child: CircularProgressIndicator(),
-    child: SpinKitFadingCircle(
-      color: ColorConstants.primaryColor,
-      size: 50.0,
-    ),
-  );
-}
+// Widget LoadingWidget({
+//   Color? color,
+//   double? size,
+//   double? height,
+// }) {
+//   return Center(
+//     //child: CircularProgressIndicator(),
+//     child: SpinKitFadingCircle(
+//       color: ColorConstants.primaryColor,
+//       size: 50.0,
+//     ),
+//   );
+// }
 
 Row copyRightWidget() {
   return Row(

@@ -5,11 +5,12 @@ import 'package:iconly/iconly.dart';
 import 'package:shan_shan/controller/auth_cubit/auth_cubit.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/view/pages/control_panel.dart';
+import 'package:shan_shan/view/control_panel/pages/control_panel.dart';
 import 'package:shan_shan/view/pages/history.dart';
-import 'package:shan_shan/view/pages/report_page.dart';
+import 'package:shan_shan/view/sale_report/sale_report_page.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -21,6 +22,9 @@ class HomeDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       width: 400,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0)
+      ),
       backgroundColor: Colors.white,
       child: SafeArea(
         child: Column(
@@ -161,7 +165,7 @@ class HomeDrawer extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 Expanded(
-                  child: custamizableElevated(
+                  child: CustomElevatedButton(
                     bgColor: ColorConstants.primaryColor,
                     elevation: 0,
                     height: 60,

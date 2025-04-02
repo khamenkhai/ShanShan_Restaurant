@@ -2,23 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_state.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/ahtone_level_crud_dialog.dart';
-import 'package:shan_shan/view/widgets/control_panel_widgets/common_crud_card.dart';
+import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-class AhtoneLevelScreen extends StatefulWidget {
-  const AhtoneLevelScreen({super.key, required this.title});
+class HtoneLevelControlPage extends StatefulWidget {
+  const HtoneLevelControlPage({super.key, required this.title});
   final String title;
 
   @override
-  State<AhtoneLevelScreen> createState() => _AhtoneLevelScreenState();
+  State<HtoneLevelControlPage> createState() => _HtoneLevelControlPageState();
 }
 
-class _AhtoneLevelScreenState extends State<AhtoneLevelScreen> {
+class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
   var ahtoneLevelController = TextEditingController();
   var descriptionController = TextEditingController();
 
@@ -72,47 +75,44 @@ class _AhtoneLevelScreenState extends State<AhtoneLevelScreen> {
     return BlocBuilder<HtoneLevelCubit, AhtoneLevelCrudState>(
       builder: (context, state) {
         if (state is AhtoneLevelLoading) {
-          return loadingWidget();
+          return Skeletonizer(
+            enabled: true,
+            child: GridView.builder(
+              gridDelegate: _gridDelegate(screenSize),
+              itemCount: 5,
+              itemBuilder: (context,index){
+                return CrudCard(title: "Hello world");
+              },
+            ),
+          );
         } else if (state is AhtoneLevelLoaded) {
           return GridView.builder(
-            
             padding: EdgeInsets.only(bottom: 20, top: 7.5),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: SizeConst.kHorizontalPadding,
-              crossAxisSpacing: SizeConst.kHorizontalPadding,
-              childAspectRatio: screenSize.width * 0.002,
-            ),
+            gridDelegate: _gridDelegate(screenSize),
             itemCount: state.ahtone_level.length,
             itemBuilder: (context, index) {
               AhtoneLevelModel ahtoneLevel = state.ahtone_level[index];
-              return Material(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: SizeConst.kBorderRadius,
-                ),
-                child: commonCrudCard(
-                  title: ahtoneLevel.name ?? "",
-                  description: ahtoneLevel.description ?? "",
-                  onEdit: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AhtoneLevelCRUDDialog(
-                          screenSize: screenSize,
-                          ahtoneLevel: ahtoneLevel,
-                        );
-                      },
-                    );
-                  },
-                  onDelete: () {
-                    _deleteWarningDialog(
-                      context: context,
-                      screenSize: screenSize,
-                      ahtone_level_id: ahtoneLevel.id.toString(),
-                    );
-                  },
-                ),
+              return CrudCard(
+                title: ahtoneLevel.name ?? "",
+                description: ahtoneLevel.description ?? "",
+                onEdit: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AhtoneLevelCRUDDialog(
+                        screenSize: screenSize,
+                        ahtoneLevel: ahtoneLevel,
+                      );
+                    },
+                  );
+                },
+                onDelete: () {
+                  _deleteWarningDialog(
+                    context: context,
+                    screenSize: screenSize,
+                    id: ahtoneLevel.id.toString(),
+                  );
+                },
               );
             },
           );
@@ -123,11 +123,21 @@ class _AhtoneLevelScreenState extends State<AhtoneLevelScreen> {
     );
   }
 
+  SliverGridDelegateWithFixedCrossAxisCount _gridDelegate(Size screenSize) {
+    return SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 4,
+      mainAxisSpacing: SizeConst.kHorizontalPadding,
+      crossAxisSpacing: SizeConst.kHorizontalPadding,
+      childAspectRatio: screenSize.width * 0.002,
+    );
+  }
+
   ///delete category warning dialog box
-  Future<dynamic> _deleteWarningDialog(
-      {required BuildContext context,
-      required Size screenSize,
-      required String ahtone_level_id}) {
+  Future<dynamic> _deleteWarningDialog({
+    required BuildContext context,
+    required Size screenSize,
+    required String id,
+  }) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -151,7 +161,7 @@ class _AhtoneLevelScreenState extends State<AhtoneLevelScreen> {
                 BlocBuilder<HtoneLevelCubit, AhtoneLevelCrudState>(
                   builder: (context, state) {
                     if (state is AhtoneLevelLoading) {
-                      return loadingWidget();
+                      return LoadingWidget();
                     } else {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -164,13 +174,13 @@ class _AhtoneLevelScreenState extends State<AhtoneLevelScreen> {
                             },
                           ),
                           SizedBox(width: 10),
-                          custamizableElevated(
+                          CustomElevatedButton(
                             bgColor: Colors.red,
                             child: Text("ဖျက်မည်"),
                             onPressed: () async {
                               await _deleteAhtoneLevelData(
                                 context: context,
-                                ahtone_level_id: ahtone_level_id,
+                                id: id,
                               );
                             },
                           ),
@@ -190,10 +200,9 @@ class _AhtoneLevelScreenState extends State<AhtoneLevelScreen> {
   ///delete ahtone level data
   Future<void> _deleteAhtoneLevelData({
     required BuildContext context,
-    required String ahtone_level_id,
+    required String id,
   }) async {
-    await context
-        .read<HtoneLevelCubit>()
-        .deleteAhtoneLevel(id: ahtone_level_id);
+    Navigator.pop(context);
+    await context.read<HtoneLevelCubit>().deleteAhtoneLevel(id: id);
   }
 }

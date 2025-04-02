@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/model/data_models/remark_model.dart';
@@ -193,7 +194,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                         },
                       ),
                       SizedBox(width: 10),
-                      custamizableElevated(
+                      CustomElevatedButton(
                         child: Text("အတည်ပြုရန်"),
                         onPressed: () {
                           String remarkString = "${remarkController.text}";
@@ -235,7 +236,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                               );
                             } else if (!widget.cashPayment &&
                                 widget.KpayPayment) {
-                              return redirectTo(
+                               redirectTo(
                                 context: context,
                                 //replacement: true,
                                 form: KpayScreen(
@@ -260,7 +261,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                               );
                             } else if (widget.cashPayment &&
                                 widget.KpayPayment) {
-                              return redirectTo(
+                               redirectTo(
                                 context: context,
                                 //replacement: true,
                                 form: KpayAndCashScreen(

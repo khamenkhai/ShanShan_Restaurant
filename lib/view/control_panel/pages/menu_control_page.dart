@@ -1,12 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_cubit.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_state.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/model/response_models/menu_model.dart';
+import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MenuCRUDScreen extends StatefulWidget {
   const MenuCRUDScreen({super.key, required this.title});
@@ -17,8 +20,6 @@ class MenuCRUDScreen extends StatefulWidget {
 }
 
 class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
-  var menuNameController = TextEditingController();
-
   @override
   void initState() {
     context.read<MenuCubit>().getMenu();
@@ -33,52 +34,42 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
         leadingWidth: 200,
         centerTitle: true,
         leading: appBarLeading(
-          onTap: () {
-            Navigator.pop(context);
-          },
+          onTap: () => Navigator.pop(context),
         ),
-        title: Text("မီနူး"),
+        title: const Text("မီနူး"),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: ColorConstants.primaryColor,
-        label: Text("မီနူးအသစ်ထည့်ရန်"),
-        icon: Icon(Icons.add),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return MenuCRUDScreenDialog(
-                screenSize: screenSize,
-              );
-            },
-          );
-        },
+        label: const Text("မီနူးအသစ်ထည့်ရန်"),
+        icon: const Icon(Icons.add),
+        onPressed: () => _showMenuDialog(screenSize),
       ),
-      body: Container(
+      body: Padding(
         padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
-        child: _productListTest(
-          screenSize,
-        ),
+        child: _buildMenuList(screenSize),
       ),
     );
   }
 
-  Widget _productListTest(Size screenSize) {
+  Widget _buildMenuList(Size screenSize) {
     return BlocBuilder<MenuCubit, MenuState>(
       builder: (context, state) {
         if (state is MenuLoadingState) {
-          return loadingWidget();
+          return Skeletonizer(
+            enabled: true,
+            child: GridView.builder(
+              padding: const EdgeInsets.only(bottom: 20, top: 7.5),
+              gridDelegate: _gridDelegate(screenSize),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return CrudCard(title: "Hello world");
+              },
+            ),
+          );
         } else if (state is MenuLoadedState) {
           return GridView.builder(
-            //controller: scrollController,
-            
-            padding: EdgeInsets.only(bottom: 20, top: 7.5),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: SizeConst.kHorizontalPadding,
-              crossAxisSpacing: SizeConst.kHorizontalPadding,
-              childAspectRatio: screenSize.width * 0.002,
-            ),
+            padding: const EdgeInsets.only(bottom: 20, top: 7.5),
+            gridDelegate: _gridDelegate(screenSize),
             itemCount: state.menuList.length,
             itemBuilder: (context, index) {
               MenuModel menu = state.menuList[index];
@@ -87,170 +78,89 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: SizeConst.kBorderRadius,
                 ),
-                child: menuCardWidget(
-                  menu: menu,
-                  onEdit: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return MenuCRUDScreenDialog(
-                          screenSize: screenSize,
-                          menu: menu,
-                        );
-                      },
-                    );
-                  },
-                  onDelete: () {
-                    _deleteWarningDialog(
-                      context: context,
-                      screenSize: screenSize,
-                      menuId: menu.id.toString(),
-                    );
-                  },
+                child: CrudCard(
+                  title: menu.name ?? "",
+                  onDelete: () => _showDeleteDialog(
+                      context, screenSize, menu.id.toString()),
+                  onEdit: () => _showMenuDialog(screenSize, menu: menu),
                 ),
               );
             },
           );
         } else {
-          return Container();
+          return const SizedBox.shrink();
         }
       },
     );
   }
 
-  ///delete category warning dialog box
-  Future<dynamic> _deleteWarningDialog({
-    required BuildContext context,
-    required Size screenSize,
-    required String menuId,
-  }) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: SizeConst.kBorderRadius,
-          ),
-          backgroundColor: Colors.white,
-          child: Container(
-            padding: EdgeInsets.all(20),
-            width: screenSize.width / 3.8,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 15),
-                Text(
-                  "ဖျက်ရန် သေချာလား",
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 15),
-                BlocBuilder<MenuCubit, MenuState>(
-                  builder: (context, state) {
-                    if (state is MenuLoadingState) {
-                      return loadingWidget();
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          customizableOTButton(
-                            elevation: 0,
-                            child: Text("ပယ်ဖျက်ရန်"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          SizedBox(width: 10),
-                          custamizableElevated(
-                            bgColor: Colors.red,
-                            child: Text("ဖျက်မည်"),
-                            onPressed: () async {
-                              await context
-                                  .read<MenuCubit>()
-                                  .deleteMenu(
-                                    id: menuId,
-                                    //categoryName: menuNameController.text,
-                                  )
-                                  .then(
-                                (value) {
-                                  if (value) {
-                                    Navigator.pop(context);
-                                    context.read<MenuCubit>().getMenu();
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                )
-              ],
-            ),
-          ),
-        );
-      },
+  SliverGridDelegateWithFixedCrossAxisCount _gridDelegate(Size screenSize) {
+    return SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 4,
+      mainAxisSpacing: SizeConst.kHorizontalPadding,
+      crossAxisSpacing: SizeConst.kHorizontalPadding,
+      childAspectRatio: screenSize.width * 0.002,
     );
   }
-}
 
-Widget menuCardWidget({
-  required MenuModel menu,
-  required Function() onEdit,
-  required Function() onDelete,
-}) {
-  return Container(
-    padding: EdgeInsets.only(
-      top: SizeConst.kHorizontalPadding - 3,
-      bottom: SizeConst.kHorizontalPadding - 3,
-      left: 20,
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              menu.name!.length > 20
-                  ? "${menu.name}..".substring(0, 20)
-                  : "${menu.name}",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Spacer(),
-            Spacer(),
-            InkWell(
-              onTap: onEdit,
-              child: Container(
-                padding: EdgeInsets.all(16),
-                child: Icon(
-                  Icons.edit,
-                  size: 20,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: onDelete,
-              child: Container(
-                padding: EdgeInsets.all(16),
-                child: Icon(
-                  CupertinoIcons.delete,
-                  size: 20,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-            SizedBox(width: 10),
-          ],
+  void _showMenuDialog(Size screenSize, {MenuModel? menu}) {
+    showDialog(
+      context: context,
+      builder: (context) => MenuCRUDScreenDialog(
+        screenSize: screenSize,
+        menu: menu,
+      ),
+    );
+  }
+
+  Future<void> _showDeleteDialog(
+      BuildContext context, Size screenSize, String menuId) {
+    return showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 15),
+              const Text("ဖျက်ရန် သေချာလား", style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 15),
+              BlocBuilder<MenuCubit, MenuState>(
+                builder: (context, state) {
+                  if (state is MenuLoadingState) {
+                    return const LoadingWidget();
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      customizableOTButton(
+                        elevation: 0,
+                        child: const Text("ပယ်ဖျက်ရန်"),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      const SizedBox(width: 10),
+                      CustomElevatedButton(
+                        bgColor: Colors.red,
+                        child: const Text("ဖျက်မည်"),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          context.read<MenuCubit>().deleteMenu(id: menuId);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              )
+            ],
+          ),
         ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
 
 ////menu crud dialob box
@@ -293,7 +203,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
       ),
       backgroundColor: Colors.white,
       child: Container(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(15),
         width: widget.screenSize.width / 3.8,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -356,7 +266,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                     listener: (context, state) {},
                     builder: (context, state) {
                       if (state is MenuLoadingState) {
-                        return loadingWidget();
+                        return LoadingWidget();
                       } else {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -369,7 +279,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                               },
                             ),
                             SizedBox(width: 10),
-                            custamizableElevated(
+                            CustomElevatedButton(
                               child: Text("အတည်ပြုရန်"),
                               onPressed: () async {
                                 if (widget.menu != null) {
@@ -381,24 +291,21 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                                           id: widget.menu!.id.toString())
                                       .then(
                                     (value) {
-                                      if (value) {
-                                        Navigator.pop(context);
-                                        context.read<MenuCubit>().getMenu();
-                                      }
+                                      if (!context.mounted) return;
+                                      Navigator.pop(context);
                                     },
                                   );
                                 } else {
                                   await context
                                       .read<MenuCubit>()
                                       .addMenu(
-                                          menuName: menuNameController.text,
-                                          isTaseRequired: isTaseRequired)
+                                        menuName: menuNameController.text,
+                                        isTaseRequired: isTaseRequired,
+                                      )
                                       .then(
                                     (value) {
-                                      if (value) {
-                                        Navigator.pop(context);
-                                        context.read<MenuCubit>().getMenu();
-                                      }
+                                      if (!context.mounted) return;
+                                      Navigator.pop(context);
                                     },
                                   );
                                 }

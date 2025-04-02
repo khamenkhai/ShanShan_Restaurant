@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/model/data_models/spicy_level.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
@@ -11,12 +13,12 @@ class SpicyLevelCRUDDialog extends StatefulWidget {
   const SpicyLevelCRUDDialog({
     super.key,
     required this.screenSize,
-    this.SpicyLevel,
+    this.spicyLevel,
   });
 
   final Size screenSize;
 
-  final SpicyLevelModel? SpicyLevel;
+  final SpicyLevelModel? spicyLevel;
 
   @override
   State<SpicyLevelCRUDDialog> createState() => _SpicyLevelCRUDDialogState();
@@ -27,14 +29,14 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController positionController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    if (widget.SpicyLevel != null) {
-      spicyLevelController.text = widget.SpicyLevel!.name.toString();
-      descriptionController.text = widget.SpicyLevel!.description.toString();
-      positionController.text = widget.SpicyLevel!.position.toString();
+    if (widget.spicyLevel != null) {
+      spicyLevelController.text = widget.spicyLevel!.name.toString();
+      descriptionController.text = widget.spicyLevel!.description.toString();
+      positionController.text = widget.spicyLevel!.position.toString();
     }
     setState(() {});
     super.initState();
@@ -97,7 +99,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
                         } else if (spicyLevels.contains(
                               int.parse(value),
                             ) &&
-                            widget.SpicyLevel == null) {
+                            widget.spicyLevel == null) {
                           return "နေရာနံပါတ် ရှိပြီးသားပါ။";
                         } else {
                           return null;
@@ -135,7 +137,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
                 listener: (context, state) {},
                 builder: (context, state) {
                   if (state is SpicyLevelLoading) {
-                    return loadingWidget();
+                    return LoadingWidget();
                   } else {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -148,11 +150,11 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
                           },
                         ),
                         SizedBox(width: 10),
-                        custamizableElevated(
+                        CustomElevatedButton(
                           child: Text("အတည်ပြုရန်"),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              if (widget.SpicyLevel != null) {
+                              if (widget.spicyLevel != null) {
                                 await editSpicLevelData(context);
                               } else {
                                 await addNewSpicyLevel(context);
@@ -186,7 +188,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
     await context.read<SpicyLevelCubit>().editSpicyLevel(
         name: spicyLevelController.text,
         description: descriptionController.text,
-        id: widget.SpicyLevel!.id.toString(),
+        id: widget.spicyLevel!.id.toString(),
         position: int.parse(positionController.text));
   }
 }

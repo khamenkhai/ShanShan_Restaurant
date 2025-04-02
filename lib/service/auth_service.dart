@@ -78,7 +78,7 @@ class AuthService {
       }
     } catch (e) {
       logger.logWarning(
-        "Error log : ${e}",
+        "Error log : $e",
         error: 'AuthService : register',
       );
       return Left(e.toString());
@@ -102,7 +102,7 @@ class AuthService {
       }
     } catch (e) {
       logger.logWarning(
-        "Error log : ${e}",
+        "Error log : $e",
         error: 'AuthService : logout',
       );
       return Left(e.toString());
