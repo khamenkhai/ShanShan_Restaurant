@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 
 class VoucherWidget extends StatelessWidget {
   const VoucherWidget({

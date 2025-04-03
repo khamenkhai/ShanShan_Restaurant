@@ -9,10 +9,10 @@ import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/pages/checkout_form.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/cart_item_widget.dart';
+import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 // ignore: must_be_immutable
@@ -21,7 +21,7 @@ class CashScreen extends StatefulWidget {
     super.key,
     required this.subTotal,
     required this.tax,
-    required this.cashPayment,
+    required this.paidCash,
     required this.athoneLevel,
     required this.spicyLevel,
     required this.dineInOrParcel,
@@ -35,7 +35,7 @@ class CashScreen extends StatefulWidget {
 
   final int subTotal;
   final int tax;
-  final bool cashPayment;
+  final bool paidCash;
   final String remark;
   final int athoneLevel;
   final int spicyLevel;
@@ -93,14 +93,14 @@ class _CashScreenState extends State<CashScreen> {
         title: Text("ငွေသားဖြင့်ပေးချေရန်"),
       ),
       body: InternetCheckWidget(
-        child: _cashPaymentForm(screenSize, cartCubit),
+        child: _paidCashForm(screenSize, cartCubit),
         onRefresh: () {},
       ),
     );
   }
 
   ///cash payment form widget
-  Widget _cashPaymentForm(Size screenSize, CartCubit cartCubit) {
+  Widget _paidCashForm(Size screenSize, CartCubit cartCubit) {
     return Container(
       padding: EdgeInsets.only(top: 5),
       child: Row(
@@ -224,11 +224,10 @@ class _CashScreenState extends State<CashScreen> {
                       child: Column(
                         children: state.items
                             .map(
-                              (e) => cartItemWidget(
+                              (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                                screenSize: screenSize,
-                                context: context,
+                              
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
@@ -362,10 +361,10 @@ String generateRandomId(int length) {
             .items
             .map(
               (e) => Product(
-                product_id: e.id,
+                productId: e.id,
                 qty: e.qty,
                 price: e.price,
-                total_price: e.totalPrice,
+                totalPrice: e.totalPrice,
               ),
             )
             .toList(),

@@ -1,4 +1,3 @@
-// ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
@@ -7,8 +6,8 @@ import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.da
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
@@ -91,11 +90,11 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
         BlocBuilder<HtoneLevelCubit, AhtoneLevelCrudState>(
           builder: (context, state) {
             if (state is AhtoneLevelLoaded) {
-              athoneLevels = state.ahtone_level;
+              athoneLevels = state.htoneLevels;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ...state.ahtone_level
+                  ...state.htoneLevels
                       .map(
                         (e) => _athoneLevelRadio(
                           value: e,
@@ -130,11 +129,11 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
         BlocBuilder<SpicyLevelCubit, SpicyLevelCrudState>(
           builder: (context, state) {
             if (state is SpicyLevelLoaded) {
-              spicyLevels = state.spicy_level;
+              spicyLevels = state.spicyLevels;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ...state.spicy_level
+                  ...state.spicyLevels
                       .map((e) => _spicyLevelRadio(value: e, width: width))
                       
                 ],

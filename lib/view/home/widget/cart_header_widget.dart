@@ -19,7 +19,7 @@ class CartHeaderWidget extends StatelessWidget {
           const Icon(IconlyBold.bookmark),
           const SizedBox(width: 10),
           const Text(
-            "မှာယူမှု",
+            "Order",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: ColorConstants.primaryColor,
@@ -30,18 +30,12 @@ class CartHeaderWidget extends StatelessWidget {
           InkWell(
             onTap: onClearOrder,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+              padding: const EdgeInsets.symmetric( vertical: 3),
               decoration: BoxDecoration(
                 borderRadius: SizeConst.kBorderRadius,
                 color: Colors.white,
               ),
-              child: Text(
-                "မှာယူမှုကို ပယ်ဖျက်ရန်",
-                style: TextStyle(
-                  color: ColorConstants.primaryColor,
-                  fontSize: 10,
-                ),
-              ),
+              child: Icon(IconlyBold.close_square)
             ),
           ),
         ],

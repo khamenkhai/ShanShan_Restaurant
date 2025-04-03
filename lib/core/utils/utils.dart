@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:intl/intl.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:sunmi_printer_plus/column_maker.dart';
 import 'package:sunmi_printer_plus/enums.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
@@ -54,8 +54,8 @@ void showSnackBar({required String text, required BuildContext context}) {
 
 ///to get the current language of the app
 String getCurrentLanguageCode(BuildContext context) {
-  Locale _selectedLocale = Localizations.localeOf(context);
-  return _selectedLocale.languageCode;
+  Locale selectedLocale = Localizations.localeOf(context);
+  return selectedLocale.languageCode;
 }
 
 ///calculate the percentage of a number
@@ -165,12 +165,12 @@ Future<bool> printReceipt({
   required bool customerTakevoucher,
 }) async {
   try {
-    print("voucher : Tax amount -> ${taxAmount}");
-    print("voucher : Sub total -> ${subTotal}");
-    print("voucher : Grand total -> ${grandTotal}");
-    print("voucher : Cash amount -> ${cashAmount}");
-    print("voucher : Kpay amount -> ${kpayAmount}");
-    print("voucher : table -> ${tableNumber}");
+    customPrint("voucher : Tax amount -> ${taxAmount}");
+    customPrint("voucher : Sub total -> ${subTotal}");
+    customPrint("voucher : Grand total -> ${grandTotal}");
+    customPrint("voucher : Cash amount -> ${cashAmount}");
+    customPrint("voucher : Kpay amount -> ${kpayAmount}");
+    customPrint("voucher : table -> ${tableNumber}");
 
     //final converter = ZawGyiConverter();
 

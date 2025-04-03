@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/core/const/const_export.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/response_models/menu_model.dart';
-import 'package:shan_shan/model/response_models/product_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/menu_model.dart';
+import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/taseLevelDialog.dart';
 
 ///menu row widget

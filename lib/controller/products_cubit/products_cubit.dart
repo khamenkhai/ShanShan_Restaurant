@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shan_shan/model/response_models/product_model.dart';
+import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/service/products_service.dart';
 import 'package:flutter/material.dart';
 

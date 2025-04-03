@@ -79,7 +79,7 @@ class SpicyLevelCubit extends Cubit<SpicyLevelCrudState> {
 
     result.fold(
       (failure) => emit(SpicyLevelError(message: failure)),
-      (levels) => emit(SpicyLevelLoaded(spicy_level: levels)),
+      (levels) => emit(SpicyLevelLoaded(spicyLevels: levels)),
     );
   }
 }

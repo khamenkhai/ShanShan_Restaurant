@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:shan_shan/core/network/dio_client.dart';
 import 'package:shan_shan/core/utils/custom_logger.dart';
-import 'package:shan_shan/model/request_models/shop_login_request_model.dart';
-import 'package:shan_shan/model/response_models/shop_model.dart';
+import 'package:shan_shan/models/request_models/shop_login_request_model.dart';
+import 'package:shan_shan/models/response_models/shop_model.dart';
 
 class AuthService {
   final DioClient dioClient;

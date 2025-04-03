@@ -5,7 +5,7 @@ import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.d
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/data_models/remark_model.dart';
+import 'package:shan_shan/models/data_models/remark_model.dart';
 import 'package:shan_shan/view/pages/payment/edit_bank.dart';
 import 'package:shan_shan/view/pages/payment/edit_bank_and_cash.dart';
 import 'package:shan_shan/view/pages/payment/edit_cash.dart';
@@ -14,8 +14,8 @@ import 'package:shan_shan/view/widgets/common_widget.dart';
 class EditSaleCheckoutDialog extends StatefulWidget {
   const EditSaleCheckoutDialog({
     super.key,
-    required this.KpayPayment,
-    required this.cashPayment,
+    required this.onlinePayment,
+    required this.paidCash,
     this.width,
     required this.orderNo,
     required this.octopusCount,
@@ -23,8 +23,8 @@ class EditSaleCheckoutDialog extends StatefulWidget {
     required this.date,
     required this.dineInOrParcel,
   });
-  final bool KpayPayment;
-  final bool cashPayment;
+  final bool onlinePayment;
+  final bool paidCash;
   final double? width;
   final String orderNo;
   final int octopusCount;
@@ -209,7 +209,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                     : int.parse(tableController.text),
                               );
                           if (_formKey.currentState!.validate()) {
-                            if (widget.cashPayment && !widget.KpayPayment) {
+                            if (widget.paidCash && !widget.onlinePayment) {
                               redirectTo(
                                 context: context,
                                 //replacement: true,
@@ -234,11 +234,11 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   subTotal: cartCubit.getTotalAmount(),
                                   tax: get5percentage(
                                       cartCubit.getTotalAmount()),
-                                  cashPayment: widget.cashPayment,
+                                  paidCash: widget.paidCash,
                                 ),
                               );
-                            } else if (!widget.cashPayment &&
-                                widget.KpayPayment) {
+                            } else if (!widget.paidCash &&
+                                widget.onlinePayment) {
                                redirectTo(
                                 context: context,
                                 //replacement: true,
@@ -264,8 +264,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   octopusCount: octopusCount,
                                 ),
                               );
-                            } else if (widget.cashPayment &&
-                                widget.KpayPayment) {
+                            } else if (widget.paidCash &&
+                                widget.onlinePayment) {
                                redirectTo(
                                 context: context,
                                 form: EditKpayAndCashScreen(

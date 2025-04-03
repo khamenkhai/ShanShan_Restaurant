@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/response_models/product_model.dart';
+import 'package:shan_shan/models/response_models/product_model.dart';
 
 class ProductCardWidget extends StatelessWidget {
   final ProductModel product;

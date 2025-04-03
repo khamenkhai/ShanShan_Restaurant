@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/response_models/category_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/category_model.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/product_list_widget.dart';
 
 class CategoryBoxWidget extends StatelessWidget {
@@ -27,7 +27,7 @@ class CategoryBoxWidget extends StatelessWidget {
       borderRadius: SizeConst.kBorderRadius,
       color: Colors.white,
       child: Container(
-        width: (constraints.maxWidth / 2),
+        width: ((constraints.maxWidth - SizeConst.kHorizontalPadding) / 2) ,
         height: constraints.maxHeight / 1.2,
         decoration: BoxDecoration(
           borderRadius: SizeConst.kBorderRadius,

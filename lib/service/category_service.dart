@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:shan_shan/core/const/api_const.dart';
 import 'package:shan_shan/core/network/dio_client.dart';
 import 'package:shan_shan/core/utils/custom_logger.dart';
-import 'package:shan_shan/model/response_models/category_model.dart';
+import 'package:shan_shan/models/response_models/category_model.dart';
 
 class CategoryService {
   final DioClient dioClient;

@@ -1,4 +1,4 @@
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 
 sealed class SpicyLevelCrudState {}
 
@@ -7,8 +7,8 @@ final class SpicyLevelCrudInitial extends SpicyLevelCrudState {}
 final class SpicyLevelLoading extends SpicyLevelCrudState {}
 
 final class SpicyLevelLoaded extends SpicyLevelCrudState {
-  final List<SpicyLevelModel> spicy_level;
-  SpicyLevelLoaded({required this.spicy_level});
+  final List<SpicyLevelModel> spicyLevels;
+  SpicyLevelLoaded({required this.spicyLevels});
 }
 
 final class SpicyLevelCreated extends SpicyLevelCrudState {}

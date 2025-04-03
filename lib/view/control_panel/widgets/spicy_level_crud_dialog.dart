@@ -4,7 +4,7 @@ import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.da
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
@@ -88,9 +88,9 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
                 builder: (context, state) {
                   if (state is SpicyLevelLoaded) {
                     List<int> spicyLevels = [];
-                    state.spicy_level.forEach((e) {
+                    for (var e in state.spicyLevels) {
                       spicyLevels.add(e.position ?? 0);
-                    });
+                    }
                     return TextFormField(
                       controller: positionController,
                       validator: (value) {

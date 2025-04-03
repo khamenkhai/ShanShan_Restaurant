@@ -7,7 +7,7 @@ import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/request_models/shop_login_request_model.dart';
+import 'package:shan_shan/models/request_models/shop_login_request_model.dart';
 import 'package:shan_shan/view/home/home.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 

@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_cubit.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_state.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
-import 'package:shan_shan/core/const/const_export.dart';import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/response_models/menu_model.dart';
+import 'package:shan_shan/core/const/const_export.dart';import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/menu_model.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/menu_row_widget.dart';
 
 ///menu box widget

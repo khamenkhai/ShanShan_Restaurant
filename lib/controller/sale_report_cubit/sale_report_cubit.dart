@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/core/const/api_const.dart';
-import 'package:shan_shan/model/data_models/sale_report_model.dart';
+import 'package:shan_shan/models/data_models/sale_report_model.dart';
 import 'package:shan_shan/service/report_service.dart';
 import 'package:flutter/material.dart';
 part 'sale_report_state.dart';

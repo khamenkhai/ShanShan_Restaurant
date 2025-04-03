@@ -1,4 +1,4 @@
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 
 class SaleHistoryDetail {
   int? userId;
@@ -58,21 +58,21 @@ class SaleHistoryDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this.userId;
-    data['user_name'] = this.userName;
-    data['payment_id'] = this.paymentId;
-    data['payment_type'] = this.paymentType;
-    data['invoice_numbers'] = this.invoiceNumbers;
-    data['sale_date'] = this.saleDate;
-    data['sub-total'] = this.subTotal;
-    data['tax_id'] = this.taxId;
-    data['total_discount'] = this.totalDiscount;
-    data['grand_total'] = this.grandTotal;
-    data['cash'] = this.cash;
-    data['change'] = this.change;
-    if (this.products != null) {
-      data['products'] = this.products!.map((v) => v.toMap()).toList();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['user_id'] = userId;
+    data['user_name'] = userName;
+    data['payment_id'] = paymentId;
+    data['payment_type'] = paymentType;
+    data['invoice_numbers'] = invoiceNumbers;
+    data['sale_date'] = saleDate;
+    data['sub-total'] = subTotal;
+    data['tax_id'] = taxId;
+    data['total_discount'] = totalDiscount;
+    data['grand_total'] = grandTotal;
+    data['cash'] = cash;
+    data['change'] = change;
+    if (products != null) {
+      data['products'] = products!.map((v) => v.toMap()).toList();
     }
     return data;
   }

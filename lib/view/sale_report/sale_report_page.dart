@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/sale_report_cubit/sale_report_cubit.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
-import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/sunmi_printer_util.dart' as spu;
 import 'package:shan_shan/core/utils/utils.dart';
+import 'package:shan_shan/view/sale_report/widgets/sale_report_skeleton.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
 
@@ -81,47 +81,6 @@ class _ReportPageState extends State<ReportPage> {
     }
   }
 
-  void _printDailyReport(SaleReportDaily state) {
-    debugPrint("total : ${state.saleReport.daily_date}");
-    spu.printReceipt(
-      cashAmount: state.saleReport.total_paid_cash ?? 0,
-      KpayAmount: state.saleReport.total_paid_online ?? 0,
-      totalAmount: state.saleReport.total_Grands ?? 0,
-      taxAmount: 500,
-      discountAmount: 0,
-      report: "${state.saleReport.daily_date}",
-    );
-  }
-
-  void _printWeeklyReport(SaleReportWeekly state) {
-    debugPrint("start of week : ${state.saleReport.start_of_week}");
-    debugPrint("end of week : ${state.saleReport.end_of_week}");
-    spu.printReceipt(
-      cashAmount: state.saleReport.total_paid_cash ?? 0,
-      KpayAmount: state.saleReport.total_paid_online ?? 0,
-      totalAmount: state.saleReport.total_Grands ?? 0,
-      taxAmount: 500,
-      discountAmount: 0,
-      report:
-          "${state.saleReport.start_of_week} to ${state.saleReport.end_of_week}",
-    );
-  }
-
-  void _printMonthlyReport(SaleReportMonthly state) {
-    debugPrint("current month : ${state.currentMonthSale.current_month}");
-    debugPrint("last month : ${state.lastMonthSale.past_month}");
-    spu.printMontylyReport(
-      lastMonthDate: state.lastMonthSale.past_month ?? "",
-      currentMonthDate: state.currentMonthSale.current_month ?? "",
-      lastMonthcashAmount: state.lastMonthSale.total_paid_cash ?? 0,
-      lastMonthKpayAmount: state.lastMonthSale.total_paid_online ?? 0,
-      lastMonthtotalAmount: state.lastMonthSale.total_Grands ?? 0,
-      currentMonthcashAmount: state.currentMonthSale.total_paid_cash ?? 0,
-      currentMonthKpayAmount: state.currentMonthSale.total_paid_online ?? 0,
-      currentMonthtotalAmount: state.currentMonthSale.total_Grands ?? 0,
-    );
-  }
-
   Widget _buildReportContent() {
     return Column(
       children: [
@@ -136,30 +95,15 @@ class _ReportPageState extends State<ReportPage> {
   Widget _buildReportTabs() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
-      child: TabBar(
-        onTap: (index) => _handleTabChange(index),
+      child: const TabBar(
         dividerColor: Colors.transparent,
-        tabs: const [
+        tabs: [
           Tab(text: 'ဒီနေ့'),
           Tab(text: 'အပတ်စဉ်'),
           Tab(text: 'လစဉ်'),
         ],
       ),
     );
-  }
-
-  void _handleTabChange(int index) {
-    switch (index) {
-      case 0:
-        context.read<SaleReportCubit>().getDailyReport();
-        break;
-      case 1:
-        context.read<SaleReportCubit>().getWeeklyReport();
-        break;
-      case 2:
-        context.read<SaleReportCubit>().getMonthlyReport();
-        break;
-    }
   }
 
   Widget _buildReportViews() {
@@ -182,15 +126,8 @@ class _ReportPageState extends State<ReportPage> {
             kpayAmount: state.saleReport.total_paid_online ?? 0,
             totalAmount: state.saleReport.total_sales ?? 0,
           );
-        } else if (state is SaleReportLoading) {
-          return const LoadingWidget();
         }
-        return ReportSummaryWidget(
-          name: "To Day",
-          cashAmount: 0,
-          kpayAmount: 0,
-          totalAmount: 0,
-        );
+        return const ReportSummarySkeleton();
       },
     );
   }
@@ -205,15 +142,8 @@ class _ReportPageState extends State<ReportPage> {
             kpayAmount: state.saleReport.total_paid_online ?? 0,
             totalAmount: state.saleReport.total_sales ?? 0,
           );
-        } else if (state is SaleReportLoading) {
-          return const LoadingWidget();
         }
-        return ReportSummaryWidget(
-          name: "This Week",
-          cashAmount: 0,
-          kpayAmount: 0,
-          totalAmount: 0,
-        );
+        return const ReportSummarySkeleton();
       },
     );
   }
@@ -241,14 +171,15 @@ class _ReportPageState extends State<ReportPage> {
               ),
             ],
           );
-        } else if (state is SaleReportLoading) {
-          return const LoadingWidget();
         }
-        return const Center(
-          child: Text(
-            "No Monthly Report",
-            style: TextStyle(fontSize: 19),
-          ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildReportHeader("ယခင်လ"),
+            const ReportSummarySkeleton(),
+            _buildReportHeader("လက်ရှိလ"),
+            const ReportSummarySkeleton(),
+          ],
         );
       },
     );
@@ -266,6 +197,52 @@ class _ReportPageState extends State<ReportPage> {
       ),
     );
   }
+}
+
+// Add these printer methods to your _ReportPageState class
+// (place them anywhere in the class, typically with other private methods)
+
+void _printDailyReport(SaleReportDaily state) {
+  debugPrint("Daily report date: ${state.saleReport.daily_date}");
+  spu.printReceipt(
+    cashAmount: state.saleReport.total_paid_cash ?? 0,
+    KpayAmount: state.saleReport.total_paid_online ?? 0,
+    totalAmount: state.saleReport.total_Grands ?? 0,
+    taxAmount: 500, // Consider making this dynamic if needed
+    discountAmount: 0, // Consider making this dynamic if needed
+    report: "${state.saleReport.daily_date}",
+  );
+}
+
+void _printWeeklyReport(SaleReportWeekly state) {
+  debugPrint(
+      "Weekly report range: ${state.saleReport.start_of_week} to ${state.saleReport.end_of_week}");
+  spu.printReceipt(
+    cashAmount: state.saleReport.total_paid_cash ?? 0,
+    KpayAmount: state.saleReport.total_paid_online ?? 0,
+    totalAmount: state.saleReport.total_Grands ?? 0,
+    taxAmount: 500,
+    discountAmount: 0,
+    report:
+        "${state.saleReport.start_of_week} to ${state.saleReport.end_of_week}",
+  );
+}
+
+void _printMonthlyReport(SaleReportMonthly state) {
+  debugPrint("Monthly report comparison:");
+  debugPrint("Current month: ${state.currentMonthSale.current_month}");
+  debugPrint("Last month: ${state.lastMonthSale.past_month}");
+
+  spu.printMontylyReport(
+    lastMonthDate: state.lastMonthSale.past_month ?? "",
+    currentMonthDate: state.currentMonthSale.current_month ?? "",
+    lastMonthcashAmount: state.lastMonthSale.total_paid_cash ?? 0,
+    lastMonthKpayAmount: state.lastMonthSale.total_paid_online ?? 0,
+    lastMonthtotalAmount: state.lastMonthSale.total_Grands ?? 0,
+    currentMonthcashAmount: state.currentMonthSale.total_paid_cash ?? 0,
+    currentMonthKpayAmount: state.currentMonthSale.total_paid_online ?? 0,
+    currentMonthtotalAmount: state.currentMonthSale.total_Grands ?? 0,
+  );
 }
 
 class ReportSummaryWidget extends StatelessWidget {
@@ -364,3 +341,4 @@ class ReportSummaryWidget extends StatelessWidget {
     );
   }
 }
+

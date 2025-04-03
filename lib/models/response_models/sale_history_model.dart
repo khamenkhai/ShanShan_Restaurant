@@ -1,5 +1,5 @@
-import 'package:shan_shan/model/response_models/menu_model.dart';
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/response_models/menu_model.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 
 class SaleHistoryModel {
   final int id;

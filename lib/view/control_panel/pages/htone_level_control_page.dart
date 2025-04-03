@@ -7,7 +7,7 @@ import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
-import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
+import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/ahtone_level_crud_dialog.dart';
 import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
@@ -89,9 +89,9 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
           return GridView.builder(
             padding: EdgeInsets.only(bottom: 20, top: 7.5),
             gridDelegate: _gridDelegate(screenSize),
-            itemCount: state.ahtone_level.length,
+            itemCount: state.htoneLevels.length,
             itemBuilder: (context, index) {
-              AhtoneLevelModel ahtoneLevel = state.ahtone_level[index];
+              AhtoneLevelModel ahtoneLevel = state.htoneLevels[index];
               return CrudCard(
                 title: ahtoneLevel.name ?? "",
                 description: ahtoneLevel.description ?? "",

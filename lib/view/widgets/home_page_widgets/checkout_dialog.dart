@@ -4,400 +4,369 @@ import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/data_models/remark_model.dart';
 import 'package:shan_shan/view/pages/payment/bank.dart';
 import 'package:shan_shan/view/pages/payment/bank_and_cash.dart';
 import 'package:shan_shan/view/pages/payment/cash.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class CheckoutDialog extends StatefulWidget {
+  final bool paidOnline;
+  final bool paidCash;
+  final double? width;
+
   const CheckoutDialog({
     super.key,
-    required this.KpayPayment,
-    required this.cashPayment,
+    required this.paidOnline,
+    required this.paidCash,
     this.width,
   });
-  final bool KpayPayment;
-  final bool cashPayment;
-  final double? width;
 
   @override
   State<CheckoutDialog> createState() => _CheckoutDialogState();
 }
 
 class _CheckoutDialogState extends State<CheckoutDialog> {
-  bool isParcel = false;
+  final _formKey = GlobalKey<FormState>();
+  final _tableController = TextEditingController();
+  final _remarkController = TextEditingController();
 
-  TextEditingController tableController = TextEditingController();
-  TextEditingController remarkController = TextEditingController();
-
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  RemarkModel? remarkData;
-
-  int prawnCount = 0;
-  int octuposCount = 0;
+  bool _isParcel = false;
+  int _prawnCount = 0;
+  int _octopusCount = 0;
 
   @override
   void initState() {
-    prawnCount = context.read<CartCubit>().state.prawnCount;
-    octuposCount = context.read<CartCubit>().state.octopusCount;
-    remarkController.text = context.read<CartCubit>().state.remark;
-    isParcel =
-        context.read<CartCubit>().state.dineInOrParcel == 0 ? true : false;
-    tableController.text =
-        context.read<CartCubit>().state.tableNumber.toString();
-
-    setState(() {});
     super.initState();
+    _initializeFormData();
+  }
+
+  @override
+  void dispose() {
+    _tableController.dispose();
+    _remarkController.dispose();
+    super.dispose();
+  }
+
+  void _initializeFormData() {
+    final cartState = context.read<CartCubit>().state;
+    _prawnCount = cartState.prawnCount;
+    _octopusCount = cartState.octopusCount;
+    _remarkController.text = cartState.remark;
+    _isParcel = cartState.dineInOrParcel == 0;
+    _tableController.text = cartState.tableNumber.toString();
   }
 
   @override
   Widget build(BuildContext context) {
-    CartCubit cartCubit = BlocProvider.of<CartCubit>(context);
+    final screenSize = MediaQuery.of(context).size;
+    final cartCubit = context.read<CartCubit>();
 
-    var screenSize = MediaQuery.of(context).size;
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: SizeConst.kBorderRadius,
       ),
       child: SingleChildScrollView(
-        child: BlocConsumer<CartCubit, CartState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            return Container(
-              width:
-                  widget.width == null ? screenSize.width / 3.8 : widget.width,
-              padding: EdgeInsets.all(15),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "မှာယူမှု",
-                    style: TextStyle(
-                      fontSize: 24 - 5,
-                      color: ColorConstants.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    "စားပွဲနံပါတ်",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-
-                  Form(
-                    key: _formKey,
-                    child: TextFormField(
-                      controller: tableController,
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value == "") {
-                          return "စားပွဲနံပါတ် လိုအပ်ပါသည်။!";
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        hintText: "စားပွဲနံပါတ်ရေးရန်",
-                        hintStyle: TextStyle(fontSize: 16 - 3),
-                        contentPadding: EdgeInsets.symmetric(vertical: 0),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 15),
-
-                  Text(
-                    "ထိုင်စား or ပါဆယ်",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        isParcel = false;
-                      });
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          isParcel
-                              ? Icons.radio_button_off
-                              : Icons.radio_button_checked,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text("ထိုင်စား")
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        isParcel = true;
-                      });
-                    },
-                    child: Row(
-                      children: [
-                        Icon(isParcel
-                            ? Icons.radio_button_checked
-                            : Icons.radio_button_off),
-                        SizedBox(width: 10),
-                        Text("ပါဆယ်")
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 25),
-                  Text(
-                    "မှတ်ချက်",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  TextField(
-                    controller: remarkController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      hintText: "မှတ်ချက်ရေးရန်",
-                      hintStyle: TextStyle(fontSize: 16 - 3),
-                      contentPadding: EdgeInsets.symmetric(vertical: 0),
-                    ),
-                  ),
-
-                  SizedBox(height: 5),
-                  _octopusCountRow(),
-                  _prawnCount(),
-                  SizedBox(height: 20),
-
-                  ///buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      customizableOTButton(
-                        elevation: 0,
-                        child: Text("ပယ်ဖျက်ရန်"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      SizedBox(width: 10),
-                      CustomElevatedButton(
-                        child: Text("အတည်ပြုရန်"),
-                        onPressed: () {
-                          String remarkString = "${remarkController.text}";
-                          context.read<CartCubit>().addAdditionalData(
-                                remark: remarkController.text,
-                                dineInOrParcel: isParcel ? 0 : 1,
-                                octopusCount: octuposCount,
-                                prawnCount: prawnCount,
-                                tableNumber: tableController.text == ""
-                                    ? 0
-                                    : int.parse(tableController.text),
-                              );
-                          if (_formKey.currentState!.validate()) {
-                            if (widget.cashPayment && !widget.KpayPayment) {
-                              redirectTo(
-                                context: context,
-                                //replacement: true,
-                                ///^^^^^^^^^^ important ^^^^^^^^^^
-                                form: CashScreen(
-                                  octopusCount: octuposCount,
-                                  prawnCount: prawnCount,
-                                  remark: remarkString,
-                                  menu: cartCubit.state.menu!.name.toString(),
-                                  athoneLevel:
-                                      cartCubit.state.athoneLevel == null
-                                          ? 000
-                                          : cartCubit.state.athoneLevel!.id!,
-                                  spicyLevel: cartCubit.state.spicyLevel == null
-                                      ? 000
-                                      : cartCubit.state.spicyLevel!.id!,
-                                  menu_id: cartCubit.state.menu!.id ?? 0,
-                                  table_number: int.parse(tableController.text),
-                                  dineInOrParcel: isParcel ? 0 : 1,
-                                  subTotal: cartCubit.getTotalAmount(),
-                                  tax: get5percentage(
-                                      cartCubit.getTotalAmount()),
-                                  cashPayment: widget.cashPayment,
-                                ),
-                              );
-                            } else if (!widget.cashPayment &&
-                                widget.KpayPayment) {
-                               redirectTo(
-                                context: context,
-                                //replacement: true,
-                                form: KpayScreen(
-                                  menu: cartCubit.state.menu!.name.toString(),
-                                  remark: remarkString,
-                                  athoneLevel:
-                                      cartCubit.state.athoneLevel == null
-                                          ? 000
-                                          : cartCubit.state.athoneLevel!.id!,
-                                  spicyLevel: cartCubit.state.spicyLevel == null
-                                      ? 000
-                                      : cartCubit.state.spicyLevel!.id!,
-                                  menu_id: cartCubit.state.menu!.id ?? 0,
-                                  table_number: int.parse(tableController.text),
-                                  dineInOrParcel: isParcel ? 0 : 1,
-                                  subTotal: cartCubit.getTotalAmount(),
-                                  tax: get5percentage(
-                                      cartCubit.getTotalAmount()),
-                                  prawnCount: prawnCount,
-                                  octopusCount: octuposCount,
-                                ),
-                              );
-                            } else if (widget.cashPayment &&
-                                widget.KpayPayment) {
-                               redirectTo(
-                                context: context,
-                                //replacement: true,
-                                form: KpayAndCashScreen(
-                                  menu: cartCubit.state.menu!.name.toString(),
-                                  remark: remarkString,
-                                  athoneLevel:
-                                      cartCubit.state.athoneLevel == null
-                                          ? 000
-                                          : cartCubit.state.athoneLevel!.id!,
-                                  spicyLevel: cartCubit.state.spicyLevel == null
-                                      ? 000
-                                      : cartCubit.state.spicyLevel!.id!,
-                                  menu_id: cartCubit.state.menu!.id ?? 0,
-                                  table_number: int.parse(tableController.text),
-                                  dineInOrParcel: isParcel ? 0 : 1,
-                                  subTotal: cartCubit.getTotalAmount(),
-                                  tax: get5percentage(
-                                      cartCubit.getTotalAmount()),
-                                  prawnCount: prawnCount,
-                                  octopusCount: octuposCount,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            );
-          },
+        child: Container(
+          width: widget.width ?? screenSize.width / 3.8,
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 15),
+              _buildTableNumberField(),
+              const SizedBox(height: 15),
+              _buildOrderTypeSelection(),
+              const SizedBox(height: 25),
+              _buildRemarkField(),
+              const SizedBox(height: 5),
+              _buildOctopusCounter(),
+              _buildPrawnCounter(),
+              const SizedBox(height: 20),
+              _buildActionButtons(cartCubit),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  ///octus count control row
-  Row _octopusCountRow() {
-    return Row(
+  Widget _buildHeader() {
+    return const Text(
+      "မှာယူမှု",
+      style: TextStyle(
+        fontSize: 19,
+        color: ColorConstants.primaryColor,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget _buildTableNumberField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          //"Octopus Count",
-          "ရေဘဝဲ",
+        const Text(
+          "စားပွဲနံပါတ်",
           style: TextStyle(
             fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        Spacer(),
-        IconButton(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onPressed: () {
-            if (octuposCount == 0) {
-            } else {
-              setState(() {
-                octuposCount -= 1;
-              });
-            }
-          },
-          icon: Icon(
-            Icons.remove_circle,
-          ),
-        ),
-        Container(
-          width: 20,
-          child: Text(
-            "${octuposCount}",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
+        Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: _tableController,
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "စားပွဲနံပါတ် လိုအပ်ပါသည်။!";
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              hintText: "စားပွဲနံပါတ်ရေးရန်",
+              hintStyle: TextStyle(fontSize: 13),
+              contentPadding: EdgeInsets.symmetric(vertical: 0),
             ),
-          ),
-        ),
-        IconButton(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onPressed: () {
-            setState(() {
-              octuposCount += 1;
-            });
-          },
-          icon: Icon(
-            Icons.add_circle,
           ),
         ),
       ],
     );
   }
 
-  Row _prawnCount() {
+  Widget _buildOrderTypeSelection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "ထိုင်စား or ပါဆယ်",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 10),
+        _buildRadioOption(
+          value: false,
+          label: "ထိုင်စား",
+          isSelected: !_isParcel,
+        ),
+        const SizedBox(height: 15),
+        _buildRadioOption(
+          value: true,
+          label: "ပါဆယ်",
+          isSelected: _isParcel,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRadioOption({
+    required bool value,
+    required String label,
+    required bool isSelected,
+  }) {
+    return InkWell(
+      onTap: () => setState(() => _isParcel = value),
+      child: Row(
+        children: [
+          Icon(
+            isSelected 
+              ? Icons.radio_button_checked 
+              : Icons.radio_button_off,
+          ),
+          const SizedBox(width: 10),
+          Text(label),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRemarkField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "မှတ်ချက်",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        TextField(
+          controller: _remarkController,
+          decoration: const InputDecoration(
+            hintText: "မှတ်ချက်ရေးရန်",
+            hintStyle: TextStyle(fontSize: 13),
+            contentPadding: EdgeInsets.symmetric(vertical: 0),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOctopusCounter() {
+    return _CounterRow(
+      label: "ရေဘဝဲ",
+      count: _octopusCount,
+      onDecrement: () {
+        if (_octopusCount > 0) {
+          setState(() => _octopusCount--);
+        }
+      },
+      onIncrement: () => setState(() => _octopusCount++),
+    );
+  }
+
+  Widget _buildPrawnCounter() {
+    return _CounterRow(
+      label: "ပုဇွန်",
+      count: _prawnCount,
+      onDecrement: () {
+        if (_prawnCount > 0) {
+          setState(() => _prawnCount--);
+        }
+      },
+      onIncrement: () => setState(() => _prawnCount++),
+    );
+  }
+
+  Widget _buildActionButtons(CartCubit cartCubit) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        customizableOTButton(
+          elevation: 0,
+          child: const Text("ပယ်ဖျက်ရန်"),
+          onPressed: () => Navigator.pop(context),
+        ),
+        const SizedBox(width: 10),
+        CustomElevatedButton(
+          child: const Text("အတည်ပြုရန်"),
+          onPressed: () => _handleOrderConfirmation(cartCubit),
+        ),
+      ],
+    );
+  }
+
+  void _handleOrderConfirmation(CartCubit cartCubit) {
+    final remark = _remarkController.text;
+    
+    cartCubit.addAdditionalData(
+      remark: remark,
+      dineInOrParcel: _isParcel ? 0 : 1,
+      octopusCount: _octopusCount,
+      prawnCount: _prawnCount,
+      tableNumber: _tableController.text.isEmpty 
+          ? 0 
+          : int.parse(_tableController.text),
+    );
+
+    if (!_formKey.currentState!.validate()) return;
+
+    final paymentScreen = _getPaymentScreen(cartCubit, remark);
+    if (paymentScreen != null) {
+      redirectTo(context: context, form: paymentScreen);
+    }
+  }
+
+  Widget? _getPaymentScreen(CartCubit cartCubit, String remark) {
+    final menu = cartCubit.state.menu!;
+    final total = cartCubit.getTotalAmount();
+    final tax = get5percentage(total);
+
+    if (widget.paidCash && !widget.paidOnline) {
+      return CashScreen(
+        octopusCount: _octopusCount,
+        prawnCount: _prawnCount,
+        remark: remark,
+        menu: menu.name.toString(),
+        athoneLevel: cartCubit.state.athoneLevel?.id ?? 0,
+        spicyLevel: cartCubit.state.spicyLevel?.id ?? 0,
+        menu_id: menu.id ?? 0,
+        table_number: int.parse(_tableController.text),
+        dineInOrParcel: _isParcel ? 0 : 1,
+        subTotal: total,
+        tax: tax,
+        paidCash: widget.paidCash,
+      );
+    } else if (!widget.paidCash && widget.paidOnline) {
+      return KpayScreen(
+        menu: menu.name.toString(),
+        remark: remark,
+        athoneLevel: cartCubit.state.athoneLevel?.id ?? 0,
+        spicyLevel: cartCubit.state.spicyLevel?.id ?? 0,
+        menu_id: menu.id ?? 0,
+        table_number: int.parse(_tableController.text),
+        dineInOrParcel: _isParcel ? 0 : 1,
+        subTotal: total,
+        tax: tax,
+        prawnCount: _prawnCount,
+        octopusCount: _octopusCount,
+      );
+    } else if (widget.paidCash && widget.paidOnline) {
+      return KpayAndCashScreen(
+        menu: menu.name.toString(),
+        remark: remark,
+        athoneLevel: cartCubit.state.athoneLevel?.id ?? 0,
+        spicyLevel: cartCubit.state.spicyLevel?.id ?? 0,
+        menu_id: menu.id ?? 0,
+        table_number: int.parse(_tableController.text),
+        dineInOrParcel: _isParcel ? 0 : 1,
+        subTotal: total,
+        tax: tax,
+        prawnCount: _prawnCount,
+        octopusCount: _octopusCount,
+      );
+    }
+    return null;
+  }
+}
+
+class _CounterRow extends StatelessWidget {
+  final String label;
+  final int count;
+  final VoidCallback onDecrement;
+  final VoidCallback onIncrement;
+
+  const _CounterRow({
+    required this.label,
+    required this.count,
+    required this.onDecrement,
+    required this.onIncrement,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Text(
-          "ပုဇွန်",
-          style: TextStyle(
-            fontSize: 16,
-          ),
+          label,
+          style: const TextStyle(fontSize: 16),
         ),
-        Spacer(),
+        const Spacer(),
         IconButton(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          onPressed: () {
-            if (prawnCount == 0) {
-            } else {
-              setState(() {
-                prawnCount -= 1;
-              });
-            }
-          },
-          icon: Icon(
-            Icons.remove_circle,
-          ),
+          onPressed: onDecrement,
+          icon: const Icon(Icons.remove_circle),
         ),
-        Container(
+        SizedBox(
           width: 20,
           child: Text(
-            "${prawnCount}",
+            "$count",
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-            ),
+            style: const TextStyle(fontSize: 16),
           ),
         ),
         IconButton(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          onPressed: () {
-            setState(() {
-              prawnCount += 1;
-            });
-          },
-          icon: Icon(
-            Icons.add_circle,
-          ),
+          onPressed: onIncrement,
+          icon: const Icon(Icons.add_circle),
         ),
       ],
     );

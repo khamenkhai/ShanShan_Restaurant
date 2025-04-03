@@ -12,12 +12,12 @@ import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/response_models/category_model.dart';
-import 'package:shan_shan/model/response_models/menu_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/category_model.dart';
+import 'package:shan_shan/models/response_models/menu_model.dart';
 import 'package:shan_shan/view/home/widget/cart_header_widget.dart';
 import 'package:shan_shan/view/home/widget/category_box_widget.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/cart_item_list_widget.dart';
+import 'package:shan_shan/view/home/widget/cart_item_list_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/checkout_dialog.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/menu_box_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/total_and_tax_widget.dart';
@@ -43,8 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // State variables
   CartItem? _defaultItem;
-  bool _kpayPayment = false;
-  bool _cashPayment = true;
+  bool _paidOnline = false;
+  bool _paidCash = true;
 
   @override
   void initState() {
@@ -205,7 +205,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Wrap(
         runSpacing: SizeConst.kHorizontalPadding,
         spacing: SizeConst.kHorizontalPadding,
-        alignment: WrapAlignment.start,
         children: [
           ...categories.map(
             (category) => CategoryBoxWidget(
@@ -253,27 +252,25 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.white,
               borderRadius: SizeConst.kBorderRadius,
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 1),
-                  CartHeaderWidget(onClearOrder: _handleClearOrder),
-                  const SizedBox(height: 5),
-                  _buildCartItems(screenSize, state),
-                  _buildTotalSection(cartCubit),
-                  const SizedBox(height: 25),
-                  _buildPaymentOptions(),
-                  const SizedBox(height: 15),
-                  CustomElevatedButton(
-                    width: double.infinity,
-                    onPressed: () {
-                      _handlePlaceOrder(cartCubit, screenSize);
-                    },
-                    child: Text("Order"),
-                  )
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 1),
+                CartHeaderWidget(onClearOrder: _handleClearOrder),
+                const SizedBox(height: 5),
+                Expanded(child: CartItemListWidget(screenSize: screenSize, state: state)),
+                TotalAndTaxHomeWidget(),
+                const SizedBox(height: 15),
+                _buildPaymentOptions(),
+                const SizedBox(height: 15),
+                CustomElevatedButton(
+                  width: double.infinity,
+                  onPressed: () {
+                    _handlePlaceOrder(cartCubit, screenSize);
+                  },
+                  child: Text("Order"),
+                )
+              ],
             ),
           ),
         );
@@ -291,26 +288,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCartItems(Size screenSize, CartState state) {
-    return cartItemListWidget(
-      screenSize: screenSize,
-      state: state,
-      context: context,
-    );
-  }
+ 
 
-  Widget _buildTotalSection(CartCubit cartCubit) {
-    return totalAndTaxHomeWidget(cartCubit: cartCubit);
-  }
-
+ 
   Widget _buildPaymentOptions() {
     return Row(
       children: [
         Expanded(
           child: InkWell(
-            onTap: () => setState(() => _cashPayment = !_cashPayment),
+            onTap: () => setState(() => _paidCash = !_paidCash),
             child: PaymentButton(
-              isSelected: _cashPayment,
+              isSelected: _paidCash,
               title: "Cash",
             ),
           ),
@@ -318,9 +306,9 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(width: 15),
         Expanded(
           child: InkWell(
-            onTap: () => setState(() => _kpayPayment = !_kpayPayment),
+            onTap: () => setState(() => _paidOnline = !_paidOnline),
             child: PaymentButton(
-              isSelected: _kpayPayment,
+              isSelected: _paidOnline,
               title: "KBZ Pay",
             ),
           ),
@@ -338,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    if (!_cashPayment && !_kpayPayment) {
+    if (!_paidCash && !_paidOnline) {
       showCustomSnackbar(
         message: "ငွေပေးချေမှုနည်းလမ်းကို ရွေးချယ်ရပါမည်",
         context: context,
@@ -351,8 +339,8 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (context) => CheckoutDialog(
           width: screenSize.width / 3,
-          KpayPayment: _kpayPayment,
-          cashPayment: _cashPayment,
+          paidOnline: _paidOnline,
+          paidCash: _paidCash,
         ),
       );
     } else {

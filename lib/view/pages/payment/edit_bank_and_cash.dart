@@ -8,12 +8,12 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/pages/checkout_form.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/cart_item_widget.dart';
+import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/number_buttons.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -131,7 +131,7 @@ class _EditKpayAndCashScreenState extends State<EditKpayAndCashScreen> {
       ),
       body:Container(
               padding: EdgeInsets.only(top: 15),
-              child: _cashPaymentForm(
+              child: _paidCashForm(
                 screenSize,
                 cartCubit,
               ),
@@ -140,7 +140,7 @@ class _EditKpayAndCashScreenState extends State<EditKpayAndCashScreen> {
   }
 
   ///cash payment form widget
-  Widget _cashPaymentForm(Size screenSize, EditSaleCartCubit cartCubit) {
+  Widget _paidCashForm(Size screenSize, EditSaleCartCubit cartCubit) {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,10 +217,10 @@ class _EditKpayAndCashScreenState extends State<EditKpayAndCashScreen> {
                       ),
                     ),
                     paymentIndex == 0
-                        ? _cashPaymentButtons(constraints)
+                        ? _paidCashButtons(constraints)
                         : Container(),
                     paymentIndex == 1
-                        ? _KpayPaymentButtons(constraints)
+                        ? _paidOnlineButtons(constraints)
                         : Container(),
                   ],
                 );
@@ -233,7 +233,7 @@ class _EditKpayAndCashScreenState extends State<EditKpayAndCashScreen> {
     );
   }
 
-  Container _cashPaymentButtons(BoxConstraints constraints) {
+  Container _paidCashButtons(BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth,
       decoration: BoxDecoration(),
@@ -250,7 +250,7 @@ class _EditKpayAndCashScreenState extends State<EditKpayAndCashScreen> {
     );
   }
 
-  Container _KpayPaymentButtons(BoxConstraints constraints) {
+  Container _paidOnlineButtons(BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth,
       decoration: BoxDecoration(),
@@ -306,11 +306,10 @@ class _EditKpayAndCashScreenState extends State<EditKpayAndCashScreen> {
                       child: Column(
                         children: state.items
                             .map(
-                              (e) => cartItemWidget(
+                              (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                                screenSize: screenSize,
-                                context: context,
+                             
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
@@ -541,10 +540,10 @@ class _EditKpayAndCashScreenState extends State<EditKpayAndCashScreen> {
         .items
         .map(
           (e) => Product(
-            product_id: e.id,
+            productId: e.id,
             qty: e.qty,
             price: e.price,
-            total_price: e.totalPrice,
+            totalPrice: e.totalPrice,
           ),
         )
         .toList();

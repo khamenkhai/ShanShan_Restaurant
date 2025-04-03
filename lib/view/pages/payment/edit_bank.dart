@@ -9,10 +9,10 @@ import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/pages/checkout_form.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/cart_item_widget.dart';
+import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class EditKpayScreen extends StatefulWidget {
@@ -97,7 +97,7 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
       ),
       body: Container(
         padding: EdgeInsets.only(top: 15),
-        child: _cashPaymentForm(
+        child: _paidCashForm(
           screenSize,
           cartCubit,
         ),
@@ -106,7 +106,7 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
   }
 
   ///cash payment form widget
-  Widget _cashPaymentForm(
+  Widget _paidCashForm(
       Size screenSize, EditSaleCartCubit EditSaleCartCubit) {
     return Container(
       child: Row(
@@ -230,11 +230,10 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
                       child: Column(
                         children: state.items
                             .map(
-                              (e) => cartItemWidget(
+                              (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                                screenSize: screenSize,
-                                context: context,
+                              
                                 onDelete: () {},
                                 onEdit: () {},
                               ),

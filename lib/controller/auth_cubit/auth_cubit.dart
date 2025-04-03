@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/core/local_data/shared_prefs.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/request_models/shop_login_request_model.dart';
-import 'package:shan_shan/model/response_models/shop_model.dart';
+import 'package:shan_shan/models/request_models/shop_login_request_model.dart';
+import 'package:shan_shan/models/response_models/shop_model.dart';
 import 'package:shan_shan/service/auth_service.dart';
 part 'auth_state.dart';
 

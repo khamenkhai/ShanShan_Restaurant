@@ -5,7 +5,7 @@ import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.da
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/delete_warning_dialog.dart';
@@ -85,9 +85,9 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
           return GridView.builder(
             padding: EdgeInsets.only(bottom: 20, top: 7.5),
             gridDelegate: _gridDelegate(screenSize),
-            itemCount: state.spicy_level.length,
+            itemCount: state.spicyLevels.length,
             itemBuilder: (context, index) {
-              SpicyLevelModel spicyLevel = state.spicy_level[index];
+              SpicyLevelModel spicyLevel = state.spicyLevels[index];
               return CrudCard(
                 title: spicyLevel.name ?? "",
                 description: spicyLevel.description ?? "",

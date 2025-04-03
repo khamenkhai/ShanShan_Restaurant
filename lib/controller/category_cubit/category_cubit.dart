@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shan_shan/model/response_models/category_model.dart';
+import 'package:shan_shan/models/response_models/category_model.dart';
 import 'package:shan_shan/service/category_service.dart';
 part 'category_state.dart';
 

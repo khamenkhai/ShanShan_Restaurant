@@ -82,7 +82,7 @@ class HtoneLevelCubit extends Cubit<AhtoneLevelCrudState> {
 
     result.fold(
       (failure) => emit(AhtoneLevelError(message: failure)),
-      (levels) => emit(AhtoneLevelLoaded(ahtone_level: levels)),
+      (levels) => emit(AhtoneLevelLoaded(htoneLevels: levels)),
     );
   }
 }

@@ -9,7 +9,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/view/control_panel/pages/control_panel.dart';
-import 'package:shan_shan/view/pages/history.dart';
+import 'package:shan_shan/view/history/history.dart';
 import 'package:shan_shan/view/sale_report/sale_report_page.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
@@ -75,7 +75,7 @@ class HomeDrawer extends StatelessWidget {
                 Navigator.pop(context);
                 redirectTo(
                   context: context,
-                  form: History(),
+                  form: SalesHistoryPage(),
                 );
               },
               leading: CircleAvatar(child: Icon(CupertinoIcons.doc)),

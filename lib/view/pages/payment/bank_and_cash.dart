@@ -8,10 +8,10 @@ import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/pages/checkout_form.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/cart_item_widget.dart';
+import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/date_action_widget.dart';
 import 'package:shan_shan/view/widgets/number_buttons.dart';
@@ -100,7 +100,7 @@ class _KpayAndCashScreenState extends State<KpayAndCashScreen> {
         title: Text("Cash & Kpay"),
       ),
       body: InternetCheckWidget(
-        child: _cashPaymentForm(
+        child: _paidCashForm(
           screenSize,
           cartCubit,
         ),
@@ -110,7 +110,7 @@ class _KpayAndCashScreenState extends State<KpayAndCashScreen> {
   }
 
   ///cash payment form widget
-  Widget _cashPaymentForm(Size screenSize, CartCubit cartCubit) {
+  Widget _paidCashForm(Size screenSize, CartCubit cartCubit) {
     return Container(
       padding: EdgeInsets.only(top: 5),
       child: Row(
@@ -197,10 +197,10 @@ class _KpayAndCashScreenState extends State<KpayAndCashScreen> {
                 ),
               ),
               paymentIndex == 0
-                  ? _cashPaymentButtons(constraints)
+                  ? _paidCashButtons(constraints)
                   : Container(),
               paymentIndex == 1
-                  ? _KpayPaymentButtons(constraints)
+                  ? _paidOnlineButtons(constraints)
                   : Container(),
             ],
           );
@@ -210,7 +210,7 @@ class _KpayAndCashScreenState extends State<KpayAndCashScreen> {
   }
 
   /// cash amount payment button
-  Container _cashPaymentButtons(BoxConstraints constraints) {
+  Container _paidCashButtons(BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth,
       decoration: BoxDecoration(),
@@ -228,7 +228,7 @@ class _KpayAndCashScreenState extends State<KpayAndCashScreen> {
   }
 
   ///bank amount payment button
-  Container _KpayPaymentButtons(BoxConstraints constraints) {
+  Container _paidOnlineButtons(BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth,
       decoration: BoxDecoration(),
@@ -284,11 +284,10 @@ class _KpayAndCashScreenState extends State<KpayAndCashScreen> {
                       child: Column(
                         children: state.items
                             .map(
-                              (e) => cartItemWidget(
+                              (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                                screenSize: screenSize,
-                                context: context,
+                             
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
