@@ -1,4 +1,4 @@
-import 'package:shan_shan/model/response_models/menu_model.dart';
+import 'package:shan_shan/models/response_models/menu_model.dart';
 
 sealed class MenuState {}
 

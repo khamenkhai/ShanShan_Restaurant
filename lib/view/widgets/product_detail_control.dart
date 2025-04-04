@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/response_models/product_model.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
@@ -31,7 +32,7 @@ class _ProductWeightOrDetailControlState
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      child: widget.produt.is_gram
+      child: widget.produt.isGram
           ? gramControlWidget(context)
           : quantityControlWidget(),
     );
@@ -66,7 +67,7 @@ class _ProductWeightOrDetailControlState
               },
             ),
             SizedBox(width: 10),
-            custamizableElevated(
+            CustomElevatedButton(
               child: Text("ထည့်ရန်"),
               onPressed: () {
                 addToCartGram(context);
@@ -86,7 +87,7 @@ class _ProductWeightOrDetailControlState
     if (widget.isEditState) {
       context.read<EditSaleCartCubit>().addToCartByGram(
             item: CartItem(
-                is_gram: widget.produt.is_gram ?? false,
+                isGram: widget.produt.isGram ?? false,
                 name: "${widget.produt.name?.replaceAll(',', '')}",
                 id: widget.produt.id!,
                 qty: int.parse(gram.text),
@@ -97,7 +98,7 @@ class _ProductWeightOrDetailControlState
     } else {
       context.read<CartCubit>().addToCartByGram(
             item: CartItem(
-              is_gram: widget.produt.is_gram ?? false,
+              isGram: widget.produt.isGram ?? false,
               name: "${widget.produt.name?.replaceAll(',', '')}",
               id: widget.produt.id!,
               qty: int.parse(gram.text),
@@ -138,7 +139,7 @@ class _ProductWeightOrDetailControlState
             ),
           ),
           SizedBox(width: 30),
-          Container(
+          SizedBox(
             width: 100,
             child: TextField(
               controller: gram,
@@ -200,7 +201,7 @@ class _ProductWeightOrDetailControlState
               },
             ),
             SizedBox(width: 10),
-            custamizableElevated(
+            CustomElevatedButton(
               child: Text("ထည့်ရန်"),
               onPressed: () {
                 addToCartByQuantity();
@@ -217,7 +218,7 @@ class _ProductWeightOrDetailControlState
     if (widget.isEditState) {
       context.read<EditSaleCartCubit>().addToCartByQuantity(
             item: CartItem(
-              is_gram: widget.produt.is_gram ?? false,
+              isGram: widget.produt.isGram ?? false,
               name: "${widget.produt.name?.replaceAll(',', '')}",
               id: widget.produt.id!,
               qty: 1,
@@ -229,7 +230,7 @@ class _ProductWeightOrDetailControlState
     } else {
       context.read<CartCubit>().addToCartByQuantity(
             item: CartItem(
-              is_gram: widget.produt.is_gram ?? false,
+              isGram: widget.produt.isGram ?? false,
               name: "${widget.produt.name?.replaceAll(',', '')}",
               id: widget.produt.id!,
               qty: 1,
@@ -268,10 +269,10 @@ class _ProductWeightOrDetailControlState
           ),
           SizedBox(width: 30),
           Center(
-            child: Container(
+            child: SizedBox(
               width: 70,
               child: Text(
-                "${quantity}",
+                "$quantity",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20),
               ),

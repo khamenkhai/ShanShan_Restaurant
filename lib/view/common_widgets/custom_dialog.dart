@@ -26,7 +26,7 @@ class CustomDialog extends StatelessWidget {
           vertical:paddingInVertical ? 15 : 0,
           horizontal: 15,
         ),
-        width: width == null ? size.width / 3.8 : width,
+        width: width ?? size.width / 3.8,
         child: child,
       ),
     );

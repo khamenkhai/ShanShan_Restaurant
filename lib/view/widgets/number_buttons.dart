@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class NumberButtons extends StatefulWidget {
   const NumberButtons({
@@ -78,52 +78,51 @@ class _NumberButtonsState extends State<NumberButtons> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Text("1",
-                    style: TextStyle(
-                        fontSize: widget.numberFontSize, color: Colors.black)),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
                   addNumber(numberAmount: 1);
                 },
+                child: Text(
+                  "1",
+                  style: TextStyle(
+                    fontSize: widget.numberFontSize,
+                    color: Colors.black,
+                  ),
+                ),
               ),
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Text(
-                  "2",
-                  style: TextStyle(
-                      fontSize: widget.numberFontSize, color: Colors.black),
-                ),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
                   addNumber(numberAmount: 2);
                 },
+                child: Text(
+                  "2",
+                  style: TextStyle(
+                      fontSize: widget.numberFontSize, color: Colors.black),
+                ),
               ),
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Text("3",
-                    style: TextStyle(
-                        fontSize: widget.numberFontSize, color: Colors.black)),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
                   addNumber(numberAmount: 3);
                 },
+                child: Text("3",
+                    style: TextStyle(
+                        fontSize: widget.numberFontSize, color: Colors.black)),
               ),
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Icon(
-                  Icons.backspace,
-                  size: SizeConst.kHorizontalPadding,
-                  color: Colors.black,
-                ),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
@@ -141,6 +140,11 @@ class _NumberButtonsState extends State<NumberButtons> {
                   }
                   setState(() {});
                 },
+                child: Icon(
+                  Icons.backspace,
+                  size: SizeConst.kHorizontalPadding,
+                  color: Colors.black,
+                ),
               ),
             ],
           ),
@@ -149,33 +153,38 @@ class _NumberButtonsState extends State<NumberButtons> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Text("4",
-                    style: TextStyle(
-                        fontSize: widget.numberFontSize, color: Colors.black)),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
                   addNumber(numberAmount: 4);
                 },
-              ),
-              custamizableElevated(
-                width: screenSize / 4.2,
-                bgColor: Colors.grey.shade200,
-                child: Text("5",
+                child: Text("4",
                     style: TextStyle(
                         fontSize: widget.numberFontSize, color: Colors.black)),
+              ),
+              CustomElevatedButton(
+                width: screenSize / 4.2,
+                bgColor: Colors.grey.shade200,
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
                   addNumber(numberAmount: 5);
                 },
+                child: Text("5",
+                    style: TextStyle(
+                        fontSize: widget.numberFontSize, color: Colors.black)),
               ),
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
+                elevation: 0,
+                height: widget.gridHeight,
+                onPressed: () {
+                  addNumber(numberAmount: 6);
+                },
                 child: Text(
                   "6",
                   style: TextStyle(
@@ -183,22 +192,10 @@ class _NumberButtonsState extends State<NumberButtons> {
                     color: Colors.black,
                   ),
                 ),
-                elevation: 0,
-                height: widget.gridHeight,
-                onPressed: () {
-                  addNumber(numberAmount: 6);
-                },
               ),
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Text(
-                  "000",
-                  style: TextStyle(
-                    fontSize: widget.numberFontSize,
-                    color: Colors.black,
-                  ),
-                ),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
@@ -208,6 +205,13 @@ class _NumberButtonsState extends State<NumberButtons> {
                     setState(() {});
                   }
                 },
+                child: Text(
+                  "000",
+                  style: TextStyle(
+                    fontSize: widget.numberFontSize,
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ],
           ),
@@ -216,23 +220,28 @@ class _NumberButtonsState extends State<NumberButtons> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Text(
-                  "7",
-                  style: TextStyle(
-                      fontSize: widget.numberFontSize, color: Colors.black),
-                ),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
                   addNumber(numberAmount: 7);
                 },
+                child: Text(
+                  "7",
+                  style: TextStyle(
+                      fontSize: widget.numberFontSize, color: Colors.black),
+                ),
               ),
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
+                elevation: 0,
+                height: widget.gridHeight,
+                onPressed: () {
+                  addNumber(numberAmount: 8);
+                },
                 child: Text(
                   "8",
                   style: TextStyle(
@@ -240,30 +249,22 @@ class _NumberButtonsState extends State<NumberButtons> {
                     color: Colors.black,
                   ),
                 ),
-                elevation: 0,
-                height: widget.gridHeight,
-                onPressed: () {
-                  addNumber(numberAmount: 8);
-                },
               ),
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Text("9",
-                    style: TextStyle(
-                        fontSize: widget.numberFontSize, color: Colors.black)),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
                   addNumber(numberAmount: 9);
                 },
-              ),
-              custamizableElevated(
-                width: screenSize / 4.2,
-                bgColor: Colors.grey.shade200,
-                child: Text("00",
+                child: Text("9",
                     style: TextStyle(
                         fontSize: widget.numberFontSize, color: Colors.black)),
+              ),
+              CustomElevatedButton(
+                width: screenSize / 4.2,
+                bgColor: Colors.grey.shade200,
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
@@ -273,6 +274,9 @@ class _NumberButtonsState extends State<NumberButtons> {
                     setState(() {});
                   }
                 },
+                child: Text("00",
+                    style: TextStyle(
+                        fontSize: widget.numberFontSize, color: Colors.black)),
               ),
             ],
           ),
@@ -282,34 +286,34 @@ class _NumberButtonsState extends State<NumberButtons> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: custamizableElevated(
-                  child: Text(
-                    "0",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
+                child: CustomElevatedButton(
                   elevation: 0,
                   bgColor: Colors.grey.shade200,
                   height: widget.gridHeight,
                   onPressed: () {
                     addNumber(numberAmount: 0);
                   },
+                  child: Text(
+                    "0",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: spaceBetweenButtons),
-              custamizableElevated(
+              CustomElevatedButton(
                 width: screenSize / 4.2,
                 bgColor: Colors.grey.shade200,
-                child: Text(
-                  "Enter",
-                  style: TextStyle(color: Colors.black),
-                ),
                 elevation: 0,
                 height: widget.gridHeight,
                 onPressed: () {
                   widget.enterClick();
                 },
+                child: Text(
+                  "Enter",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ],
           ),
@@ -324,7 +328,7 @@ class _NumberButtonsState extends State<NumberButtons> {
   addNumber({required int numberAmount}) {
     if (widget.numberController.text.length <= 15) {
       String barCode = widget.numberController.text;
-      widget.numberController.text = "${barCode}${numberAmount}";
+      widget.numberController.text = "$barCode$numberAmount";
       setState(() {});
     } else {
       showCustomSnackbar(context: context, message: 'Limit length is 15');

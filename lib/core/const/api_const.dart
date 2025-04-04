@@ -1,15 +1,17 @@
+// ignore_for_file: constant_identifier_names
 import 'package:flutter/material.dart';
 
 @immutable
 class ApiConstants {
   // Base URL for different environments
-  static const String BASE_URL_DEV = "http://3.115.85.31/api";
+  static const String BASE_URL_DEV = "http://192.168.100.203:8000/api";
+    // static const String BASE_URL_DEV = "http://3.115.85.31/api";
   // static const String BASE_URL_STAGING = "https://staging-api.example.com";
   // static const String BASE_URL_PROD = "https://api.example.com";
 
   // Auth API paths (endpoints)
-  static const String LOGIN = "${BASE_URL_DEV}/auth/login";
-  static const String LOGOUT = "${BASE_URL_DEV}/auth/logout";
+  static const String LOGIN = "$BASE_URL_DEV/auth/login";
+  static const String LOGOUT = "$BASE_URL_DEV/auth/logout";
 
   // Htone Level Crud
   static const String GET_HTONE_LEVEL = "htone-level";

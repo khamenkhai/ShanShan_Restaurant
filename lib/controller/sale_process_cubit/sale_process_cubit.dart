@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'package:bloc/bloc.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/service/sale_service.dart';
-import 'package:meta/meta.dart';
-
+import 'package:flutter/material.dart';
 
 part 'sale_process_state.dart';
 
@@ -18,11 +16,9 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
   }) async {
     emit(SaleProcessLoadingState());
 
-    print("sale request : ${jsonEncode(saleRequest.toMap())}");
-
     try {
       final response = await saleService.makeSale(
-        requestBody: saleRequest.toMap(),
+        requestBody: saleRequest.toJson(),
       );
 
       return response.fold(
@@ -48,11 +44,9 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
   }) async {
     emit(SaleProcessLoadingState());
 
-    print("sale request : ${jsonEncode(saleRequest.toMap())}");
-
     try {
       final response = await saleService.makeSale(
-        requestBody: saleRequest.toMap(),
+        requestBody: saleRequest.toJson(),
       );
 
       return response.fold(

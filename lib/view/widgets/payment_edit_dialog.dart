@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/size_const.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/view/widgets/payment_button.dart';
 
 class PaymentEditDialog extends StatefulWidget {
@@ -20,8 +20,8 @@ class PaymentEditDialog extends StatefulWidget {
 }
 
 class _PaymentEditDialogState extends State<PaymentEditDialog> {
-  bool KpayPayment = false;
-  bool cashPayment = false;
+  bool paidOnline = false;
+  bool paidCash = false;
   String paymentType = "";
 
   @override
@@ -31,16 +31,16 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
   }
 
   int getCashAmount() {
-    if (cashPayment == true && KpayPayment == false) {
-      return widget.saleModel.grand_total;
+    if (paidCash == true && paidOnline == false) {
+      return widget.saleModel.grandTotal;
     } else {
       return 0;
     }
   }
 
-  int getKpayAmount() {
-    if (cashPayment == false && KpayPayment == true) {
-      return widget.saleModel.grand_total;
+  int getpaidOnline() {
+    if (paidCash == false && paidOnline == true) {
+      return widget.saleModel.grandTotal;
     } else {
       return 0;
     }
@@ -86,12 +86,12 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
                     splashColor: Colors.transparent,
                     onTap: () {
                       setState(() {
-                        cashPayment = !cashPayment;
-                        KpayPayment = false;
+                        paidCash = !paidCash;
+                        paidOnline = false;
                       });
                     },
                     child: PaymentButton(
-                      isSelected: cashPayment,
+                      isSelected: paidCash,
                       title: "Cash",
                     ),
                   ),
@@ -103,12 +103,12 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
                     splashColor: Colors.transparent,
                     onTap: () {
                       setState(() {
-                        KpayPayment = !KpayPayment;
-                        cashPayment = false;
+                        paidOnline = !paidOnline;
+                        paidCash = false;
                       });
                     },
                     child: PaymentButton(
-                      isSelected: KpayPayment,
+                      isSelected: paidOnline,
                       title: "KBZ Pay",
                     ),
                   ),
@@ -119,25 +119,26 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                custamizableElevated(
+                CustomElevatedButton(
                   child: Text("အတည်ပြုရန်"),
                   onPressed: () async {
-                    if (cashPayment && KpayPayment) {
+                    if (paidCash && paidOnline) {
                     } else {
                       await context
                           .read<SaleProcessCubit>()
                           .updateSale(
-                            orderId: widget.saleModel.order_no,
+                            orderId: widget.saleModel.orderNo,
                             saleRequest: widget.saleModel.copyWith(
-                              paid_cash: getCashAmount(),
-                              paid_online: getKpayAmount(),
+                              paidCash: getCashAmount(),
+                              paidOnline: getpaidOnline(),
                             ),
                           )
                           .then(
                         (value) {
+                          if(!context.mounted) return;
                           Navigator.pop(
                             context,
-                            getCashAmount() > getKpayAmount() ? "cash" : "Kpay",
+                            getCashAmount() > getpaidOnline() ? "cash" : "Kpay",
                           );
                         },
                       );
@@ -155,15 +156,15 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
   ///to check the payment type
   void checKpaymentType() {
     if (widget.paymentType == "cash") {
-      cashPayment = true;
+      paidCash = true;
     }
 
     if (widget.paymentType == "Kpay") {
-      KpayPayment = true;
+      paidOnline = true;
     }
     if (widget.paymentType == "Cash / Kpay") {
-      KpayPayment = false;
-      cashPayment = false;
+      paidOnline = false;
+      paidCash = false;
     }
 
     setState(() {});

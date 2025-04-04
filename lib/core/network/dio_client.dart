@@ -84,7 +84,7 @@ class DioClient {
     try {
       final headers = await _getHeaders();
       return await dio.delete<T>(
-        apiUrl,
+        "${ApiConstants.BASE_URL_DEV}/$apiUrl",
         data: requestBody,
         options: Options(headers: headers),
       );

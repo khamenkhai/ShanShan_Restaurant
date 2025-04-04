@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shan_shan/model/response_models/sale_history_model.dart';
+import 'package:shan_shan/models/response_models/sale_history_model.dart';
 
 @immutable
 sealed class SalesHistoryState {}

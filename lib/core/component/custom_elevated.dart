@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 
 class CustomElevatedButton extends StatelessWidget {

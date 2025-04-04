@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/data_models/remark_model.dart';
+import 'package:shan_shan/models/data_models/remark_model.dart';
 import 'package:shan_shan/view/pages/payment/edit_bank.dart';
 import 'package:shan_shan/view/pages/payment/edit_bank_and_cash.dart';
 import 'package:shan_shan/view/pages/payment/edit_cash.dart';
@@ -13,8 +14,8 @@ import 'package:shan_shan/view/widgets/common_widget.dart';
 class EditSaleCheckoutDialog extends StatefulWidget {
   const EditSaleCheckoutDialog({
     super.key,
-    required this.KpayPayment,
-    required this.cashPayment,
+    required this.onlinePayment,
+    required this.paidCash,
     this.width,
     required this.orderNo,
     required this.octopusCount,
@@ -22,8 +23,8 @@ class EditSaleCheckoutDialog extends StatefulWidget {
     required this.date,
     required this.dineInOrParcel,
   });
-  final bool KpayPayment;
-  final bool cashPayment;
+  final bool onlinePayment;
+  final bool paidCash;
   final double? width;
   final String orderNo;
   final int octopusCount;
@@ -40,7 +41,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
   TextEditingController tableController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   RemarkModel? remarkData;
 
@@ -75,7 +76,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
           builder: (context, state) {
             return Container(
               width:
-                  widget.width == null ? screenSize.width / 3.8 : widget.width,
+                  widget.width ?? screenSize.width / 3.8,
               padding: EdgeInsets.all(15),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -196,7 +197,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                         },
                       ),
                       SizedBox(width: 10),
-                      custamizableElevated(
+                      CustomElevatedButton(
                         child: Text("အတည်ပြုရန်"),
                         onPressed: () {
                           String remarkString = "${remarkController.text}";
@@ -208,7 +209,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                     : int.parse(tableController.text),
                               );
                           if (_formKey.currentState!.validate()) {
-                            if (widget.cashPayment && !widget.KpayPayment) {
+                            if (widget.paidCash && !widget.onlinePayment) {
                               redirectTo(
                                 context: context,
                                 //replacement: true,
@@ -227,18 +228,18 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   spicyLevel: cartCubit.state.spicyLevel == null
                                       ? 000
                                       : cartCubit.state.spicyLevel!.id!,
-                                  menu_id: cartCubit.state.menu!.id ?? 0,
-                                  table_number: int.parse(tableController.text),
+                                  menuId: cartCubit.state.menu!.id ,
+                                  tableNumber: int.parse(tableController.text),
                                   dineInOrParcel: isParcel ? 0 : 1,
                                   subTotal: cartCubit.getTotalAmount(),
                                   tax: get5percentage(
                                       cartCubit.getTotalAmount()),
-                                  cashPayment: widget.cashPayment,
+                                  paidCash: widget.paidCash,
                                 ),
                               );
-                            } else if (!widget.cashPayment &&
-                                widget.KpayPayment) {
-                              return redirectTo(
+                            } else if (!widget.paidCash &&
+                                widget.onlinePayment) {
+                               redirectTo(
                                 context: context,
                                 //replacement: true,
                                 form: EditKpayScreen(
@@ -253,8 +254,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   spicyLevel: cartCubit.state.spicyLevel == null
                                       ? 000
                                       : cartCubit.state.spicyLevel!.id!,
-                                  menu_id: cartCubit.state.menu!.id ?? 0,
-                                  table_number: int.parse(tableController.text),
+                                  menuId: cartCubit.state.menu!.id ,
+                                  tableNo: int.parse(tableController.text),
                                   dineInOrParcel: isParcel ? 0 : 1,
                                   subTotal: cartCubit.getTotalAmount(),
                                   tax: get5percentage(
@@ -263,9 +264,9 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   octopusCount: octopusCount,
                                 ),
                               );
-                            } else if (widget.cashPayment &&
-                                widget.KpayPayment) {
-                              return redirectTo(
+                            } else if (widget.paidCash &&
+                                widget.onlinePayment) {
+                               redirectTo(
                                 context: context,
                                 form: EditKpayAndCashScreen(
                                   date: widget.date,
@@ -279,8 +280,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   spicyLevel: cartCubit.state.spicyLevel == null
                                       ? 000
                                       : cartCubit.state.spicyLevel!.id!,
-                                  menu_id: cartCubit.state.menu!.id ?? 0,
-                                  table_number: int.parse(tableController.text),
+                                  menuId: cartCubit.state.menu!.id ,
+                                  tableNumber: int.parse(tableController.text),
                                   dineInOrParcel: isParcel ? 0 : 1,
                                   subTotal: cartCubit.getTotalAmount(),
                                   tax: get5percentage(
@@ -331,7 +332,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
             Icons.remove_circle,
           ),
         ),
-        Container(
+        SizedBox(
           width: 20,
           child: Text(
             "${octopusCount}",
@@ -382,7 +383,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
             Icons.remove_circle,
           ),
         ),
-        Container(
+        SizedBox(
           width: 20,
           child: Text(
             "${prawnCount}",

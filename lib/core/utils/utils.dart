@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:intl/intl.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:sunmi_printer_plus/column_maker.dart';
 import 'package:sunmi_printer_plus/enums.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
@@ -54,8 +54,8 @@ void showSnackBar({required String text, required BuildContext context}) {
 
 ///to get the current language of the app
 String getCurrentLanguageCode(BuildContext context) {
-  Locale _selectedLocale = Localizations.localeOf(context);
-  return _selectedLocale.languageCode;
+  Locale selectedLocale = Localizations.localeOf(context);
+  return selectedLocale.languageCode;
 }
 
 ///calculate the percentage of a number
@@ -152,7 +152,7 @@ Future<bool> printReceipt({
   required int subTotal,
   required int grandTotal,
   required int cashAmount,
-  required int kpayAmount,
+  required int paidOnline,
   required String remark,
   required String menu,
   required String ahtoneLevel,
@@ -165,12 +165,12 @@ Future<bool> printReceipt({
   required bool customerTakevoucher,
 }) async {
   try {
-    print("voucher : Tax amount -> ${taxAmount}");
-    print("voucher : Sub total -> ${subTotal}");
-    print("voucher : Grand total -> ${grandTotal}");
-    print("voucher : Cash amount -> ${cashAmount}");
-    print("voucher : Kpay amount -> ${kpayAmount}");
-    print("voucher : table -> ${tableNumber}");
+    customPrint("voucher : Tax amount -> ${taxAmount}");
+    customPrint("voucher : Sub total -> ${subTotal}");
+    customPrint("voucher : Grand total -> ${grandTotal}");
+    customPrint("voucher : Cash amount -> ${cashAmount}");
+    customPrint("voucher : Kpay amount -> ${paidOnline}");
+    customPrint("voucher : table -> ${tableNumber}");
 
     //final converter = ZawGyiConverter();
 
@@ -333,6 +333,7 @@ Future<bool> printReceipt({
     await SunmiPrinter.lineWrap(1);
     await SunmiPrinter.setCustomFontSize(22);
 
+    // ignore: avoid_function_literals_in_foreach_calls
     products.forEach((e) async {
       // Zawgyi to Unicode
       // String price = formatNumber(e.price);
@@ -362,7 +363,7 @@ Future<bool> printReceipt({
           align: SunmiPrintAlign.LEFT,
         ),
         ColumnMaker(
-          text: e.is_gram ? '${e.qty}g' : '${e.qty}',
+          text: e.isGram ? '${e.qty}g' : '${e.qty}',
           //text: "${e.price}",
           width: 10,
           align: SunmiPrintAlign.LEFT,
@@ -453,7 +454,7 @@ Future<bool> printReceipt({
         align: SunmiPrintAlign.LEFT,
       ),
       ColumnMaker(
-        text: '${kpayAmount} MMK',
+        text: '${paidOnline} MMK',
         width: 20,
         align: SunmiPrintAlign.RIGHT,
       ),
@@ -465,7 +466,7 @@ Future<bool> printReceipt({
     //     align: SunmiPrintAlign.LEFT,
     //   ),
     //   ColumnMaker(
-    //     text: '${kpayAmount} MMK',
+    //     text: '${paidOnline} MMK',
     //     width: 20,
     //     align: SunmiPrintAlign.RIGHT,
     //   ),

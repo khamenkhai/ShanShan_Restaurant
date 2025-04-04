@@ -4,13 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/pages/checkout_form.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/cart_item_widget.dart';
+import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class EditKpayScreen extends StatefulWidget {
@@ -21,9 +23,9 @@ class EditKpayScreen extends StatefulWidget {
     required this.athoneLevel,
     required this.spicyLevel,
     required this.dineInOrParcel,
-    required this.menu_id,
-    required this.table_number,
-    this.remark_id,
+    required this.menuId,
+    required this.tableNo,
+    this.remarkId,
     required this.prawnCount,
     required this.octopusCount,
     required this.remark,
@@ -37,9 +39,9 @@ class EditKpayScreen extends StatefulWidget {
   final int athoneLevel;
   final int spicyLevel;
   final int dineInOrParcel;
-  final int menu_id;
-  final int table_number;
-  final int? remark_id;
+  final int menuId;
+  final int tableNo;
+  final int? remarkId;
   final int prawnCount;
   final int octopusCount;
   final String remark;
@@ -56,7 +58,7 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
 
   TextEditingController cashController = TextEditingController();
 
-  int KpayAmount = 0;
+  int paidOnline = 0;
   int grandTotal = 0;
   int taxAmount = 0;
   bool alreadyPrint = false;
@@ -95,7 +97,7 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
       ),
       body: Container(
         padding: EdgeInsets.only(top: 15),
-        child: _cashPaymentForm(
+        child: _paidCashForm(
           screenSize,
           cartCubit,
         ),
@@ -104,88 +106,85 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
   }
 
   ///cash payment form widget
-  Widget _cashPaymentForm(
-      Size screenSize, EditSaleCartCubit EditSaleCartCubit) {
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// left side of the screen
-          _saleSummaryForm(screenSize, EditSaleCartCubit),
+  Widget _paidCashForm(Size screenSize, EditSaleCartCubit editSaleCartCubit) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// left side of the screen
+        _saleSummaryForm(screenSize, editSaleCartCubit),
 
-          ///right side
-          Container(
-            padding: EdgeInsets.only(
-              top: 15,
-              right: 15,
-              left: 15,
-              bottom: 15,
-            ),
-            margin: EdgeInsets.only(
-              bottom: 15,
-              right: SizeConst.kHorizontalPadding,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(
-                15,
-              ),
-            ),
-            height: 180,
-            width: screenSize.width * 0.5,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "ငွေပေးချေမှုနည်းလမ်း :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Text(
-                          "Kpay",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: ColorConstants.primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      width: 200,
-                      height: 50,
-                      margin: EdgeInsets.only(right: 15),
-                      child: custamizableElevated(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.edit),
-                            SizedBox(width: 7),
-                            Text("အော်ဒါပြင်ရန်"),
-                          ],
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    )
-                  ],
-                );
-              },
+        ///right side
+        Container(
+          padding: EdgeInsets.only(
+            top: 15,
+            right: 15,
+            left: 15,
+            bottom: 15,
+          ),
+          margin: EdgeInsets.only(
+            bottom: 15,
+            right: SizeConst.kHorizontalPadding,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(
+              15,
             ),
           ),
-          SizedBox(width: 5),
-        ],
-      ),
+          height: 180,
+          width: screenSize.width * 0.5,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "ငွေပေးချေမှုနည်းလမ်း :",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Text(
+                        "Kpay",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: ColorConstants.primaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    width: 200,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 15),
+                    child: CustomElevatedButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 7),
+                          Text("အော်ဒါပြင်ရန်"),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+        SizedBox(width: 5),
+      ],
     );
   }
 
@@ -221,18 +220,15 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
                     ),
                   ),
 
-                  Container(
+                  SizedBox(
                     height: screenSize.height * 0.45,
                     child: SingleChildScrollView(
-                      
                       child: Column(
                         children: state.items
                             .map(
-                              (e) => cartItemWidget(
+                              (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                                screenSize: screenSize,
-                                context: context,
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
@@ -287,10 +283,10 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
     return BlocBuilder<SaleProcessCubit, SaleProcessState>(
       builder: (context, state) {
         if (state is SaleProcessLoadingState) {
-          return loadingWidget();
+          return LoadingWidget();
         } else {
-          return custamizableElevated(
-            enabled: isCheckoutEnabled(),
+          return CustomElevatedButton(
+            isEnabled: isCheckoutEnabled(),
             width: double.infinity,
             elevation: 0,
             height: 70,
@@ -306,7 +302,7 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
                 taxAmount = 0;
               }
 
-              KpayAmount = grandTotal;
+              paidOnline = grandTotal;
 
               if (true) {
                 ///check conditions that if the curret sale process items is from pending orders or not
@@ -315,34 +311,34 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
                   octopusCount: widget.octopusCount,
                   prawnCount: widget.prawnCount,
                   remark: widget.remark,
-                  ahtone_level_id:
+                  ahtoneLevelId:
                       widget.athoneLevel == 000 ? null : widget.athoneLevel,
-                  spicy_level_id:
+                  spicyLevelId:
                       widget.spicyLevel == 000 ? null : widget.spicyLevel,
-                  dine_in_or_percel: widget.dineInOrParcel,
-                  grand_total: grandTotal,
-                  menu_id: widget.menu_id,
-                  order_no: "${widget.orderNo}",
-                  paid_cash: 0,
+                  dineInOrParcel: widget.dineInOrParcel,
+                  grandTotal: grandTotal,
+                  menuId: widget.menuId,
+                  orderNo: "${widget.orderNo}",
+                  paidCash: 0,
                   products: context
                       .read<EditSaleCartCubit>()
                       .state
                       .items
                       .map(
                         (e) => Product(
-                          product_id: e.id,
+                          productId: e.id,
                           qty: e.qty,
                           price: e.price,
-                          total_price: e.totalPrice,
+                          totalPrice: e.totalPrice,
                         ),
                       )
                       .toList(),
-                  table_number: widget.table_number,
+                  tableNumber: widget.tableNo,
                   refund: 0,
-                  sub_total: widget.subTotal,
+                  subTotal: widget.subTotal,
                   tax: taxAmount,
                   discount: discountAmount,
-                  paid_online: KpayAmount,
+                  paidOnline: paidOnline,
                 );
                 await context
                     .read<SaleProcessCubit>()
@@ -350,6 +346,7 @@ class _EditKpayScreenState extends State<EditKpayScreen> {
                     .then(
                   (value) {
                     if (value) {
+                      if(!context.mounted) return;
                       redirectTo(
                         context: context,
                         form: CheckOutForm(

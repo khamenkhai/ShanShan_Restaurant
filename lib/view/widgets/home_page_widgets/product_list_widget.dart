@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shan_shan/model/response_models/product_model.dart';
+import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/product_row_widget.dart';
 
 ///product list widget (display with scrollbar)

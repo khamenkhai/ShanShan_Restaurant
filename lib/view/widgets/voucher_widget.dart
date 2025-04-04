@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 
 class VoucherWidget extends StatelessWidget {
   const VoucherWidget({
@@ -26,7 +26,7 @@ class VoucherWidget extends StatelessWidget {
     required this.menu,
     this.ahtoneLevel,
     this.spicyLevel,
-    required this.table_number,
+    required this.tableNumber,
     required this.showEditButton,
     required this.paymentType,
   });
@@ -47,7 +47,7 @@ class VoucherWidget extends StatelessWidget {
   final String menu;
   final AhtoneLevelModel? ahtoneLevel;
   final SpicyLevelModel? spicyLevel;
-  final int table_number;
+  final int tableNumber;
   final bool showEditButton;
   final String paymentType;
 
@@ -99,7 +99,7 @@ class VoucherWidget extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    "${table_number}",
+                    "$tableNumber",
                     style: TextStyle(fontSize: 16 - 2.5),
                   ),
                 ),
@@ -129,7 +129,7 @@ class VoucherWidget extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    "${orderNumber}",
+                    "$orderNumber",
                     style: TextStyle(fontSize: 16 - 2.5),
                   ),
                 ),
@@ -164,7 +164,7 @@ class VoucherWidget extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topRight,
                   child: Text(
-                    "${date}",
+                    "$date",
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       fontSize: 16 - 2.5,
@@ -176,7 +176,7 @@ class VoucherWidget extends StatelessWidget {
           ),
           SizedBox(height: 25),
           Text(
-            "${menu}",
+            "$menu",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 5),
@@ -185,7 +185,7 @@ class VoucherWidget extends StatelessWidget {
             children: [
               Text(dineInOrParcel == 1 ? "ထိုင်စား" : "ပါဆယ်"),
               Text(
-                "Remark : ${remark} ",
+                "Remark : $remark ",
                 textAlign: TextAlign.right,
               ),
             ],
@@ -357,10 +357,10 @@ class VoucherWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   prawnAmount > 0
-                      ? Text("ပုဇွန် : ${prawnAmount} , ")
+                      ? Text("ပုဇွန် : $prawnAmount , ")
                       : Container(),
                   octopusCount > 0
-                      ? Text("ရေဘဝဲ : ${octopusCount}")
+                      ? Text("ရေဘဝဲ : $octopusCount")
                       : Container(),
                 ],
               ),
@@ -526,7 +526,7 @@ class VoucherWidget extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-              e.is_gram ? "${e.qty} gram" : "${e.qty}",
+              e.isGram ? "${e.qty} gram" : "${e.qty}",
               textAlign: TextAlign.right,
             ),
           ),
@@ -569,7 +569,7 @@ class VoucherWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  e.is_gram
+                  e.isGram
                       ? "${e.qty} gram x  ${formatNumber(e.price)} MMK "
                       : "${e.qty} qty x ${formatNumber(e.price)} MMK",
                 )

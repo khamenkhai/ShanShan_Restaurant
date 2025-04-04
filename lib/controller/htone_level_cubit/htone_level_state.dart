@@ -1,5 +1,5 @@
 
-import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
+import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 
 sealed class AhtoneLevelCrudState {}
 
@@ -8,8 +8,8 @@ final class AhtoneLevelCrudInitial extends AhtoneLevelCrudState {}
 final class AhtoneLevelLoading extends AhtoneLevelCrudState {}
 
 final class AhtoneLevelLoaded extends AhtoneLevelCrudState {
-  final List<AhtoneLevelModel> ahtone_level;
-  AhtoneLevelLoaded({required this.ahtone_level});
+  final List<AhtoneLevelModel> htoneLevels;
+  AhtoneLevelLoaded({required this.htoneLevels});
 }
 
 final class AhtoneLevelCreated extends AhtoneLevelCrudState {}

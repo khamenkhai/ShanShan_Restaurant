@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/pages/checkout_form.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/cart_item_widget.dart';
+import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class KpayScreen extends StatefulWidget {
@@ -20,8 +22,8 @@ class KpayScreen extends StatefulWidget {
     required this.athoneLevel,
     required this.spicyLevel,
     required this.dineInOrParcel,
-    required this.menu_id,
-    required this.table_number,
+    required this.menuId,
+    required this.tableNumber,
     required this.prawnCount,
     required this.octopusCount,
     required this.remark,
@@ -33,8 +35,8 @@ class KpayScreen extends StatefulWidget {
   final int athoneLevel;
   final int spicyLevel;
   final int dineInOrParcel;
-  final int menu_id;
-  final int table_number;
+  final int menuId;
+  final int tableNumber;
   final int prawnCount;
   final int octopusCount;
   final String remark;
@@ -47,7 +49,7 @@ class KpayScreen extends StatefulWidget {
 class _KpayScreenState extends State<KpayScreen> {
   TextEditingController cashController = TextEditingController();
 
-  int kpayAmount = 0;
+  int paidOnline = 0;
   int grandTotal = 0;
   int taxAmount = 0;
   int discountAmount = 0;
@@ -85,7 +87,7 @@ class _KpayScreenState extends State<KpayScreen> {
         title: Text("Kpay ဖြင့်ပေးချေရန်"),
       ),
       body: InternetCheckWidget(
-        child: _cashPaymentForm(
+        child: _paidCashForm(
           screenSize,
           cartCubit,
         ),
@@ -95,7 +97,7 @@ class _KpayScreenState extends State<KpayScreen> {
   }
 
   ///cash payment form widget
-  Widget _cashPaymentForm(Size screenSize, CartCubit cartCubit) {
+  Widget _paidCashForm(Size screenSize, CartCubit cartCubit) {
     return Container(
       padding: EdgeInsets.only(top: 5),
       child: Row(
@@ -161,7 +163,7 @@ class _KpayScreenState extends State<KpayScreen> {
                 width: 200,
                 height: 50,
                 margin: EdgeInsets.only(right: 15),
-                child: custamizableElevated(
+                child: CustomElevatedButton(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -212,18 +214,15 @@ class _KpayScreenState extends State<KpayScreen> {
                     ),
                   ),
 
-                  Container(
+                  SizedBox(
                     height: screenSize.height * 0.45,
                     child: SingleChildScrollView(
-                      
                       child: Column(
                         children: state.items
                             .map(
-                              (e) => cartItemWidget(
+                              (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                                screenSize: screenSize,
-                                context: context,
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
@@ -278,10 +277,10 @@ class _KpayScreenState extends State<KpayScreen> {
     return BlocBuilder<SaleProcessCubit, SaleProcessState>(
       builder: (context, state) {
         if (state is SaleProcessLoadingState) {
-          return loadingWidget();
+          return LoadingWidget();
         } else {
-          return custamizableElevated(
-            enabled: true,
+          return CustomElevatedButton(
+            isEnabled: true,
             width: double.infinity,
             elevation: 0,
             height: 70,
@@ -299,7 +298,7 @@ class _KpayScreenState extends State<KpayScreen> {
                 discountAmount = widget.tax;
               }
 
-              kpayAmount = grandTotal;
+              paidOnline = grandTotal;
 
               await checkout(cartCubit: cartCubit, cartItems: cartItems);
             },
@@ -379,32 +378,32 @@ class _KpayScreenState extends State<KpayScreen> {
       octopusCount: widget.octopusCount,
       prawnCount: widget.prawnCount,
       remark: widget.remark,
-      ahtone_level_id: widget.athoneLevel == 000 ? null : widget.athoneLevel,
-      spicy_level_id: widget.spicyLevel == 000 ? null : widget.spicyLevel,
-      dine_in_or_percel: widget.dineInOrParcel,
-      grand_total: grandTotal,
-      menu_id: widget.menu_id,
-      order_no: "SS-${generateRandomId(6)}",
-      paid_cash: 0,
+      ahtoneLevelId: widget.athoneLevel == 000 ? null : widget.athoneLevel,
+      spicyLevelId: widget.spicyLevel == 000 ? null : widget.spicyLevel,
+      dineInOrParcel: widget.dineInOrParcel,
+      grandTotal: grandTotal,
+      menuId: widget.menuId,
+      orderNo: "SS-${generateRandomId(6)}",
+      paidCash: 0,
       products: context
           .read<CartCubit>()
           .state
           .items
           .map(
             (e) => Product(
-              product_id: e.id,
+              productId: e.id,
               qty: e.qty,
               price: e.price,
-              total_price: e.totalPrice,
+              totalPrice: e.totalPrice,
             ),
           )
           .toList(),
-      table_number: widget.table_number,
+      tableNumber: widget.tableNumber,
       refund: 0,
-      sub_total: widget.subTotal,
+      subTotal: widget.subTotal,
       tax: taxAmount,
       discount: discountAmount,
-      paid_online: kpayAmount,
+      paidOnline: paidOnline,
     );
     await context
         .read<SaleProcessCubit>()
@@ -412,6 +411,7 @@ class _KpayScreenState extends State<KpayScreen> {
         .then(
       (value) {
         if (value) {
+          if(!mounted) return;
           redirectTo(
             context: context,
             form: CheckOutForm(
@@ -433,6 +433,7 @@ class _KpayScreenState extends State<KpayScreen> {
             replacement: true,
           );
         } else {
+          if(!mounted) return;
           showCustomSnackbar(context: context, message: "Checkout failed!");
         }
       },

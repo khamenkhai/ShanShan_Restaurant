@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/core/const/const_export.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/response_models/menu_model.dart';
-import 'package:shan_shan/model/response_models/product_model.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/taseLevelDialog.dart';
+import 'package:shan_shan/core/utils/utils.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/menu_model.dart';
+import 'package:shan_shan/models/response_models/product_model.dart';
+import 'package:shan_shan/view/widgets/home_page_widgets/taste_level_dialog.dart';
 
 ///menu row widget
 Widget menuRowWidget({
@@ -22,9 +23,9 @@ Widget menuRowWidget({
           // ignore: deprecated_member_use
           highlightColor: ColorConstants.primaryColor.withOpacity(0.3),
           onTap: () async {
-            if (menu.is_fish == true) {
+            if (menu.isFish == true) {
               context.read<CartCubit>().addMenu(menu: menu);
-        
+
               context.read<CartCubit>().addSpicy(
                     athoneLevel: null,
                     spicyLevel: null,
@@ -38,18 +39,16 @@ Widget menuRowWidget({
               ).then(
                 (value) {
                   if (value != null) {
+                    if (!context.mounted) return;
                     context.read<CartCubit>().addMenu(menu: menu);
                     context.read<CartCubit>().addSpicy(
                           athoneLevel: value["athoneLevel"],
                           spicyLevel: value["spicyLevel"],
                         );
-        
-                    print("${value["athoneLevel"].id}");
-                    print("${value["athoneLevel"].id}");
-        
-                    
+
                     if (state is ProductsLoadedState) {
-                      checkDefaultProduct(products: state.products,context: context);
+                      checkDefaultProduct(
+                          products: state.products, context: context);
                     }
                   }
                 },
@@ -57,7 +56,8 @@ Widget menuRowWidget({
             }
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+            padding:
+                EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
             height: 50,
             width: double.infinity,
             margin: EdgeInsets.only(bottom: 30),
@@ -80,12 +80,14 @@ Widget menuRowWidget({
 }
 
 ///to check the default product (eg. hinyi/anit)
-CartItem? checkDefaultProduct(
-    {required List<ProductModel> products, required BuildContext context}) {
+CartItem? checkDefaultProduct({
+  required List<ProductModel> products,
+  required BuildContext context,
+}) {
   try {
     ProductModel? defaultProduct =
-        products.where((element) => element.is_default == true).first;
-    print("default product : ${defaultProduct}");
+        products.where((element) => element.isDefault == true).first;
+
     CartItem? defaultItem;
 
     // ignore: unnecessary_null_comparison
@@ -96,7 +98,7 @@ CartItem? checkDefaultProduct(
         price: defaultProduct.price ?? 0,
         qty: 1,
         totalPrice: defaultProduct.price ?? 0,
-        is_gram: defaultProduct.is_gram ?? false,
+        isGram: defaultProduct.isGram ?? false,
       );
 
       context
@@ -106,7 +108,7 @@ CartItem? checkDefaultProduct(
 
     return defaultItem;
   } catch (e) {
-    print("error : ${e}");
+    customPrint("error : ${e}");
     return null;
   }
 }

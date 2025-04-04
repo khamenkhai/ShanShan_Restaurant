@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
@@ -63,7 +64,7 @@ class _CartItemWeightControlDialogState
                 },
               ),
               SizedBox(width: 10),
-              custamizableElevated(
+              CustomElevatedButton(
                 elevation: 0,
                 child: Text("အပ်ဒိတ်လုပ်ရန်"),
                 onPressed: () {
@@ -115,7 +116,7 @@ class _CartItemWeightControlDialogState
             ),
           ),
           SizedBox(width: 30),
-          Container(
+          SizedBox(
             width: 100,
             child: TextField(
               controller: gram,

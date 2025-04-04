@@ -4,27 +4,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
+import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/request_models/sale_request_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/request_models/sale_request_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/pages/checkout_form.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/cart_item_widget.dart';
+import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 // ignore: must_be_immutable
 class CashScreen extends StatefulWidget {
-  CashScreen({
+  const CashScreen({
     super.key,
     required this.subTotal,
     required this.tax,
-    required this.cashPayment,
+    required this.paidCash,
     required this.athoneLevel,
     required this.spicyLevel,
     required this.dineInOrParcel,
-    required this.menu_id,
-    required this.table_number,
+    required this.menuId,
+    required this.tableNo,
     required this.prawnCount,
     required this.octopusCount,
     required this.remark,
@@ -33,14 +35,14 @@ class CashScreen extends StatefulWidget {
 
   final int subTotal;
   final int tax;
-  final bool cashPayment;
+  final bool paidCash;
   final String remark;
   final int athoneLevel;
   final int spicyLevel;
   final int dineInOrParcel;
-  final int menu_id;
+  final int menuId;
   final String menu;
-  final int table_number;
+  final int tableNo;
   final int prawnCount;
   final int octopusCount;
 
@@ -91,14 +93,14 @@ class _CashScreenState extends State<CashScreen> {
         title: Text("ငွေသားဖြင့်ပေးချေရန်"),
       ),
       body: InternetCheckWidget(
-        child: _cashPaymentForm(screenSize, cartCubit),
+        child: _paidCashForm(screenSize, cartCubit),
         onRefresh: () {},
       ),
     );
   }
 
   ///cash payment form widget
-  Widget _cashPaymentForm(Size screenSize, CartCubit cartCubit) {
+  Widget _paidCashForm(Size screenSize, CartCubit cartCubit) {
     return Container(
       padding: EdgeInsets.only(top: 5),
       child: Row(
@@ -162,7 +164,7 @@ class _CashScreenState extends State<CashScreen> {
                 width: 200,
                 height: 50,
                 margin: EdgeInsets.only(right: 15),
-                child: custamizableElevated(
+                child: CustomElevatedButton(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -215,18 +217,17 @@ class _CashScreenState extends State<CashScreen> {
                     ),
                   ),
 
-                  Container(
+                  SizedBox(
                     height: screenSize.height * 0.45,
                     child: SingleChildScrollView(
                       
                       child: Column(
                         children: state.items
                             .map(
-                              (e) => cartItemWidget(
+                              (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                                screenSize: screenSize,
-                                context: context,
+                              
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
@@ -281,10 +282,10 @@ class _CashScreenState extends State<CashScreen> {
     return BlocBuilder<SaleProcessCubit, SaleProcessState>(
       builder: (context, state) {
         if (state is SaleProcessLoadingState) {
-          return loadingWidget();
+          return LoadingWidget();
         } else {
-          return custamizableElevated(
-            enabled: true,
+          return CustomElevatedButton(
+            isEnabled: true,
             width: double.infinity,
             elevation: 0,
             height: 70,
@@ -347,32 +348,32 @@ String generateRandomId(int length) {
         octopusCount: widget.octopusCount,
         prawnCount: widget.prawnCount,
         remark: widget.remark,
-        ahtone_level_id: widget.athoneLevel == 000 ? null : widget.athoneLevel,
-        spicy_level_id: widget.spicyLevel == 000 ? null : widget.spicyLevel,
-        dine_in_or_percel: widget.dineInOrParcel,
-        grand_total: grandTotal,
-        menu_id: widget.menu_id,
-        order_no: "SS-${generateRandomId(6)}",
-        paid_cash: grandTotal,
+        ahtoneLevelId: widget.athoneLevel == 000 ? null : widget.athoneLevel,
+        spicyLevelId: widget.spicyLevel == 000 ? null : widget.spicyLevel,
+        dineInOrParcel: widget.dineInOrParcel,
+        grandTotal: grandTotal,
+        menuId: widget.menuId,
+        orderNo: "SS-${generateRandomId(6)}",
+        paidCash: grandTotal,
         products: context
             .read<CartCubit>()
             .state
             .items
             .map(
               (e) => Product(
-                product_id: e.id,
+                productId: e.id,
                 qty: e.qty,
                 price: e.price,
-                total_price: e.totalPrice,
+                totalPrice: e.totalPrice,
               ),
             )
             .toList(),
-        table_number: widget.table_number,
+        tableNumber: widget.tableNo,
         refund: 0,
-        sub_total: subTotal,
+        subTotal: subTotal,
         tax: taxAmount,
         discount: discountAmount,
-        paid_online: 0,
+        paidOnline: 0,
       );
 
       await context
@@ -381,6 +382,7 @@ String generateRandomId(int length) {
           .then(
         (value) {
           if (value) {
+            if(!mounted) return;
             redirectTo(
               context: context,
               form: CheckOutForm(
@@ -402,6 +404,7 @@ String generateRandomId(int length) {
               replacement: true,
             );
           } else {
+            if(!mounted) return;
             showCustomSnackbar(message: "Checkout Failed!", context: context);
           }
         },
@@ -475,7 +478,7 @@ String generateRandomId(int length) {
   /// the process when clicking the enter button of the number buttons
   void enterClickProcess() {
     cashAmount =
-        cashController.text.length > 0 ? int.parse(cashController.text) : 0;
+        cashController.text.isNotEmpty ? int.parse(cashController.text) : 0;
 
     if (cashAmount > grandTotal) {
       refundAmount = cashAmount - grandTotal;
@@ -495,15 +498,15 @@ String generateRandomId(int length) {
 
   ///check process that is customer is going to take voucher or not
   void checkProcess() {
-    int grand_total = 0;
+    int grandTotal = 0;
     if (customerTakevoucher) {
-      grand_total = widget.subTotal + widget.tax;
+      grandTotal = widget.subTotal + widget.tax;
     } else {
-      grand_total = widget.subTotal;
+      grandTotal = widget.subTotal;
     }
-    if (cashAmount > grand_total) {
-      refundAmount = cashAmount - grand_total;
-    } else if (cashAmount < grand_total) {}
+    if (cashAmount > grandTotal) {
+      refundAmount = cashAmount - grandTotal;
+    } else if (cashAmount < grandTotal) {}
 
     cashController.text = "";
 

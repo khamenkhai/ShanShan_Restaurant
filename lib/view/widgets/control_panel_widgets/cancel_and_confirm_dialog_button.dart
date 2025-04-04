@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class CancelAndConfirmDialogButton extends StatelessWidget {
   const CancelAndConfirmDialogButton({super.key, required this.onConfirm});
-  final Future Function() onConfirm;
+  final VoidCallback onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +20,10 @@ class CancelAndConfirmDialogButton extends StatelessWidget {
           },
         ),
         SizedBox(width: 10),
-        custamizableElevated(
+        CustomElevatedButton(
           bgColor: ColorConstants.primaryColor,
+          onPressed: onConfirm,
           child: Text("အတည်ပြုရန်"),
-          onPressed: () async {
-            await onConfirm();
-            print("testing bbb");
-          },
         ),
       ],
     );

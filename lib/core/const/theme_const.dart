@@ -11,7 +11,7 @@ class ThemeConstants {
   );
 
   static const TextStyle _appBarTitleTextStyle = TextStyle(
-    color: Colors.white,
+    color: Colors.black,
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
@@ -59,6 +59,7 @@ class ThemeConstants {
       iconTheme: _iconTheme,
       dialogTheme: const DialogTheme(backgroundColor: Colors.white),
       bottomNavigationBarTheme: _bottomNavigationBarTheme,
+      
     );
   }
 

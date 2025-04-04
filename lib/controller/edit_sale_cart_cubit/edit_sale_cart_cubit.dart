@@ -1,10 +1,10 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/model/data_models/ahtone_level_model.dart';
-import 'package:shan_shan/model/response_models/cart_item_model.dart';
-import 'package:shan_shan/model/response_models/menu_model.dart';
-import 'package:shan_shan/model/data_models/spicy_level.dart';
+import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
+import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/menu_model.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 
 class EditSaleCartCubit extends Cubit<EditSaleCartState> {
   EditSaleCartCubit()
@@ -306,10 +306,9 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
   ///to get total amount of cart items
   int getTotalAmount() {
     int totalAmount = 0;
-    state.items.forEach((element) {
-      //totalAmount += element.qty * num.parse(element.price);
+    for (var element in state.items) {
       totalAmount += element.totalPrice;
-    });
+    }
 
     return totalAmount;
   }

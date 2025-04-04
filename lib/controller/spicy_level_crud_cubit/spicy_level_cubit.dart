@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
 import 'package:shan_shan/service/spicy_level_service.dart';
 
@@ -79,7 +79,7 @@ class SpicyLevelCubit extends Cubit<SpicyLevelCrudState> {
 
     result.fold(
       (failure) => emit(SpicyLevelError(message: failure)),
-      (levels) => emit(SpicyLevelLoaded(spicy_level: levels)),
+      (levels) => emit(SpicyLevelLoaded(spicyLevels: levels)),
     );
   }
 }

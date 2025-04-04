@@ -1,8 +1,8 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/core/const/api_const.dart';
-import 'package:shan_shan/model/data_models/sale_report_model.dart';
+import 'package:shan_shan/models/data_models/sale_report_model.dart';
 import 'package:shan_shan/service/report_service.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 part 'sale_report_state.dart';
 
 class SaleReportCubit extends Cubit<SaleReportState> {

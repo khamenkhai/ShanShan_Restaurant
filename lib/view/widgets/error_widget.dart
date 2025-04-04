@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 
 // ignore: must_be_immutable
 class CustomErrorWidget extends StatelessWidget {
-  CustomErrorWidget({required this.onPressed});
+  CustomErrorWidget({super.key, required this.onPressed});
 
   Function() onPressed;
 
@@ -22,10 +22,10 @@ class CustomErrorWidget extends StatelessWidget {
         Text("Something went wrong"),
         SizedBox(height: 15),
         Center(
-          child: custamizableElevated(
+          child: CustomElevatedButton(
             bgColor: ColorConstants.secondaryColor,
-            child: Text("Try Again"),
             onPressed: onPressed,
+            child: Text("Try Again"),
           ),
         ),
         SizedBox(height: 60),
