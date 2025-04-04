@@ -1,37 +1,51 @@
 class SaleReportModel {
-  final int? total_sales;
-  final int? total_paid_cash;
-  final int? total_paid_online;
-  final String? daily_date;
-  final String? current_month;
-  final String? past_month;
-  final String? start_of_week;
-  final String? end_of_week;
-  final int? total_Grands;
+  final int totalSales;
+  final int totalPaidCash;
+  final int totalPaidOnline;
+  final int totalGrands;
+  final String dailyDate;
+  final String currentMonth;
+  final String pastMonth;
+  final String startOfWeek;
+  final String endOfWeek;
 
-  SaleReportModel({
-    this.total_paid_cash,
-    this.total_paid_online,
-    this.total_sales,
-    this.daily_date,
-    this.total_Grands,
-    this.current_month,
-    this.past_month,
-    this.start_of_week,
-    this.end_of_week,
+  const SaleReportModel({
+    this.totalSales = 0,
+    this.totalPaidCash = 0,
+    this.totalPaidOnline = 0,
+    this.totalGrands = 0,
+    this.dailyDate = "",
+    this.currentMonth = "",
+    this.pastMonth = "",
+    this.startOfWeek = "",
+    this.endOfWeek = "",
   });
 
   factory SaleReportModel.fromMap(Map<String, dynamic> map) {
     return SaleReportModel(
-      total_sales: map["total_sales"] ?? 0,
-      total_paid_cash: map["total_paid_cash"] ?? 0,
-      total_paid_online: map["total_paid_online"] ?? 0,
-      daily_date: map["daily_date"] ?? "",
-      total_Grands: map["total_Grands"] ?? 0,
-      current_month: map["current_month"] ?? "",
-      past_month: map["past_month"] ?? "",
-      end_of_week: map["end_of_week"] ?? "",
-      start_of_week: map["start_of_week"] ?? "",
+      totalSales: map["total_sales"] as int? ?? 0,
+      totalPaidCash: map["total_paid_cash"] as int? ?? 0,
+      totalPaidOnline: map["total_paid_online"] as int? ?? 0,
+      totalGrands: map["total_Grands"] as int? ?? 0,
+      dailyDate: map["daily_date"] as String? ?? "",
+      currentMonth: map["current_month"] as String? ?? "",
+      pastMonth: map["past_month"] as String? ?? "",
+      startOfWeek: map["start_of_week"] as String? ?? "",
+      endOfWeek: map["end_of_week"] as String? ?? "",
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "total_sales": totalSales,
+      "total_paid_cash": totalPaidCash,
+      "total_paid_online": totalPaidOnline,
+      "total_Grands": totalGrands,
+      "daily_date": dailyDate,
+      "current_month": currentMonth,
+      "past_month": pastMonth,
+      "start_of_week": startOfWeek,
+      "end_of_week": endOfWeek,
+    };
   }
 }

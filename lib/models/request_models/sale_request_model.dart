@@ -1,4 +1,4 @@
-class SaleRequestModel {
+class SaleModel {
   final int menuId;
   final int? spicyLevelId;
   final int? ahtoneLevelId;
@@ -9,15 +9,15 @@ class SaleRequestModel {
   final int tax;
   final int discount;
   final int grandTotal;
-  final int paidCash;
-  final int paidOnline;
+  int paidCash;
+  int paidOnline;
   final int refund;
   final List<Product> products;
   final String remark;
   final int prawnCount;
   final int octopusCount;
 
-  const SaleRequestModel({
+  SaleModel({
     required this.menuId,
     required this.spicyLevelId,
     required this.ahtoneLevelId,
@@ -37,12 +37,12 @@ class SaleRequestModel {
     required this.prawnCount,
   });
 
-  factory SaleRequestModel.fromJson(Map<String, dynamic> json) => SaleRequestModel(
+  factory SaleModel.fromJson(Map<String, dynamic> json) => SaleModel(
         menuId: json['menu_id'],
         spicyLevelId: json['spicy_level_id'],
         ahtoneLevelId: json['ahtone_level_id'],
         remark: json['remark'],
-        tableNumber: json['table_number'],
+        tableNumber: json['tableNo'],
         orderNo: json['order_no'],
         dineInOrParcel: json['dine_in_or_percel'],
         subTotal: json['sub_total'],
@@ -59,7 +59,7 @@ class SaleRequestModel {
             .toList(),
       );
 
-  SaleRequestModel copyWith({
+  SaleModel copyWith({
     int? menuId,
     int? spicyLevelId,
     int? ahtoneLevelId,
@@ -78,7 +78,7 @@ class SaleRequestModel {
     int? octopusCount,
     int? prawnCount,
   }) {
-    return SaleRequestModel(
+    return SaleModel(
       menuId: menuId ?? this.menuId,
       spicyLevelId: spicyLevelId ?? this.spicyLevelId,
       ahtoneLevelId: ahtoneLevelId ?? this.ahtoneLevelId,
@@ -103,7 +103,7 @@ class SaleRequestModel {
         'menu_id': menuId,
         'spicy_level_id': spicyLevelId,
         'ahtone_level_id': ahtoneLevelId,
-        'table_number': tableNumber,
+        'tableNo': tableNumber,
         'order_no': orderNo,
         'dine_in_or_percel': dineInOrParcel,
         'sub_total': subTotal,

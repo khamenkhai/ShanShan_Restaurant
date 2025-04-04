@@ -87,7 +87,7 @@ class _ProductWeightOrDetailControlState
     if (widget.isEditState) {
       context.read<EditSaleCartCubit>().addToCartByGram(
             item: CartItem(
-                is_gram: widget.produt.isGram ?? false,
+                isGram: widget.produt.isGram ?? false,
                 name: "${widget.produt.name?.replaceAll(',', '')}",
                 id: widget.produt.id!,
                 qty: int.parse(gram.text),
@@ -98,7 +98,7 @@ class _ProductWeightOrDetailControlState
     } else {
       context.read<CartCubit>().addToCartByGram(
             item: CartItem(
-              is_gram: widget.produt.isGram ?? false,
+              isGram: widget.produt.isGram ?? false,
               name: "${widget.produt.name?.replaceAll(',', '')}",
               id: widget.produt.id!,
               qty: int.parse(gram.text),
@@ -218,7 +218,7 @@ class _ProductWeightOrDetailControlState
     if (widget.isEditState) {
       context.read<EditSaleCartCubit>().addToCartByQuantity(
             item: CartItem(
-              is_gram: widget.produt.isGram ?? false,
+              isGram: widget.produt.isGram ?? false,
               name: "${widget.produt.name?.replaceAll(',', '')}",
               id: widget.produt.id!,
               qty: 1,
@@ -230,7 +230,7 @@ class _ProductWeightOrDetailControlState
     } else {
       context.read<CartCubit>().addToCartByQuantity(
             item: CartItem(
-              is_gram: widget.produt.isGram ?? false,
+              isGram: widget.produt.isGram ?? false,
               name: "${widget.produt.name?.replaceAll(',', '')}",
               id: widget.produt.id!,
               qty: 1,

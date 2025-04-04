@@ -13,7 +13,7 @@ class RemarkModel {
     );
   }
 
-  toMap() {
+  toJson() {
     return {
       "id": id,
       "name": name,

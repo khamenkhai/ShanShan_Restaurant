@@ -42,7 +42,7 @@ class AhtoneLevelService {
   }) async {
     return _handleRequest(
       () => dioClient.postRequest(
-        apiUrl: ApiConstants.Edit_HTONE_LEVEL + "/${id}",
+        apiUrl: "${ApiConstants.Edit_HTONE_LEVEL}/${id}",
         requestBody: requestBody,
       ),
     );

@@ -21,10 +21,10 @@ import 'package:shan_shan/view/home/widget/cart_item_list_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/checkout_dialog.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/menu_box_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/total_and_tax_widget.dart';
-import 'package:shan_shan/view/widgets/table_number_dialog.dart';
 import 'package:shan_shan/view/home/widget/home_drawer.dart';
 import 'package:shan_shan/view/widgets/payment_button.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
+import 'package:shan_shan/view/widgets/table_number_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -358,7 +358,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (productNames.contains("ငါး")) {
       cartCubit.addMenu(
         menu: MenuModel(
-          is_fish: true,
+          isFish: true,
           id: 3,
           name: "ငါးကင်",
         ),

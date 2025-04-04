@@ -188,6 +188,7 @@ class HomeDrawer extends StatelessWidget {
     bool logoutStatus =
         await context.read<AuthCubit>().logout();
     if (logoutStatus) {
+       if(!context.mounted) return;
       context.read<CartCubit>().clearOrderr();
       context.read<EditSaleCartCubit>().clearOrderr();
     }

@@ -152,7 +152,7 @@ Future<bool> printReceipt({
   required int subTotal,
   required int grandTotal,
   required int cashAmount,
-  required int kpayAmount,
+  required int paidOnline,
   required String remark,
   required String menu,
   required String ahtoneLevel,
@@ -169,7 +169,7 @@ Future<bool> printReceipt({
     customPrint("voucher : Sub total -> ${subTotal}");
     customPrint("voucher : Grand total -> ${grandTotal}");
     customPrint("voucher : Cash amount -> ${cashAmount}");
-    customPrint("voucher : Kpay amount -> ${kpayAmount}");
+    customPrint("voucher : Kpay amount -> ${paidOnline}");
     customPrint("voucher : table -> ${tableNumber}");
 
     //final converter = ZawGyiConverter();
@@ -333,6 +333,7 @@ Future<bool> printReceipt({
     await SunmiPrinter.lineWrap(1);
     await SunmiPrinter.setCustomFontSize(22);
 
+    // ignore: avoid_function_literals_in_foreach_calls
     products.forEach((e) async {
       // Zawgyi to Unicode
       // String price = formatNumber(e.price);
@@ -362,7 +363,7 @@ Future<bool> printReceipt({
           align: SunmiPrintAlign.LEFT,
         ),
         ColumnMaker(
-          text: e.is_gram ? '${e.qty}g' : '${e.qty}',
+          text: e.isGram ? '${e.qty}g' : '${e.qty}',
           //text: "${e.price}",
           width: 10,
           align: SunmiPrintAlign.LEFT,
@@ -453,7 +454,7 @@ Future<bool> printReceipt({
         align: SunmiPrintAlign.LEFT,
       ),
       ColumnMaker(
-        text: '${kpayAmount} MMK',
+        text: '${paidOnline} MMK',
         width: 20,
         align: SunmiPrintAlign.RIGHT,
       ),
@@ -465,7 +466,7 @@ Future<bool> printReceipt({
     //     align: SunmiPrintAlign.LEFT,
     //   ),
     //   ColumnMaker(
-    //     text: '${kpayAmount} MMK',
+    //     text: '${paidOnline} MMK',
     //     width: 20,
     //     align: SunmiPrintAlign.RIGHT,
     //   ),

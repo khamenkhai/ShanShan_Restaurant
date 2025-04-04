@@ -58,7 +58,7 @@ class SaleHistoryDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['user_id'] = userId;
     data['user_name'] = userName;
     data['payment_id'] = paymentId;
@@ -72,7 +72,7 @@ class SaleHistoryDetail {
     data['cash'] = cash;
     data['change'] = change;
     if (products != null) {
-      data['products'] = products!.map((v) => v.toMap()).toList();
+      data['products'] = products!.map((v) => v.toJson()).toList();
     }
     return data;
   }

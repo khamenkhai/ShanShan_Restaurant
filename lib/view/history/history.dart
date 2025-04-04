@@ -61,8 +61,8 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         title: const Text("အရောင်းမှတ်တမ်း"),
       ),
       body: InternetCheckWidget(
-        child: _buildHistoryContent(),
         onRefresh: _refreshHistory,
+        child: _buildHistoryContent(),
       ),
     );
   }
@@ -211,6 +211,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
+  // ignore: unused_element
   void _showHistoryDetails(SaleHistoryModel history) {
     showDialog(
       context: context,
@@ -258,7 +259,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                         price: e.price,
                         qty: e.qty,
                         totalPrice: e.totalPrice,
-                        is_gram: false,
+                        isGram: false,
                       ))
                   .toList(),
               octopusCount: history.octopusCount,

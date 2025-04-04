@@ -25,7 +25,7 @@ class MenuCubit extends Cubit<MenuState> {
   Future<bool> addMenu({required String menuName, required bool isTaseRequired}) async {
     emit(MenuLoadingState());
     final result = await menuService.createMenu(
-      requestBody: {"name": menuName, "is_fish": isTaseRequired},
+      requestBody: {"name": menuName, "isFish": isTaseRequired},
     );
 
     result.fold(
@@ -67,7 +67,7 @@ class MenuCubit extends Cubit<MenuState> {
       id: id,
       requestBody: {
         "name": name,
-        "is_fish": isTaseRequired,
+        "isFish": isTaseRequired,
       },
     );
 

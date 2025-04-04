@@ -20,7 +20,7 @@ class SpicyLevelModel {
     );
   }
 
-  toMap() {
+  toJson() {
     return {
       "id": id,
       "name": name,

@@ -526,7 +526,7 @@ class VoucherWidget extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-              e.is_gram ? "${e.qty} gram" : "${e.qty}",
+              e.isGram ? "${e.qty} gram" : "${e.qty}",
               textAlign: TextAlign.right,
             ),
           ),
@@ -569,7 +569,7 @@ class VoucherWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  e.is_gram
+                  e.isGram
                       ? "${e.qty} gram x  ${formatNumber(e.price)} MMK "
                       : "${e.qty} qty x ${formatNumber(e.price)} MMK",
                 )

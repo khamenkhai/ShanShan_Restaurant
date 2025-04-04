@@ -19,7 +19,7 @@ class TaxModel {
       name: map['name'] ?? "",
       type: map['type'] ?? "",
       percentage: map['percentage'] ?? 0,
-      amount: map['amount'] != null ? map['amount'].toString() : null,
+      amount: map['amount']?.toString(),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
@@ -62,7 +61,7 @@ class CartItemWidget extends StatelessWidget {
             style: const TextStyle(fontSize: 13),
           ),
           Text(
-            cartItem.is_gram
+            cartItem.isGram
                 ? "${cartItem.qty}gram x ${cartItem.price}"
                 : "${cartItem.qty} x ${cartItem.price} MMK",
             style: const TextStyle(fontSize: 13),
@@ -78,7 +77,7 @@ class CartItemWidget extends StatelessWidget {
       child: Align(
         alignment: Alignment.topRight,
         child: Text(
-          NumberFormat('#,##0').format(cartItem.totalPrice) + " MMK",
+          "${NumberFormat('#,##0').format(cartItem.totalPrice)} MMK",
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,

@@ -1,17 +1,15 @@
-class MenuModel{
-  final  id;
+class MenuModel {
+  final int id;
   final String? name;
-  final bool? is_fish;
+  final bool? isFish;
 
-  MenuModel({this.id, this.name,required this.is_fish});
+  MenuModel({required this.id, this.name, required this.isFish});
 
-  factory MenuModel.fromMap(Map<String,dynamic> map){
+  factory MenuModel.fromMap(Map<String, dynamic> map) {
     return MenuModel(
       id: map["id"] ?? 0,
       name: map["name"] ?? "",
-      is_fish: map["is_fish"] ?? false,
+      isFish: map["is_fish"] ?? false,
     );
   }
 }
-
-

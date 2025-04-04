@@ -18,7 +18,7 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
 
     try {
       final response = await saleService.makeSale(
-        requestBody: saleRequest.toMap(),
+        requestBody: saleRequest.toJson(),
       );
 
       return response.fold(
@@ -46,7 +46,7 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
 
     try {
       final response = await saleService.makeSale(
-        requestBody: saleRequest.toMap(),
+        requestBody: saleRequest.toJson(),
       );
 
       return response.fold(

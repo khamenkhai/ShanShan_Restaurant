@@ -25,8 +25,8 @@ class CashScreen extends StatefulWidget {
     required this.athoneLevel,
     required this.spicyLevel,
     required this.dineInOrParcel,
-    required this.menu_id,
-    required this.table_number,
+    required this.menuId,
+    required this.tableNo,
     required this.prawnCount,
     required this.octopusCount,
     required this.remark,
@@ -40,9 +40,9 @@ class CashScreen extends StatefulWidget {
   final int athoneLevel;
   final int spicyLevel;
   final int dineInOrParcel;
-  final int menu_id;
+  final int menuId;
   final String menu;
-  final int table_number;
+  final int tableNo;
   final int prawnCount;
   final int octopusCount;
 
@@ -217,7 +217,7 @@ class _CashScreenState extends State<CashScreen> {
                     ),
                   ),
 
-                  Container(
+                  SizedBox(
                     height: screenSize.height * 0.45,
                     child: SingleChildScrollView(
                       
@@ -348,13 +348,13 @@ String generateRandomId(int length) {
         octopusCount: widget.octopusCount,
         prawnCount: widget.prawnCount,
         remark: widget.remark,
-        ahtone_level_id: widget.athoneLevel == 000 ? null : widget.athoneLevel,
-        spicy_level_id: widget.spicyLevel == 000 ? null : widget.spicyLevel,
-        dine_in_or_percel: widget.dineInOrParcel,
-        grand_total: grandTotal,
-        menu_id: widget.menu_id,
-        order_no: "SS-${generateRandomId(6)}",
-        paid_cash: grandTotal,
+        ahtoneLevelId: widget.athoneLevel == 000 ? null : widget.athoneLevel,
+        spicyLevelId: widget.spicyLevel == 000 ? null : widget.spicyLevel,
+        dineInOrParcel: widget.dineInOrParcel,
+        grandTotal: grandTotal,
+        menuId: widget.menuId,
+        orderNo: "SS-${generateRandomId(6)}",
+        paidCash: grandTotal,
         products: context
             .read<CartCubit>()
             .state
@@ -368,12 +368,12 @@ String generateRandomId(int length) {
               ),
             )
             .toList(),
-        table_number: widget.table_number,
+        tableNumber: widget.tableNo,
         refund: 0,
-        sub_total: subTotal,
+        subTotal: subTotal,
         tax: taxAmount,
         discount: discountAmount,
-        paid_online: 0,
+        paidOnline: 0,
       );
 
       await context
@@ -382,6 +382,7 @@ String generateRandomId(int length) {
           .then(
         (value) {
           if (value) {
+            if(!mounted) return;
             redirectTo(
               context: context,
               form: CheckOutForm(
@@ -403,6 +404,7 @@ String generateRandomId(int length) {
               replacement: true,
             );
           } else {
+            if(!mounted) return;
             showCustomSnackbar(message: "Checkout Failed!", context: context);
           }
         },
@@ -476,7 +478,7 @@ String generateRandomId(int length) {
   /// the process when clicking the enter button of the number buttons
   void enterClickProcess() {
     cashAmount =
-        cashController.text.length > 0 ? int.parse(cashController.text) : 0;
+        cashController.text.isNotEmpty ? int.parse(cashController.text) : 0;
 
     if (cashAmount > grandTotal) {
       refundAmount = cashAmount - grandTotal;
@@ -496,15 +498,15 @@ String generateRandomId(int length) {
 
   ///check process that is customer is going to take voucher or not
   void checkProcess() {
-    int grand_total = 0;
+    int grandTotal = 0;
     if (customerTakevoucher) {
-      grand_total = widget.subTotal + widget.tax;
+      grandTotal = widget.subTotal + widget.tax;
     } else {
-      grand_total = widget.subTotal;
+      grandTotal = widget.subTotal;
     }
-    if (cashAmount > grand_total) {
-      refundAmount = cashAmount - grand_total;
-    } else if (cashAmount < grand_total) {}
+    if (cashAmount > grandTotal) {
+      refundAmount = cashAmount - grandTotal;
+    } else if (cashAmount < grandTotal) {}
 
     cashController.text = "";
 

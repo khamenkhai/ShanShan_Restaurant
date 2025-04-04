@@ -49,7 +49,7 @@ class SaleHistoryModel {
       id: map['id'] ?? 0,
       orderNo: map['order_no'] ?? '',
       // paymentTypeId: map['payment_type_id'],
-      tableNumber: map['table_number'] ?? '',
+      tableNumber: map['tableNo'] ?? '',
       dineInOrParcel: map['dine_in_or_percel'] ?? 0,
       subTotal: map['sub_total'] ?? 0,
       tax: map['tax'] ?? 0,

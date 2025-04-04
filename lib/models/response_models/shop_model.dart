@@ -22,7 +22,7 @@ class ShopModel {
   }
 
   // Method to convert a ShopModel instance to a map
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'username': username,

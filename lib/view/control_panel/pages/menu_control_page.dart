@@ -187,7 +187,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
   void initState() {
     if (widget.menu != null) {
       menuNameController.text = widget.menu!.name.toString();
-      isTaseRequired = widget.menu!.is_fish ?? false;
+      isTaseRequired = widget.menu!.isFish ?? false;
     }
     setState(() {});
     super.initState();

@@ -122,9 +122,9 @@ class _ReportPageState extends State<ReportPage> {
         if (state is SaleReportDaily) {
           return ReportSummaryWidget(
             name: "To Day",
-            cashAmount: state.saleReport.total_paid_cash ?? 0,
-            kpayAmount: state.saleReport.total_paid_online ?? 0,
-            totalAmount: state.saleReport.total_sales ?? 0,
+            cashAmount: state.saleReport.totalPaidCash ,
+            paidOnline: state.saleReport.totalPaidOnline ,
+            totalAmount: state.saleReport.totalSales ,
           );
         }
         return const ReportSummarySkeleton();
@@ -138,9 +138,9 @@ class _ReportPageState extends State<ReportPage> {
         if (state is SaleReportWeekly) {
           return ReportSummaryWidget(
             name: "This Week",
-            cashAmount: state.saleReport.total_paid_cash ?? 0,
-            kpayAmount: state.saleReport.total_paid_online ?? 0,
-            totalAmount: state.saleReport.total_sales ?? 0,
+            cashAmount: state.saleReport.totalPaidCash ,
+            paidOnline: state.saleReport.totalPaidOnline ,
+            totalAmount: state.saleReport.totalSales ,
           );
         }
         return const ReportSummarySkeleton();
@@ -158,16 +158,16 @@ class _ReportPageState extends State<ReportPage> {
               _buildReportHeader("ယခင်လ"),
               ReportSummaryWidget(
                 name: "Last Month",
-                cashAmount: state.lastMonthSale.total_paid_cash ?? 0,
-                kpayAmount: state.lastMonthSale.total_paid_online ?? 0,
-                totalAmount: state.lastMonthSale.total_sales ?? 0,
+                cashAmount: state.lastMonthSale.totalPaidCash ,
+                paidOnline: state.lastMonthSale.totalPaidOnline ,
+                totalAmount: state.lastMonthSale.totalSales ,
               ),
               _buildReportHeader("လက်ရှိလ"),
               ReportSummaryWidget(
                 name: "Current Month",
-                cashAmount: state.currentMonthSale.total_paid_cash ?? 0,
-                kpayAmount: state.currentMonthSale.total_paid_online ?? 0,
-                totalAmount: state.currentMonthSale.total_sales ?? 0,
+                cashAmount: state.currentMonthSale.totalPaidCash ,
+                paidOnline: state.currentMonthSale.totalPaidOnline ,
+                totalAmount: state.currentMonthSale.totalSales ,
               ),
             ],
           );
@@ -203,59 +203,59 @@ class _ReportPageState extends State<ReportPage> {
 // (place them anywhere in the class, typically with other private methods)
 
 void _printDailyReport(SaleReportDaily state) {
-  debugPrint("Daily report date: ${state.saleReport.daily_date}");
+  debugPrint("Daily report date: ${state.saleReport.dailyDate}");
   spu.printReceipt(
-    cashAmount: state.saleReport.total_paid_cash ?? 0,
-    KpayAmount: state.saleReport.total_paid_online ?? 0,
-    totalAmount: state.saleReport.total_Grands ?? 0,
+    cashAmount: state.saleReport.totalPaidCash ,
+    paidOnline: state.saleReport.totalPaidOnline ,
+    totalAmount: state.saleReport.totalGrands ,
     taxAmount: 500, // Consider making this dynamic if needed
     discountAmount: 0, // Consider making this dynamic if needed
-    report: "${state.saleReport.daily_date}",
+    report: "${state.saleReport.dailyDate}",
   );
 }
 
 void _printWeeklyReport(SaleReportWeekly state) {
   debugPrint(
-      "Weekly report range: ${state.saleReport.start_of_week} to ${state.saleReport.end_of_week}");
+      "Weekly report range: ${state.saleReport.startOfWeek} to ${state.saleReport.endOfWeek}");
   spu.printReceipt(
-    cashAmount: state.saleReport.total_paid_cash ?? 0,
-    KpayAmount: state.saleReport.total_paid_online ?? 0,
-    totalAmount: state.saleReport.total_Grands ?? 0,
+    cashAmount: state.saleReport.totalPaidCash ,
+    paidOnline: state.saleReport.totalPaidOnline ,
+    totalAmount: state.saleReport.totalGrands ,
     taxAmount: 500,
     discountAmount: 0,
     report:
-        "${state.saleReport.start_of_week} to ${state.saleReport.end_of_week}",
+        "${state.saleReport.startOfWeek} to ${state.saleReport.endOfWeek}",
   );
 }
 
 void _printMonthlyReport(SaleReportMonthly state) {
   debugPrint("Monthly report comparison:");
-  debugPrint("Current month: ${state.currentMonthSale.current_month}");
-  debugPrint("Last month: ${state.lastMonthSale.past_month}");
+  debugPrint("Current month: ${state.currentMonthSale.currentMonth}");
+  debugPrint("Last month: ${state.lastMonthSale.pastMonth}");
 
   spu.printMontylyReport(
-    lastMonthDate: state.lastMonthSale.past_month ?? "",
-    currentMonthDate: state.currentMonthSale.current_month ?? "",
-    lastMonthcashAmount: state.lastMonthSale.total_paid_cash ?? 0,
-    lastMonthKpayAmount: state.lastMonthSale.total_paid_online ?? 0,
-    lastMonthtotalAmount: state.lastMonthSale.total_Grands ?? 0,
-    currentMonthcashAmount: state.currentMonthSale.total_paid_cash ?? 0,
-    currentMonthKpayAmount: state.currentMonthSale.total_paid_online ?? 0,
-    currentMonthtotalAmount: state.currentMonthSale.total_Grands ?? 0,
+    lastMonthDate: state.lastMonthSale.pastMonth,
+    currentMonthDate: state.currentMonthSale.currentMonth,
+    lastMonthcashAmount: state.lastMonthSale.totalPaidCash ,
+    lastMonthpaidOnline: state.lastMonthSale.totalPaidOnline ,
+    lastMonthtotalAmount: state.lastMonthSale.totalGrands ,
+    currentMonthcashAmount: state.currentMonthSale.totalPaidCash ,
+    currentMonthpaidOnline: state.currentMonthSale.totalPaidOnline ,
+    currentMonthtotalAmount: state.currentMonthSale.totalGrands ,
   );
 }
 
 class ReportSummaryWidget extends StatelessWidget {
   final String name;
   final int cashAmount;
-  final int kpayAmount;
+  final int paidOnline;
   final int totalAmount;
 
   const ReportSummaryWidget({
     super.key,
     required this.name,
     required this.cashAmount,
-    required this.kpayAmount,
+    required this.paidOnline,
     required this.totalAmount,
   });
 
@@ -275,7 +275,7 @@ class ReportSummaryWidget extends StatelessWidget {
               ),
               const SizedBox(width: 15),
               _buildReportCard(
-                amount: kpayAmount,
+                amount: paidOnline,
                 title: "စုစုပေါင်း Kpay",
                 icon: const Icon(CupertinoIcons.creditcard, size: 30),
               ),

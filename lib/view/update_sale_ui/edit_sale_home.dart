@@ -25,7 +25,7 @@ import 'package:shan_shan/view/update_sale_ui/edit_sale_checkkout_dialog.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/product_row_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/quantity_dialog_control.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/taseLevelDialog.dart';
+import 'package:shan_shan/view/widgets/home_page_widgets/taste_level_dialog.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/weight_dialog_control.dart';
 import 'package:shan_shan/view/widgets/payment_button.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
@@ -45,7 +45,7 @@ class EditSaleScreen extends StatefulWidget {
 }
 
 class _EditSaleScreenState extends State<EditSaleScreen> {
-  TextEditingController _pendingOrderController = TextEditingController();
+  final TextEditingController _pendingOrderController = TextEditingController();
   ScrollController scrollController = ScrollController();
 
   ScrollController categoryScrollController = ScrollController();
@@ -93,7 +93,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                   price: e.price,
                   qty: e.qty,
                   totalPrice: e.totalPrice,
-                  is_gram: e.isGram,
+                  isGram: e.isGram,
                 ),
               )
               .toList(),
@@ -184,8 +184,8 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
   }
 
   // ignore: unused_element
-  Container _searchBox() {
-    return Container(
+  SizedBox _searchBox() {
+    return SizedBox(
       width: double.infinity,
       child: TextField(
         focusNode: searchFocusNode,
@@ -198,7 +198,8 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: SizeConst.kBorderRadius,
-            borderSide: BorderSide(width: 1.5, color: ColorConstants.primaryColor),
+            borderSide:
+                BorderSide(width: 1.5, color: ColorConstants.primaryColor),
           ),
           hintText: "Search...",
           suffixIcon: Icon(Icons.search),
@@ -232,7 +233,6 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
               borderRadius: SizeConst.kBorderRadius,
             ),
             child: SingleChildScrollView(
-              
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -337,7 +337,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
     BuildContext context,
     Size screenSize,
   ) {
-    if (cartCubit.state.items.length > 0) {
+    if (cartCubit.state.items.isNotEmpty) {
       if (paidCash == false && onlinePayment == false) {
         showCustomSnackbar(
           message: "ငွေပေးချေမှုနည်းလမ်းကို ရွေးချယ်ရပါမည်",
@@ -345,9 +345,9 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
         );
       } else {
         List<String> productNameList = [];
-        cartCubit.state.items.forEach((element) {
+        for (var element in cartCubit.state.items) {
           productNameList.add(element.name);
-        });
+        }
 
         if (cartCubit.state.menu != null) {
           showDialog(
@@ -369,7 +369,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
           if (productNameList.contains("ငါး")) {
             cartCubit.addMenu(
               menu: MenuModel(
-                is_fish: true,
+                isFish: true,
                 id: 3,
                 name: "ငါးကင်",
               ),
@@ -443,79 +443,72 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
     );
   }
 
-  ///cart item list widget
-  Container _cartItemListWidget({
+  /// cart item list widget
+  SizedBox _cartItemListWidget({
     required Size screenSize,
     required EditSaleCartState state,
     required BuildContext context,
   }) {
-    return Container(
+    return SizedBox(
       height: screenSize.height * 0.48,
       child: SingleChildScrollView(
-        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10),
-            state.menu == 0
-                ? Container()
-                : Container(
-                    padding: EdgeInsets.only(left: SizeConst.kHorizontalPadding),
-                    child: Text("စားပွဲနံပါတ် : ${state.tableNumber}")),
+            Container(
+              padding: EdgeInsets.only(left: SizeConst.kHorizontalPadding),
+              child: Text("စားပွဲနံပါတ် : ${state.tableNumber}"),
+            ),
             state.menu == null
                 ? Container()
                 : CartMenuWidget(
                     tapDisabled: false,
                     menu: state.menu!,
-                  
                     spicyLevel: state.spicyLevel,
                     athoneLevel: state.athoneLevel,
                     onDelete: () {
                       context.read<EditSaleCartCubit>().removeMenu();
                     },
                     onEdit: () {},
-                
                   ),
-            ...state.items
-                .map(
-                  (e) => CartItemWidget(
-                    ontapDisable: false,
-                    cartItem: e,
-                  
-                    onEdit: () {
-                      ///show cart item quantity control
-                      if (e.is_gram) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return CartItemWeightControlDialog(
-                              screenSizeWidth: screenSize.width,
-                              weightGram: e.qty,
-                              cartItem: e,
-                              isEditState: true,
-                            );
-                          },
+            ...state.items.map(
+              (e) => CartItemWidget(
+                ontapDisable: false,
+                cartItem: e,
+                onEdit: () {
+                  ///show cart item quantity control
+                  if (e.isGram) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CartItemWeightControlDialog(
+                          screenSizeWidth: screenSize.width,
+                          weightGram: e.qty,
+                          cartItem: e,
+                          isEditState: true,
                         );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return CartItemQtyDialogControl(
-                              screenSizeWidth: screenSize.width,
-                              quantity: e.qty,
-                              cartItem: e,
-                              isEditState: true,
-                            );
-                          },
+                      },
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CartItemQtyDialogControl(
+                          screenSizeWidth: screenSize.width,
+                          quantity: e.qty,
+                          cartItem: e,
+                          isEditState: true,
                         );
-                      }
-                    },
-                    onDelete: () {
-                      context.read<EditSaleCartCubit>().removeFromCart(item: e);
-                    },
-                  ),
-                )
-                .toList(),
+                      },
+                    );
+                  }
+                },
+                onDelete: () {
+                  context.read<EditSaleCartCubit>().removeFromCart(item: e);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -558,8 +551,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     "${NumberFormat('#,##0').format(cartCubit.getTotalAmount())} MMK",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
               ),
@@ -574,8 +566,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
               Expanded(
                 child: Text(
                   "Tax",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
               Expanded(
@@ -583,8 +574,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     "${formatNumber(get5percentage(cartCubit.getTotalAmount()))}(5%)",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
               ),
@@ -610,8 +600,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     "${NumberFormat('#,##0').format(grandTotal)} MMK",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
               ),
@@ -644,14 +633,12 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                 alignment: WrapAlignment.start,
                 children: [
                   ///categories box row
-                  ...state.categoryList
-                      .map(
-                        (e) => _categoryBoxWidget(
-                          maxWidth: maxWidth,
-                          category: e,
-                        ),
-                      )
-                      .toList(),
+                  ...state.categoryList.map(
+                    (e) => _categoryBoxWidget(
+                      maxWidth: maxWidth,
+                      category: e,
+                    ),
+                  ),
 
                   ///menu list
                   _menuBoxWidget(
@@ -686,7 +673,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10),
-            Container(
+            SizedBox(
               height: 38,
               child: Center(
                 child: Text(
@@ -724,11 +711,11 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                           price: defaultProduct.price ?? 0,
                           qty: 1,
                           totalPrice: defaultProduct.price ?? 0,
-                          is_gram: defaultProduct.isGram ?? false,
+                          isGram: defaultProduct.isGram ?? false,
                         );
                       }
                     } catch (e) {
-                      print("error : ${e}");
+                      customPrint("error : ${e}");
                     }
 
                     List<ProductModel> productList = state.products
@@ -773,7 +760,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10),
-            Container(
+            SizedBox(
               height: 38,
               child: Center(
                 child: Text(
@@ -803,7 +790,6 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(right: 0, bottom: 10),
                       child: SingleChildScrollView(
-                        
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -842,7 +828,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
       // ignore: deprecated_member_use
       highlightColor: ColorConstants.primaryColor.withOpacity(0.3),
       onTap: () async {
-        if (menu.is_fish == true) {
+        if (menu.isFish == true) {
           context.read<EditSaleCartCubit>().addMenu(menu: menu);
 
           context.read<EditSaleCartCubit>().addSpicy(
@@ -865,14 +851,12 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
           ).then(
             (value) {
               if (value != null) {
+                if (!context.mounted) return;
                 context.read<EditSaleCartCubit>().addMenu(menu: menu);
                 context.read<EditSaleCartCubit>().addSpicy(
                       athoneLevel: value["athoneLevel"],
                       spicyLevel: value["spicyLevel"],
                     );
-
-                print("${value["athoneLevel"].id}");
-                print("${value["athoneLevel"].id}");
 
                 context.read<EditSaleCartCubit>().addToCartByQuantity(
                       item: defaultItem!,
@@ -919,7 +903,6 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
         controller: scrollController,
         radius: Radius.circular(25),
         child: SingleChildScrollView(
-          
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,

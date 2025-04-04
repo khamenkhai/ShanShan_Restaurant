@@ -20,41 +20,39 @@ class CartItemListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: SizeConst.kHorizontalPadding,
-              ),
-              child: Text(
-                "Table Number : ${state.tableNumber}",
-                style: AppTextStyles.kNormalFont(),
-              ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: SizeConst.kHorizontalPadding,
             ),
-            if (state.menu != null)
-              CartMenuWidget(
-                tapDisabled: false,
-                menu: state.menu!,
-                spicyLevel: state.spicyLevel,
-                athoneLevel: state.athoneLevel,
-                onDelete: () => context.read<CartCubit>().removeMenu(),
-                onEdit: () {},
-              ),
-            ...state.items.map(
-              (e) => CartItemWidget(
-                ontapDisable: false,
-                cartItem: e,
-                onEdit: () => _showEditDialog(context, e),
-                onDelete: () =>
-                    context.read<CartCubit>().removeFromCart(item: e),
-              ),
+            child: Text(
+              "Table Number : ${state.tableNumber}",
+              style: AppTextStyles.kNormalFont(),
             ),
-          ],
-        ),
+          ),
+          if (state.menu != null)
+            CartMenuWidget(
+              tapDisabled: false,
+              menu: state.menu!,
+              spicyLevel: state.spicyLevel,
+              athoneLevel: state.athoneLevel,
+              onDelete: () => context.read<CartCubit>().removeMenu(),
+              onEdit: () {},
+            ),
+          ...state.items.map(
+            (e) => CartItemWidget(
+              ontapDisable: false,
+              cartItem: e,
+              onEdit: () => _showEditDialog(context, e),
+              onDelete: () =>
+                  context.read<CartCubit>().removeFromCart(item: e),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -63,7 +61,7 @@ class CartItemListWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
-        return e.is_gram
+        return e.isGram
             ? CartItemWeightControlDialog(
                 screenSizeWidth: screenSize.width,
                 weightGram: e.qty,

@@ -42,7 +42,7 @@ class SaleResponseModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['user_id'] = userId;
     data['payment_id'] = paymentId;

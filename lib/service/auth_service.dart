@@ -40,7 +40,7 @@ class AuthService {
     try {
       final response = await dioClient.postRequest(
         apiUrl: url,
-        requestBody: shopLoginRequest.toMap(),
+        requestBody: shopLoginRequest.toJson(),
       );
 
       ShopModel shopData = ShopModel.fromMap(response.data["data"]);
@@ -67,7 +67,7 @@ class AuthService {
     try {
       final response = await dioClient.postRequest(
         apiUrl: url,
-        requestBody: shopLoginRequest.toMap(),
+        requestBody: shopLoginRequest.toJson(),
       );
 
       if (response.statusCode == 200) {

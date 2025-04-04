@@ -22,8 +22,8 @@ class KpayScreen extends StatefulWidget {
     required this.athoneLevel,
     required this.spicyLevel,
     required this.dineInOrParcel,
-    required this.menu_id,
-    required this.table_number,
+    required this.menuId,
+    required this.tableNumber,
     required this.prawnCount,
     required this.octopusCount,
     required this.remark,
@@ -35,8 +35,8 @@ class KpayScreen extends StatefulWidget {
   final int athoneLevel;
   final int spicyLevel;
   final int dineInOrParcel;
-  final int menu_id;
-  final int table_number;
+  final int menuId;
+  final int tableNumber;
   final int prawnCount;
   final int octopusCount;
   final String remark;
@@ -49,7 +49,7 @@ class KpayScreen extends StatefulWidget {
 class _KpayScreenState extends State<KpayScreen> {
   TextEditingController cashController = TextEditingController();
 
-  int kpayAmount = 0;
+  int paidOnline = 0;
   int grandTotal = 0;
   int taxAmount = 0;
   int discountAmount = 0;
@@ -214,17 +214,15 @@ class _KpayScreenState extends State<KpayScreen> {
                     ),
                   ),
 
-                  Container(
+                  SizedBox(
                     height: screenSize.height * 0.45,
                     child: SingleChildScrollView(
-                      
                       child: Column(
                         children: state.items
                             .map(
                               (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                             
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
@@ -300,7 +298,7 @@ class _KpayScreenState extends State<KpayScreen> {
                 discountAmount = widget.tax;
               }
 
-              kpayAmount = grandTotal;
+              paidOnline = grandTotal;
 
               await checkout(cartCubit: cartCubit, cartItems: cartItems);
             },
@@ -380,32 +378,32 @@ class _KpayScreenState extends State<KpayScreen> {
       octopusCount: widget.octopusCount,
       prawnCount: widget.prawnCount,
       remark: widget.remark,
-      ahtone_level_id: widget.athoneLevel == 000 ? null : widget.athoneLevel,
-      spicy_level_id: widget.spicyLevel == 000 ? null : widget.spicyLevel,
-      dine_in_or_percel: widget.dineInOrParcel,
-      grand_total: grandTotal,
-      menu_id: widget.menu_id,
-      order_no: "SS-${generateRandomId(6)}",
-      paid_cash: 0,
+      ahtoneLevelId: widget.athoneLevel == 000 ? null : widget.athoneLevel,
+      spicyLevelId: widget.spicyLevel == 000 ? null : widget.spicyLevel,
+      dineInOrParcel: widget.dineInOrParcel,
+      grandTotal: grandTotal,
+      menuId: widget.menuId,
+      orderNo: "SS-${generateRandomId(6)}",
+      paidCash: 0,
       products: context
           .read<CartCubit>()
           .state
           .items
           .map(
             (e) => Product(
-              product_id: e.id,
+              productId: e.id,
               qty: e.qty,
               price: e.price,
-              total_price: e.totalPrice,
+              totalPrice: e.totalPrice,
             ),
           )
           .toList(),
-      table_number: widget.table_number,
+      tableNumber: widget.tableNumber,
       refund: 0,
-      sub_total: widget.subTotal,
+      subTotal: widget.subTotal,
       tax: taxAmount,
       discount: discountAmount,
-      paid_online: kpayAmount,
+      paidOnline: paidOnline,
     );
     await context
         .read<SaleProcessCubit>()
@@ -413,6 +411,7 @@ class _KpayScreenState extends State<KpayScreen> {
         .then(
       (value) {
         if (value) {
+          if(!mounted) return;
           redirectTo(
             context: context,
             form: CheckOutForm(
@@ -434,6 +433,7 @@ class _KpayScreenState extends State<KpayScreen> {
             replacement: true,
           );
         } else {
+          if(!mounted) return;
           showCustomSnackbar(context: context, message: "Checkout failed!");
         }
       },

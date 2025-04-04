@@ -32,15 +32,15 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
 
   int getCashAmount() {
     if (paidCash == true && paidOnline == false) {
-      return widget.saleModel.grand_total;
+      return widget.saleModel.grandTotal;
     } else {
       return 0;
     }
   }
 
-  int getKpayAmount() {
+  int getpaidOnline() {
     if (paidCash == false && paidOnline == true) {
-      return widget.saleModel.grand_total;
+      return widget.saleModel.grandTotal;
     } else {
       return 0;
     }
@@ -127,17 +127,18 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
                       await context
                           .read<SaleProcessCubit>()
                           .updateSale(
-                            orderId: widget.saleModel.order_no,
+                            orderId: widget.saleModel.orderNo,
                             saleRequest: widget.saleModel.copyWith(
-                              paid_cash: getCashAmount(),
-                              paid_online: getKpayAmount(),
+                              paidCash: getCashAmount(),
+                              paidOnline: getpaidOnline(),
                             ),
                           )
                           .then(
                         (value) {
+                          if(!context.mounted) return;
                           Navigator.pop(
                             context,
-                            getCashAmount() > getKpayAmount() ? "cash" : "Kpay",
+                            getCashAmount() > getpaidOnline() ? "cash" : "Kpay",
                           );
                         },
                       );

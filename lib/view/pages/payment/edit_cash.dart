@@ -23,8 +23,8 @@ class EditCashScreen extends StatefulWidget {
     required this.athoneLevel,
     required this.spicyLevel,
     required this.dineInOrParcel,
-    required this.menu_id,
-    required this.table_number,
+    required this.menuId,
+    required this.tableNumber,
     required this.prawnCount,
     required this.octopusCount,
     required this.remark,
@@ -40,9 +40,9 @@ class EditCashScreen extends StatefulWidget {
   final int athoneLevel;
   final int spicyLevel;
   final int dineInOrParcel;
-  final int menu_id;
+  final int menuId;
   final String menu;
-  final int table_number;
+  final int tableNumber;
   final String orderNo;
   final int prawnCount;
   final int octopusCount;
@@ -88,106 +88,106 @@ class _EditCashScreenState extends State<EditCashScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leadingWidth: 160,
-        leading: appBarLeading(onTap: () {
-          Navigator.pop(context);
-        }),
-        title: Text("ငွေသားဖြင့်ပေးချေရန်"),
-      ),
-      body: InternetCheckWidget(child: Container(
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leadingWidth: 160,
+          leading: appBarLeading(onTap: () {
+            Navigator.pop(context);
+          }),
+          title: Text("ငွေသားဖြင့်ပေးချေရန်"),
+        ),
+        body: InternetCheckWidget(
+            child: Container(
               padding: EdgeInsets.only(top: 15),
               child: _paidCashForm(
                 screenSize,
                 cartCubit,
               ),
-            ), onRefresh: (){})
-    );
+            ),
+            onRefresh: () {}));
   }
 
   ///cash payment form widget
   Widget _paidCashForm(Size screenSize, EditSaleCartCubit cartCubit) {
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// left side of the screen
-          _saleSummaryForm(screenSize, cartCubit),
-
-          ///right side
-          Container(
-            height: 180,
-            padding: EdgeInsets.only(
-              top: 15,
-              right: 15,
-              left: 15,
-              bottom: 15,
-            ),
-            margin: EdgeInsets.only(bottom: 15, right: SizeConst.kHorizontalPadding),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(
-                15,
-              ),
-            ),
-            width: screenSize.width * 0.5,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    //_abc(),
-                    Row(
-                      children: [
-                        Text(
-                          "ငွေပေးချေမှုနည်းလမ်း :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Text(
-                          "ငွေသား",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: ColorConstants.primaryColor),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-
-                    Container(
-                      width: 200,
-                      height: 50,
-                      margin: EdgeInsets.only(right: 15),
-                      child: CustomElevatedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.edit),
-                            SizedBox(width: 7),
-                            Text("အော်ဒါပြင်ရန်"),
-                          ],
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    )
-                  ],
-                );
-              },
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// left side of the screen
+        _saleSummaryForm(screenSize, cartCubit),
+    
+        ///right side
+        Container(
+          height: 180,
+          padding: EdgeInsets.only(
+            top: 15,
+            right: 15,
+            left: 15,
+            bottom: 15,
+          ),
+          margin: EdgeInsets.only(
+              bottom: 15, right: SizeConst.kHorizontalPadding),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(
+              15,
             ),
           ),
-          SizedBox(width: 5),
-        ],
-      ),
+          width: screenSize.width * 0.5,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  //_abc(),
+                  Row(
+                    children: [
+                      Text(
+                        "ငွေပေးချေမှုနည်းလမ်း :",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Text(
+                        "ငွေသား",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: ColorConstants.primaryColor),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+    
+                  Container(
+                    width: 200,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 15),
+                    child: CustomElevatedButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 7),
+                          Text("အော်ဒါပြင်ရန်"),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+        SizedBox(width: 5),
+      ],
     );
   }
 
@@ -223,17 +223,15 @@ class _EditCashScreenState extends State<EditCashScreen> {
                     ),
                   ),
 
-                  Container(
+                  SizedBox(
                     height: screenSize.height * 0.45,
                     child: SingleChildScrollView(
-                      
                       child: Column(
                         children: state.items
                             .map(
                               (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                              
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
@@ -322,45 +320,46 @@ class _EditCashScreenState extends State<EditCashScreen> {
                   octopusCount: widget.octopusCount,
                   prawnCount: widget.prawnCount,
                   remark: widget.remark,
-                  ahtone_level_id:
+                  ahtoneLevelId:
                       widget.athoneLevel == 000 ? null : widget.athoneLevel,
-                  spicy_level_id:
+                  spicyLevelId:
                       widget.spicyLevel == 000 ? null : widget.spicyLevel,
-                  dine_in_or_percel: widget.dineInOrParcel,
-                  grand_total: grandTotal,
-                  menu_id: widget.menu_id,
-                  order_no: "${widget.orderNo}",
-                  paid_cash: grandTotal,
+                  dineInOrParcel: widget.dineInOrParcel,
+                  grandTotal: grandTotal,
+                  menuId: widget.menuId,
+                  orderNo: "${widget.orderNo}",
+                  paidCash: grandTotal,
                   products: context
                       .read<EditSaleCartCubit>()
                       .state
                       .items
                       .map(
                         (e) => Product(
-                          product_id: e.id,
+                          productId: e.id,
                           qty: e.qty,
                           price: e.price,
-                          total_price: e.totalPrice,
+                          totalPrice: e.totalPrice,
                         ),
                       )
                       .toList(),
-                  table_number: widget.table_number,
+                  tableNumber: widget.tableNumber,
                   refund: 0,
-                  sub_total: subTotal,
+                  subTotal: subTotal,
                   tax: taxAmount,
                   discount: discountAmount,
-                  paid_online: 0,
+                  paidOnline: 0,
                 );
 
                 await context
                     .read<SaleProcessCubit>()
                     .updateSale(
                       saleRequest: saleModel,
-                      orderId: saleModel.order_no,
+                      orderId: saleModel.orderNo,
                     )
                     .then(
                   (value) {
                     if (value) {
+                       if(!context.mounted) return;
                       redirectTo(
                         context: context,
                         form: CheckOutForm(
@@ -382,6 +381,7 @@ class _EditCashScreenState extends State<EditCashScreen> {
                         replacement: true,
                       );
                     } else {
+                       if(!context.mounted) return;
                       showCustomSnackbar(
                           message: "Checkout Failed!", context: context);
                     }
@@ -479,7 +479,7 @@ class _EditCashScreenState extends State<EditCashScreen> {
 
   void enterClickProcess() {
     cashAmount =
-        cashController.text.length > 0 ? int.parse(cashController.text) : 0;
+        cashController.text.isNotEmpty ? int.parse(cashController.text) : 0;
 
     if (cashAmount > grandTotal) {
       refundAmount = cashAmount - grandTotal;
@@ -498,15 +498,15 @@ class _EditCashScreenState extends State<EditCashScreen> {
   }
 
   void checkProcess() {
-    int grand_total = 0;
+    int grandTotal = 0;
     if (customerTakevoucher) {
-      grand_total = widget.subTotal + widget.tax;
+      grandTotal = widget.subTotal + widget.tax;
     } else {
-      grand_total = widget.subTotal;
+      grandTotal = widget.subTotal;
     }
-    if (cashAmount > grand_total) {
-      refundAmount = cashAmount - grand_total;
-    } else if (cashAmount < grand_total) {
+    if (cashAmount > grandTotal) {
+      refundAmount = cashAmount - grandTotal;
+    } else if (cashAmount < grandTotal) {
       // cashAmount = 0;
       // refundAmount = 0;
     }
@@ -518,8 +518,8 @@ class _EditCashScreenState extends State<EditCashScreen> {
 
   ///calculate refund
   calculateRefund() {
-    // if ((KpayAmount + cashAmount) > grand_total) {
-    //   refundAmount = (KpayAmount + cashAmount) - grand_total;
+    // if ((paidOnline + cashAmount) > grand_total) {
+    //   refundAmount = (paidOnline + cashAmount) - grand_total;
     // } else {
     //   refundAmount = 0;
     // }

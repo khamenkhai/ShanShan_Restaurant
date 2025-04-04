@@ -4,7 +4,10 @@ class ShopLoginRequest {
 
   ShopLoginRequest({required this.username, required this.password});
 
-  toMap() {
-    return {"username": this.username, "password": this.password};
+  toJson() {
+    return {
+      "username": username,
+      "password": password,
+    };
   }
 }

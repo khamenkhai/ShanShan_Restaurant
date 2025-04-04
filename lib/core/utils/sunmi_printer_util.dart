@@ -7,7 +7,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
 ///print out
   Future<bool> printReceipt({
     required int cashAmount,
-    required int KpayAmount,
+    required int paidOnline,
     required int totalAmount,
     required int taxAmount,
     required int discountAmount,
@@ -84,7 +84,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
             align: SunmiPrintAlign.LEFT,
           ),
           ColumnMaker(
-            text: '${formatNumber(KpayAmount)} MMK',
+            text: '${formatNumber(paidOnline)} MMK',
             width: 26,
             align: SunmiPrintAlign.RIGHT,
           ),
@@ -131,10 +131,10 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
   ///priint montyly report
   Future<bool> printMontylyReport({
     required int lastMonthcashAmount,
-    required int lastMonthKpayAmount,
+    required int lastMonthpaidOnline,
     required int lastMonthtotalAmount,
     required int currentMonthcashAmount,
-    required int currentMonthKpayAmount,
+    required int currentMonthpaidOnline,
     required int currentMonthtotalAmount,
     required String lastMonthDate,
     required String currentMonthDate,
@@ -193,7 +193,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
             align: SunmiPrintAlign.LEFT,
           ),
           ColumnMaker(
-            text: '${formatNumber(currentMonthKpayAmount)} MMK',
+            text: '${formatNumber(currentMonthpaidOnline)} MMK',
             width: 26,
             align: SunmiPrintAlign.RIGHT,
           ),
@@ -269,7 +269,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
             align: SunmiPrintAlign.LEFT,
           ),
           ColumnMaker(
-            text: '${formatNumber(lastMonthKpayAmount)} MMK',
+            text: '${formatNumber(lastMonthpaidOnline)} MMK',
             width: 26,
             align: SunmiPrintAlign.RIGHT,
           ),

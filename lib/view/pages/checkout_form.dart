@@ -103,31 +103,29 @@ class _CheckOutFormState extends State<CheckOutForm> {
   }
 
   Future _printReceipt() async {
-    print("printing");
     await printReceipt(
       customerTakevoucher: widget.customerTakevoucher,
       paymentType: widget.paymentType,
-      tableNumber: widget.saleData.table_number,
+      tableNumber: widget.saleData.tableNumber,
       menu: widget.menu,
       ahtoneLevel:
           widget.ahtoneLevel == null ? "" : "${widget.ahtoneLevel!.name}",
       spicyLevel:
           widget.spicyLevel == null ? "" : widget.spicyLevel!.name ?? "",
       remark: "${widget.remark}",
-      cashAmount: widget.saleData.paid_cash,
-      kpayAmount: widget.saleData.paid_online ?? 0,
+      cashAmount: widget.saleData.paidCash,
+      paidOnline: widget.saleData.paidOnline,
       date: "${DateFormat('E d, MMM yyyy').format(DateTime.now())}",
-      discountAmount: widget.saleData.discount ?? 0,
-      grandTotal: widget.saleData.grand_total,
-      subTotal: widget.saleData.sub_total,
-      orderNumber: widget.saleData.order_no,
+      discountAmount: widget.saleData.discount,
+      grandTotal: widget.saleData.grandTotal,
+      subTotal: widget.saleData.subTotal,
+      orderNumber: widget.saleData.orderNo,
       products: widget.cartItems,
       octopusCount: widget.octopusCount,
       prawnCount: widget.prawnCount,
       taxAmount: widget.taxAmount,
       dineInOrParcel: widget.dineInOrParcel,
     );
-    print("printing done!!");
   }
 
   @override
@@ -186,7 +184,7 @@ class _CheckOutFormState extends State<CheckOutForm> {
             ],
           ),
           SizedBox(height: 25),
-          Container(
+          SizedBox(
             height: 250,
             child: Image.asset(
               "assets/images/cashier.png",
@@ -233,17 +231,17 @@ class _CheckOutFormState extends State<CheckOutForm> {
                 widget.paymentType = result ?? "";
 
                 if (result == "cash") {
-                  widget.saleData.paid_cash = widget.saleData.grand_total;
-                  widget.saleData.paid_online = 0;
+                  widget.saleData.paidCash = widget.saleData.grandTotal;
+                  widget.saleData.paidOnline = 0;
                 } else if (result == "Kpay") {
-                  widget.saleData.paid_online = widget.saleData.grand_total;
-                  widget.saleData.paid_cash = 0;
+                  widget.saleData.paidOnline = widget.saleData.grandTotal;
+                  widget.saleData.paidCash = 0;
                 }
               }
             },
           ),
         ),
-        Container(
+        SizedBox(
           width: (screenSize.width / 2.8),
           height: 60,
           child: widget.isEditSale
@@ -289,24 +287,23 @@ class _CheckOutFormState extends State<CheckOutForm> {
           builder: (context, state) {
             if (state is SaleProcessSuccessState) {
               return SingleChildScrollView(
-                
                 child: Column(
                   children: [
                     VoucherWidget(
                       showEditButton: true,
                       paymentType: widget.paymentType,
-                      tableNumber: saleData.table_number,
+                      tableNumber: saleData.tableNumber,
                       remark: widget.remark,
-                      discount: saleData.discount ?? 0,
-                      cashAmount: saleData.paid_cash,
-                      bankAmount: saleData.paid_online ?? 0,
+                      discount: saleData.discount,
+                      cashAmount: saleData.paidCash,
+                      bankAmount: saleData.paidOnline,
                       change: saleData.refund,
-                      subTotal: saleData.sub_total,
+                      subTotal: saleData.subTotal,
                       cartItems: widget.cartItems,
                       menu: widget.menu,
                       date: widget.dateTime,
-                      grandTotal: saleData.grand_total,
-                      orderNumber: saleData.order_no,
+                      grandTotal: saleData.grandTotal,
+                      orderNumber: saleData.orderNo,
                       octopusCount: widget.prawnCount,
                       prawnAmount: widget.octopusCount,
                       dineInOrParcel: widget.dineInOrParcel,
@@ -338,11 +335,11 @@ class _CheckOutFormState extends State<CheckOutForm> {
 
   int? getPaidAmount() {
     if (widget.paymentType == "cash") {
-      return widget.saleData.paid_cash;
+      return widget.saleData.paidCash;
     } else if (widget.paymentType == "Kpay") {
-      return widget.saleData.paid_online;
+      return widget.saleData.paidOnline;
     } else {
-      return widget.saleData.paid_online! + widget.saleData.paid_cash;
+      return widget.saleData.paidOnline + widget.saleData.paidCash;
     }
   }
 }
