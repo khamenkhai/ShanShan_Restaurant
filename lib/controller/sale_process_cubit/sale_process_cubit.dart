@@ -18,7 +18,7 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
 
     try {
       final response = await saleService.makeSale(
-        requestBody: saleRequest.toJson(),
+        requestBody: saleRequest.toMap(),
       );
 
       return response.fold(
@@ -26,7 +26,7 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
           emit(SaleProcessFailedState(error: 'Sale failed: $error'));
           return false;
         },
-        (success) {
+        (data) {
           emit(SaleProcessSuccessState());
           return true;
         },
@@ -46,7 +46,7 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
 
     try {
       final response = await saleService.makeSale(
-        requestBody: saleRequest.toJson(),
+        requestBody: saleRequest.toMap(),
       );
 
       return response.fold(

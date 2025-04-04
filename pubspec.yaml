@@ -53,6 +53,7 @@ dependencies:
   skeletonizer: ^1.4.3
   shimmer: ^3.0.0
   toggle_switch: ^2.3.0
+  flutter_local_notifications: ^19.0.0
 
 dev_dependencies:
   flutter_test:

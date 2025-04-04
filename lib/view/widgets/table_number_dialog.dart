@@ -81,7 +81,7 @@ class TableNumberDialog extends StatelessWidget {
                   children: [
                     CustomElevatedButton(
                       onPressed: () {
-                        cartCubit.addTableNumber(
+                        cartCubit.addData(
                           tableNumber: int.parse(tableController.text),
                         );
 

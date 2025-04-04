@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
@@ -120,7 +121,7 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            customizableOTButton(
+            CustomOutlineButton(
               elevation: 0,
               child: const Text("ပယ်ဖျက်ရန်"),
               onPressed: () => Navigator.pop(context),

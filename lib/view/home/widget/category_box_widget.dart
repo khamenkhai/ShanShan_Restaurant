@@ -12,7 +12,7 @@ class CategoryBoxWidget extends StatelessWidget {
   final CategoryModel category;
   final CartItem? defaultItem;
   final TextEditingController tableController;
-  
+
   const CategoryBoxWidget({
     super.key,
     required this.constraints,
@@ -27,7 +27,7 @@ class CategoryBoxWidget extends StatelessWidget {
       borderRadius: SizeConst.kBorderRadius,
       color: Colors.white,
       child: Container(
-        width: ((constraints.maxWidth - SizeConst.kHorizontalPadding) / 2) ,
+        width: ((constraints.maxWidth - SizeConst.kHorizontalPadding) / 2),
         height: constraints.maxHeight / 1.2,
         decoration: BoxDecoration(
           borderRadius: SizeConst.kBorderRadius,

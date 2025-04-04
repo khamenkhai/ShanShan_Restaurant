@@ -9,8 +9,8 @@ import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
-import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/service/local_noti_service.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/category_model.dart';
@@ -18,13 +18,14 @@ import 'package:shan_shan/models/response_models/menu_model.dart';
 import 'package:shan_shan/view/home/widget/cart_header_widget.dart';
 import 'package:shan_shan/view/home/widget/category_box_widget.dart';
 import 'package:shan_shan/view/home/widget/cart_item_list_widget.dart';
+import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/checkout_dialog.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/menu_box_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/total_and_tax_widget.dart';
 import 'package:shan_shan/view/home/widget/home_drawer.dart';
 import 'package:shan_shan/view/widgets/payment_button.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/table_number_dialog.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -45,12 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
   CartItem? _defaultItem;
   bool _paidOnline = false;
   bool _paidCash = true;
+  LocalNotificationService localNotificationService =
+      LocalNotificationService();
 
   @override
   void initState() {
     super.initState();
     _initializeData();
     _showTableNumberDialog();
+    localNotificationService.initializeLocalNotification();
   }
 
   @override
@@ -148,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody(Size screenSize, CartCubit cartCubit) {
     return Container(
-      padding: EdgeInsets.only(top: 5, bottom: 10),
+      padding: EdgeInsets.only(top: 5, bottom: 0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -162,33 +166,43 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildProductsSection(Size screenSize) {
     return Container(
-      width: screenSize.width * 0.71,
+      width: screenSize.width * 0.675,
       height: MediaQuery.of(context).size.height,
       margin: EdgeInsets.only(left: SizeConst.kHorizontalPadding),
-      child: Column(
+      child: Stack(
         children: [
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return BlocBuilder<CategoryCubit, CategoryState>(
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return SmartRefresher(
+                enablePullDown: true,
+                controller: _refresherController,
+                onRefresh: _handleRefresh,
+                child: BlocBuilder<CategoryCubit, CategoryState>(
                   builder: (context, state) {
-                    if (state is CategoryLoadingState) {
-                      return LoadingWidget();
-                    } else if (state is CategoryLoadedState) {
-                      return _buildCategoryList(
+                    return Skeletonizer(
+                      enabled: state is CategoryLoadingState,
+                      child: _buildCategoryList(
                         constraints,
-                        state.categoryList,
-                      );
-                    }
-                    return Container();
+                        state is CategoryLoadedState ? state.categoryList : [],
+                      ),
+                    );
+                    // if (state is CategoryLoadingState) {
+                    //   return LoadingWidget();
+                    // } else if (state is CategoryLoadedState) {
+                    //   return _buildCategoryList(
+                    //     constraints,
+                    //     state.categoryList,
+                    //   );
+                    // }
                   },
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
-          const SizedBox(height: 20),
-          copyRightWidget(),
-          const SizedBox(height: 20),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: copyRightWidget(),
+          )
         ],
       ),
     );
@@ -198,25 +212,23 @@ class _HomeScreenState extends State<HomeScreen> {
     BoxConstraints constraints,
     List<CategoryModel> categories,
   ) {
-    return SmartRefresher(
-      enablePullDown: true,
-      controller: _refresherController,
-      onRefresh: _handleRefresh,
-      child: Wrap(
-        runSpacing: SizeConst.kHorizontalPadding,
-        spacing: SizeConst.kHorizontalPadding,
-        children: [
-          ...categories.map(
-            (category) => CategoryBoxWidget(
-              constraints: constraints,
-              category: category,
-              defaultItem: _defaultItem,
-              tableController: _tableController,
-            ),
+    return Wrap(
+      runSpacing: SizeConst.kHorizontalPadding,
+      spacing: SizeConst.kHorizontalPadding,
+      children: [
+        MenuBoxWidget(
+          constraints: constraints,
+          defaultItem: _defaultItem,
+        ),
+        ...categories.map(
+          (category) => CategoryBoxWidget(
+            constraints: constraints,
+            category: category,
+            defaultItem: _defaultItem,
+            tableController: _tableController,
           ),
-          _buildMenuBox(constraints),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -228,13 +240,6 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<HtoneLevelCubit>().getAllLevels();
     _refresherController.refreshCompleted();
     setState(() {});
-  }
-
-  Widget _buildMenuBox(BoxConstraints constraints) {
-    return menuBoxWidget(
-      constraints: constraints,
-      defaultItem: _defaultItem,
-    );
   }
 
   Widget _buildCartSection(Size screenSize, CartCubit cartCubit) {
@@ -258,7 +263,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 1),
                 CartHeaderWidget(onClearOrder: _handleClearOrder),
                 const SizedBox(height: 5),
-                Expanded(child: CartItemListWidget(screenSize: screenSize, state: state)),
+                Expanded(
+                    child: CartItemListWidget(
+                        screenSize: screenSize, state: state)),
                 TotalAndTaxHomeWidget(),
                 const SizedBox(height: 15),
                 _buildPaymentOptions(),
@@ -279,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _handleClearOrder() {
-    context.read<CartCubit>().clearOrderr();
+    context.read<CartCubit>().clearOrder();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -288,9 +295,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
- 
-
- 
   Widget _buildPaymentOptions() {
     return Row(
       children: [
@@ -356,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final productNames = cartCubit.state.items.map((e) => e.name).toList();
     if (productNames.contains("ငါး")) {
-      cartCubit.addMenu(
+      cartCubit.addData(
         menu: MenuModel(
           isFish: true,
           id: 3,

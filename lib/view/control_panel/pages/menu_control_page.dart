@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_cubit.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
@@ -137,7 +138,7 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      customizableOTButton(
+                      CustomOutlineButton(
                         elevation: 0,
                         child: const Text("ပယ်ဖျက်ရန်"),
                         onPressed: () => Navigator.pop(context),
@@ -271,7 +272,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            customizableOTButton(
+                            CustomOutlineButton(
                               elevation: 0,
                               child: Text("ပယ်ဖျက်ရန်"),
                               onPressed: () {

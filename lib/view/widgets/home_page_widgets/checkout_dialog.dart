@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
-import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/view/pages/payment/bank.dart';
-import 'package:shan_shan/view/pages/payment/bank_and_cash.dart';
-import 'package:shan_shan/view/pages/payment/cash.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
+import 'package:shan_shan/core/utils/navigation_helper.dart';
+import 'package:shan_shan/view/payment/cash.dart';
+import 'package:shan_shan/view/payment/online_payment.dart';
 
 class CheckoutDialog extends StatefulWidget {
   final bool paidOnline;
@@ -27,8 +26,8 @@ class CheckoutDialog extends StatefulWidget {
 
 class _CheckoutDialogState extends State<CheckoutDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _tableController = TextEditingController();
-  final _remarkController = TextEditingController();
+  final _tableCtrl = TextEditingController();
+  final _remarkCtrl = TextEditingController();
 
   bool _isParcel = false;
   int _prawnCount = 0;
@@ -37,55 +36,62 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   @override
   void initState() {
     super.initState();
-    _initializeFormData();
+    final cart = context.read<CartCubit>().state;
+    _prawnCount = cart.prawnCount;
+    _octopusCount = cart.octopusCount;
+    _remarkCtrl.text = cart.remark;
+    _isParcel = cart.dineInOrParcel == 0;
+    _tableCtrl.text = cart.tableNumber.toString();
   }
 
   @override
   void dispose() {
-    _tableController.dispose();
-    _remarkController.dispose();
+    _tableCtrl.dispose();
+    _remarkCtrl.dispose();
     super.dispose();
-  }
-
-  void _initializeFormData() {
-    final cartState = context.read<CartCubit>().state;
-    _prawnCount = cartState.prawnCount;
-    _octopusCount = cartState.octopusCount;
-    _remarkController.text = cartState.remark;
-    _isParcel = cartState.dineInOrParcel == 0;
-    _tableController.text = cartState.tableNumber.toString();
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
     final cartCubit = context.read<CartCubit>();
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: SizeConst.kBorderRadius,
-      ),
       child: SingleChildScrollView(
         child: Container(
-          width: widget.width ?? screenSize.width / 3.8,
+          width: widget.width ?? screenWidth / 3.8,
           padding: const EdgeInsets.all(15),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
+              _header("မှာယူမှု"),
               const SizedBox(height: 15),
-              _buildTableNumberField(),
+              _formField("စားပွဲနံပါတ်", _tableCtrl, validator: (val) {
+                return (val == null || val.isEmpty)
+                    ? "စားပွဲနံပါတ် လိုအပ်ပါသည်။!"
+                    : null;
+              }),
               const SizedBox(height: 15),
-              _buildOrderTypeSelection(),
+              _orderTypeSection(),
               const SizedBox(height: 25),
-              _buildRemarkField(),
+              _formField("မှတ်ချက်", _remarkCtrl, multiline: true),
               const SizedBox(height: 5),
-              _buildOctopusCounter(),
-              _buildPrawnCounter(),
+              _CounterRow(
+                  label: "ရေဘဝဲ",
+                  count: _octopusCount,
+                  onIncrement: () => setState(() => _octopusCount++),
+                  onDecrement: () => setState(() => _octopusCount =
+                      (_octopusCount - 1).clamp(0, _octopusCount))),
+              _CounterRow(
+                  label: "ပုဇွန်",
+                  count: _prawnCount,
+                  onIncrement: () => setState(() => _prawnCount++),
+                  onDecrement: () => setState(() =>
+                      _prawnCount = (_prawnCount - 1).clamp(0, _prawnCount))),
               const SizedBox(height: 20),
-              _buildActionButtons(cartCubit),
+              _actionButtons(cartCubit),
             ],
           ),
         ),
@@ -93,235 +99,120 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
     );
   }
 
-  Widget _buildHeader() {
-    return const Text(
-      "မှာယူမှု",
-      style: TextStyle(
-        fontSize: 19,
-        color: ColorConstants.primaryColor,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
+  Widget _header(String title) => Text(
+        title,
+        style: const TextStyle(
+          fontSize: 19,
+          fontWeight: FontWeight.bold,
+          color: ColorConstants.primaryColor,
+        ),
+      );
 
-  Widget _buildTableNumberField() {
+  Widget _formField(String label, TextEditingController controller,
+      {FormFieldValidator<String>? validator, bool multiline = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "စားပွဲနံပါတ်",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Form(
-          key: _formKey,
-          child: TextFormField(
-            controller: _tableController,
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "စားပွဲနံပါတ် လိုအပ်ပါသည်။!";
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              hintText: "စားပွဲနံပါတ်ရေးရန်",
-              hintStyle: TextStyle(fontSize: 13),
-              contentPadding: EdgeInsets.symmetric(vertical: 0),
+        Text(label,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        if (validator != null)
+          Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              validator: validator,
+              decoration: const InputDecoration(
+                  hintText: "စားပွဲနံပါတ်ရေးရန်",
+                  hintStyle: TextStyle(fontSize: 13)),
             ),
+          )
+        else
+          TextField(
+            controller: controller,
+            maxLines: multiline ? 3 : 1,
+            decoration: const InputDecoration(
+                hintText: "မှတ်ချက်ရေးရန်", hintStyle: TextStyle(fontSize: 13)),
           ),
-        ),
       ],
     );
   }
 
-  Widget _buildOrderTypeSelection() {
+  Widget _orderTypeSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "ထိုင်စား or ပါဆယ်",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        const Text("ထိုင်စား or ပါဆယ်",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(height: 10),
-        _buildRadioOption(
-          value: false,
-          label: "ထိုင်စား",
-          isSelected: !_isParcel,
-        ),
-        const SizedBox(height: 15),
-        _buildRadioOption(
-          value: true,
-          label: "ပါဆယ်",
-          isSelected: _isParcel,
-        ),
+        ...[
+          _orderTypeOption(false, "ထိုင်စား"),
+          _orderTypeOption(true, "ပါဆယ်"),
+        ]
       ],
     );
   }
 
-  Widget _buildRadioOption({
-    required bool value,
-    required String label,
-    required bool isSelected,
-  }) {
+  Widget _orderTypeOption(bool value, String label) {
+    final selected = _isParcel == value;
     return InkWell(
       onTap: () => setState(() => _isParcel = value),
-      child: Row(
-        children: [
-          Icon(
-            isSelected 
-              ? Icons.radio_button_checked 
-              : Icons.radio_button_off,
-          ),
-          const SizedBox(width: 10),
-          Text(label),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Row(
+          children: [
+            Icon(
+                selected ? Icons.radio_button_checked : Icons.radio_button_off),
+            const SizedBox(width: 10),
+            Text(label),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildRemarkField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "မှတ်ချက်",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        TextField(
-          controller: _remarkController,
-          decoration: const InputDecoration(
-            hintText: "မှတ်ချက်ရေးရန်",
-            hintStyle: TextStyle(fontSize: 13),
-            contentPadding: EdgeInsets.symmetric(vertical: 0),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildOctopusCounter() {
-    return _CounterRow(
-      label: "ရေဘဝဲ",
-      count: _octopusCount,
-      onDecrement: () {
-        if (_octopusCount > 0) {
-          setState(() => _octopusCount--);
-        }
-      },
-      onIncrement: () => setState(() => _octopusCount++),
-    );
-  }
-
-  Widget _buildPrawnCounter() {
-    return _CounterRow(
-      label: "ပုဇွန်",
-      count: _prawnCount,
-      onDecrement: () {
-        if (_prawnCount > 0) {
-          setState(() => _prawnCount--);
-        }
-      },
-      onIncrement: () => setState(() => _prawnCount++),
-    );
-  }
-
-  Widget _buildActionButtons(CartCubit cartCubit) {
+  Widget _actionButtons(CartCubit cartCubit) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        customizableOTButton(
-          elevation: 0,
+        CustomOutlineButton(
           child: const Text("ပယ်ဖျက်ရန်"),
           onPressed: () => Navigator.pop(context),
         ),
         const SizedBox(width: 10),
         CustomElevatedButton(
           child: const Text("အတည်ပြုရန်"),
-          onPressed: () => _handleOrderConfirmation(cartCubit),
+          onPressed: () => _confirmOrder(cartCubit),
         ),
       ],
     );
   }
 
-  void _handleOrderConfirmation(CartCubit cartCubit) {
-    final remark = _remarkController.text;
-    
-    cartCubit.addAdditionalData(
-      remark: remark,
+  void _confirmOrder(CartCubit cartCubit) {
+    if (!_formKey.currentState!.validate()) return;
+
+    final remark = _remarkCtrl.text;
+    cartCubit.addData(
       dineInOrParcel: _isParcel ? 0 : 1,
       octopusCount: _octopusCount,
       prawnCount: _prawnCount,
-      tableNumber: _tableController.text.isEmpty 
-          ? 0 
-          : int.parse(_tableController.text),
+      tableNumber: int.tryParse(_tableCtrl.text) ?? 0,
     );
 
-    if (!_formKey.currentState!.validate()) return;
-
-    final paymentScreen = _getPaymentScreen(cartCubit, remark);
-    if (paymentScreen != null) {
-      redirectTo(context: context, form: paymentScreen);
-    }
+    final screen = _getPaymentScreen(cartCubit, remark);
+    if (screen != null) NavigationHelper.pushPage(context, screen);
   }
 
   Widget? _getPaymentScreen(CartCubit cartCubit, String remark) {
-    final menu = cartCubit.state.menu!;
-    final total = cartCubit.getTotalAmount();
-    final tax = get5percentage(total);
 
-    if (widget.paidCash && !widget.paidOnline) {
-      return CashScreen(
-        octopusCount: _octopusCount,
-        prawnCount: _prawnCount,
-        remark: remark,
-        menu: menu.name.toString(),
-        athoneLevel: cartCubit.state.athoneLevel?.id ?? 0,
-        spicyLevel: cartCubit.state.spicyLevel?.id ?? 0,
-        menuId: menu.id,
-        tableNo: int.parse(_tableController.text),
-        dineInOrParcel: _isParcel ? 0 : 1,
-        subTotal: total,
-        tax: tax,
-        paidCash: widget.paidCash,
-      );
-    } else if (!widget.paidCash && widget.paidOnline) {
-      return KpayScreen(
-        menu: menu.name.toString(),
-        remark: remark,
-        athoneLevel: cartCubit.state.athoneLevel?.id ?? 0,
-        spicyLevel: cartCubit.state.spicyLevel?.id ?? 0,
-        menuId: menu.id ,
-        tableNumber: int.parse(_tableController.text),
-        dineInOrParcel: _isParcel ? 0 : 1,
-        subTotal: total,
-        tax: tax,
-        prawnCount: _prawnCount,
-        octopusCount: _octopusCount,
-      );
-    } else if (widget.paidCash && widget.paidOnline) {
-      return KpayAndCashScreen(
-        menu: menu.name.toString(),
-        remark: remark,
-        athoneLevel: cartCubit.state.athoneLevel?.id ?? 0,
-        spicyLevel: cartCubit.state.spicyLevel?.id ?? 0,
-        menuId: menu.id ,
-        tableNo: int.parse(_tableController.text),
-        dineInOrParcel: _isParcel ? 0 : 1,
-        subTotal: total,
-        tax: tax,
-        prawnCount: _prawnCount,
-        octopusCount: _octopusCount,
-      );
+    if (widget.paidCash && widget.paidOnline) {
+      // return KpayAndCashScreen();
+    } else if (widget.paidCash) {
+      return CashScreen();
+    } else if (widget.paidOnline) {
+      return OnlinePaymentScreen();
     }
+
     return null;
   }
 }
@@ -343,31 +234,12 @@ class _CounterRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16),
-        ),
+        Text(label, style: const TextStyle(fontSize: 16)),
         const Spacer(),
         IconButton(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onPressed: onDecrement,
-          icon: const Icon(Icons.remove_circle),
-        ),
-        SizedBox(
-          width: 20,
-          child: Text(
-            "$count",
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16),
-          ),
-        ),
-        IconButton(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onPressed: onIncrement,
-          icon: const Icon(Icons.add_circle),
-        ),
+            onPressed: onDecrement, icon: const Icon(Icons.remove_circle)),
+        Text("$count", style: const TextStyle(fontSize: 16)),
+        IconButton(onPressed: onIncrement, icon: const Icon(Icons.add_circle)),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
@@ -145,7 +146,7 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
             return Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                customizableOTButton(
+                CustomOutlineButton(
                   elevation: 0,
                   child: Text("ပယ်ဖျက်ရန်"),
                   onPressed: () {

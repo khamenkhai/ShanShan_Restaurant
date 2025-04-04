@@ -5,10 +5,10 @@ import 'package:shan_shan/controller/htone_level_cubit/htone_level_state.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
 class TasteChooseDialog extends StatefulWidget {
@@ -53,7 +53,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                customizableOTButton(
+                CustomOutlineButton(
                   child: Text("ပယ်ဖျက်ရန်"),
                   onPressed: () {
                     Navigator.pop(context);

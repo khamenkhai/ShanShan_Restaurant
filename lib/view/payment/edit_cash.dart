@@ -1,8 +1,7 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
@@ -15,9 +14,8 @@ import 'package:shan_shan/view/pages/checkout_form.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
-// ignore: must_be_immutable
-class CashScreen extends StatefulWidget {
-  const CashScreen({
+class EditCashScreen extends StatefulWidget {
+  const EditCashScreen({
     super.key,
     required this.subTotal,
     required this.tax,
@@ -26,11 +24,13 @@ class CashScreen extends StatefulWidget {
     required this.spicyLevel,
     required this.dineInOrParcel,
     required this.menuId,
-    required this.tableNo,
+    required this.tableNumber,
     required this.prawnCount,
     required this.octopusCount,
     required this.remark,
     required this.menu,
+    required this.orderNo,
+    required this.date,
   });
 
   final int subTotal;
@@ -42,15 +42,19 @@ class CashScreen extends StatefulWidget {
   final int dineInOrParcel;
   final int menuId;
   final String menu;
-  final int tableNo;
+  final int tableNumber;
+  final String orderNo;
   final int prawnCount;
   final int octopusCount;
+  final String date;
 
   @override
-  State<CashScreen> createState() => _CashScreenState();
+  State<EditCashScreen> createState() => _EditCashScreenState();
 }
 
-class _CashScreenState extends State<CashScreen> {
+class _EditCashScreenState extends State<EditCashScreen> {
+  bool showButtons = true;
+
   TextEditingController cashController = TextEditingController();
 
   num refundAmount = 0;
@@ -61,6 +65,8 @@ class _CashScreenState extends State<CashScreen> {
   bool alreadyPrint = false;
 
   bool customerTakevoucher = true;
+
+  int taxAmount = 0;
 
   @override
   void initState() {
@@ -73,7 +79,7 @@ class _CashScreenState extends State<CashScreen> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
-    CartCubit cartCubit = BlocProvider.of<CartCubit>(context);
+    EditSaleCartCubit cartCubit = BlocProvider.of<EditSaleCartCubit>(context);
 
     if (customerTakevoucher) {
       grandTotal = widget.subTotal + widget.tax;
@@ -82,111 +88,111 @@ class _CashScreenState extends State<CashScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leadingWidth: 160,
-        leading: appBarLeading(onTap: () {
-          Navigator.pop(context);
-        }),
-        title: Text("ငွေသားဖြင့်ပေးချေရန်"),
-      ),
-      body: InternetCheckWidget(
-        child: _paidCashForm(screenSize, cartCubit),
-        onRefresh: () {},
-      ),
-    );
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leadingWidth: 160,
+          leading: appBarLeading(onTap: () {
+            Navigator.pop(context);
+          }),
+          title: Text("ငွေသားဖြင့်ပေးချေရန်"),
+        ),
+        body: InternetCheckWidget(
+            child: Container(
+              padding: EdgeInsets.only(top: 15),
+              child: _paidCashForm(
+                screenSize,
+                cartCubit,
+              ),
+            ),
+            onRefresh: () {}));
   }
 
   ///cash payment form widget
-  Widget _paidCashForm(Size screenSize, CartCubit cartCubit) {
-    return Container(
-      padding: EdgeInsets.only(top: 5),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// left side of the screen
-          _saleSummaryForm(screenSize, cartCubit),
+  Widget _paidCashForm(Size screenSize, EditSaleCartCubit cartCubit) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// left side of the screen
+        _saleSummaryForm(screenSize, cartCubit),
 
-          ///right side
-          _numberButtonsForm(screenSize),
-          SizedBox(width: 5),
-        ],
-      ),
-    );
-  }
-
-  Container _numberButtonsForm(Size screenSize) {
-    return Container(
-      height: 180,
-      padding: EdgeInsets.only(
-        top: 15,
-        right: 15,
-        left: 15,
-        bottom: 15,
-      ),
-      margin: EdgeInsets.only(bottom: 15, right: SizeConst.kHorizontalPadding),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(
-          15,
-        ),
-      ),
-      width: screenSize.width * 0.5,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
+        ///right side
+        Container(
+          height: 180,
+          padding: EdgeInsets.only(
+            top: 15,
+            right: 15,
+            left: 15,
+            bottom: 15,
+          ),
+          margin:
+              EdgeInsets.only(bottom: 15, right: SizeConst.kHorizontalPadding),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(
+              15,
+            ),
+          ),
+          width: screenSize.width * 0.5,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    "ငွေပေးချေမှုနည်းလမ်း :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: 15),
-                  Text(
-                    "ငွေသား",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: ColorConstants.primaryColor),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Container(
-                width: 200,
-                height: 50,
-                margin: EdgeInsets.only(right: 15),
-                child: CustomElevatedButton(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  //_abc(),
+                  Row(
                     children: [
-                      Icon(Icons.edit),
-                      SizedBox(width: 7),
-                      Text("အော်ဒါပြင်ရန်"),
+                      Text(
+                        "ငွေပေးချေမှုနည်းလမ်း :",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Text(
+                        "ငွေသား",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: ColorConstants.primaryColor),
+                      ),
                     ],
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              )
-            ],
-          );
-        },
-      ),
+                  SizedBox(height: 10),
+
+                  Container(
+                    width: 200,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 15),
+                    child: CustomElevatedButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 7),
+                          Text("အော်ဒါပြင်ရန်"),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+        SizedBox(width: 5),
+      ],
     );
   }
 
   ///sale summary form
-  Widget _saleSummaryForm(Size screenSize, CartCubit cartCubit) {
+  Widget _saleSummaryForm(Size screenSize, EditSaleCartCubit cartCubit) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(
@@ -200,7 +206,7 @@ class _CashScreenState extends State<CashScreen> {
             color: Colors.white,
             borderRadius: SizeConst.kBorderRadius,
           ),
-          child: BlocBuilder<CartCubit, CartState>(
+          child: BlocBuilder<EditSaleCartCubit, EditSaleCartState>(
             builder: (context, state) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,14 +226,12 @@ class _CashScreenState extends State<CashScreen> {
                   SizedBox(
                     height: screenSize.height * 0.45,
                     child: SingleChildScrollView(
-                      
                       child: Column(
                         children: state.items
                             .map(
                               (e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
-                              
                                 onDelete: () {},
                                 onEdit: () {},
                               ),
@@ -251,10 +255,13 @@ class _CashScreenState extends State<CashScreen> {
                         onChanged: (value) {
                           setState(() {
                             customerTakevoucher = value!;
+                            // refundAmount = 0;
+                            // cashAmount = 0;
                             checkProcess();
                           });
                         },
                       ),
+                      //Text("Customer take voucher( no discount )"),
                       Text("ဘောက်ချာယူမည်"),
                     ],
                   ),
@@ -277,7 +284,7 @@ class _CashScreenState extends State<CashScreen> {
   BlocBuilder _checkoutButton({
     required Size screenSize,
     required List<CartItem> cartItems,
-    required CartCubit cartCubit,
+    required EditSaleCartCubit cartCubit,
   }) {
     return BlocBuilder<SaleProcessCubit, SaleProcessState>(
       builder: (context, state) {
@@ -285,36 +292,98 @@ class _CashScreenState extends State<CashScreen> {
           return LoadingWidget();
         } else {
           return CustomElevatedButton(
-            isEnabled: true,
+            isEnabled: isCheckoutEnabled(),
             width: double.infinity,
             elevation: 0,
             height: 70,
             child: Text("ငွေရှင်းရန်လုပ်ဆောင်ပါ"),
             onPressed: () async {
-              ///*****///
               int discountAmount = 0;
-              int taxAmount = 0;
               if (customerTakevoucher) {
                 grandTotal = widget.subTotal + widget.tax;
-                taxAmount = widget.tax;
-                discountAmount = 0;
                 subTotal = widget.subTotal;
+                taxAmount = widget.tax;
               } else {
                 grandTotal = widget.subTotal;
                 subTotal = widget.subTotal;
-                taxAmount = 0;
                 discountAmount = widget.tax;
+                taxAmount = 0;
               }
 
               cashAmount = grandTotal;
 
               /// **********
-              checkoutProcess(
-                cartCubit: cartCubit,
-                discountAmount: discountAmount,
-                taxAmount: taxAmount,
-                cartItems: cartItems,
-              );
+              if (cashAmount == grandTotal) {
+                ///check conditions that if the curret sale process items is from pending orders or not
+
+                SaleModel saleModel = SaleModel(
+                  octopusCount: widget.octopusCount,
+                  prawnCount: widget.prawnCount,
+                  remark: widget.remark,
+                  ahtoneLevelId:
+                      widget.athoneLevel == 000 ? null : widget.athoneLevel,
+                  spicyLevelId:
+                      widget.spicyLevel == 000 ? null : widget.spicyLevel,
+                  dineInOrParcel: widget.dineInOrParcel,
+                  grandTotal: grandTotal,
+                  menuId: widget.menuId,
+                  orderNo: "${widget.orderNo}",
+                  paidCash: grandTotal,
+                  products: context
+                      .read<EditSaleCartCubit>()
+                      .state
+                      .items
+                      .map(
+                        (e) => Product(
+                          productId: e.id,
+                          qty: e.qty,
+                          price: e.price,
+                          totalPrice: e.totalPrice,
+                        ),
+                      )
+                      .toList(),
+                  tableNumber: widget.tableNumber,
+                  refund: 0,
+                  subTotal: subTotal,
+                  tax: taxAmount,
+                  discount: discountAmount,
+                  paidOnline: 0,
+                );
+
+                await context
+                    .read<SaleProcessCubit>()
+                    .updateSale(
+                      saleRequest: saleModel,
+                      orderId: saleModel.orderNo,
+                    )
+                    .then(
+                  (value) {
+                    if (value) {
+                      if (!context.mounted) return;
+                      redirectTo(
+                        context: context,
+                        form: CheckOutForm(
+                          customerTakevoucher: customerTakevoucher,
+                          taxAmount: taxAmount,
+                          saleData: saleModel,
+                          cartItems: cartItems,
+                          paymentType: "cash",
+                          dateTime: widget.date,
+                          menuTitle: widget.menu,
+                          ahtoneLevel: cartCubit.state.athoneLevel,
+                          spicyLevel: cartCubit.state.spicyLevel,
+                          isEditSale: true,
+                        ),
+                        replacement: true,
+                      );
+                    } else {
+                      if (!context.mounted) return;
+                      showCustomSnackbar(
+                          message: "Checkout Failed!", context: context);
+                    }
+                  },
+                );
+              }
             },
           );
         }
@@ -322,98 +391,7 @@ class _CashScreenState extends State<CashScreen> {
     );
   }
 
-  ///generate random id
-String generateRandomId(int length) {
-  final Random random = Random();
-  const int maxDigit = 9;
-
-  String generateDigit() => random.nextInt(maxDigit + 1).toString();
-
-  return List.generate(length, (_) => generateDigit()).join();
-}
-
-  ///***checkout process
-  checkoutProcess({
-    required CartCubit cartCubit,
-    required int taxAmount,
-    required int discountAmount,
-    required List<CartItem> cartItems,
-  }) async {
-
-    
-    if (cashAmount == grandTotal) {
-      ///check conditions that if the curret sale process items is from pending orders or not
-      DateTime dateTime = DateTime.now();
-      SaleModel saleModel = SaleModel(
-        octopusCount: widget.octopusCount,
-        prawnCount: widget.prawnCount,
-        remark: widget.remark,
-        ahtoneLevelId: widget.athoneLevel == 000 ? null : widget.athoneLevel,
-        spicyLevelId: widget.spicyLevel == 000 ? null : widget.spicyLevel,
-        dineInOrParcel: widget.dineInOrParcel,
-        grandTotal: grandTotal,
-        menuId: widget.menuId,
-        orderNo: "SS-${generateRandomId(6)}",
-        paidCash: grandTotal,
-        products: context
-            .read<CartCubit>()
-            .state
-            .items
-            .map(
-              (e) => Product(
-                productId: e.id,
-                qty: e.qty,
-                price: e.price,
-                totalPrice: e.totalPrice,
-              ),
-            )
-            .toList(),
-        tableNumber: widget.tableNo,
-        refund: 0,
-        subTotal: subTotal,
-        tax: taxAmount,
-        discount: discountAmount,
-        paidOnline: 0,
-      );
-
-      await context
-          .read<SaleProcessCubit>()
-          .makeSale(saleRequest: saleModel)
-          .then(
-        (value) {
-          if (value) {
-            if(!mounted) return;
-            redirectTo(
-              context: context,
-              form: CheckOutForm(
-                customerTakevoucher: customerTakevoucher,
-                octopusCount: cartCubit.state.octopusCount,
-                prawnCount: cartCubit.state.prawnCount,
-                taxAmount: taxAmount,
-                saleData: saleModel,
-                cartItems: cartItems,
-                paymentType: "cash",
-                dineInOrParcel: widget.dineInOrParcel,
-                dateTime: DateFormat('dd, MMMM yyyy hh:mm a').format(dateTime),
-                remark: widget.remark,
-                menu: widget.menu,
-                ahtoneLevel: cartCubit.state.athoneLevel,
-                spicyLevel: cartCubit.state.spicyLevel,
-                isEditSale: false,
-              ),
-              replacement: true,
-            );
-          } else {
-            if(!mounted) return;
-            showCustomSnackbar(message: "Checkout Failed!", context: context);
-          }
-        },
-      );
-    }
-  }
-
-  ///totol cash and cost widget
-  Widget _cashAndCost({required CartCubit cartCubit}) {
+  Widget _cashAndCost({required EditSaleCartCubit cartCubit}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
       child: Column(
@@ -432,12 +410,21 @@ String generateRandomId(int length) {
             title: "GrandTotal",
           ),
           SizedBox(height: 5),
+          // _amountRowWidget(
+          //   amount: cashAmount,
+          //   title: "Cash",
+          // ),
+          // SizedBox(height: 5),
+          // _amountRowWidget(
+          //   title: "Refund",
+          //   amount: refundAmount,
+          //   isChange: true,
+          // ),
         ],
       ),
     );
   }
 
-  ////widget to show the amount
   Row _amountRowWidget({
     required String title,
     required num amount,
@@ -475,7 +462,17 @@ String generateRandomId(int length) {
     );
   }
 
-  /// the process when clicking the enter button of the number buttons
+  bool isCheckoutEnabled() {
+    return true;
+
+    ///**********
+    // if ((cashAmount > 0 && cashAmount >= widget.subTotal)) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
+  }
+
   void enterClickProcess() {
     cashAmount =
         cashController.text.isNotEmpty ? int.parse(cashController.text) : 0;
@@ -496,7 +493,6 @@ String generateRandomId(int length) {
     setState(() {});
   }
 
-  ///check process that is customer is going to take voucher or not
   void checkProcess() {
     int grandTotal = 0;
     if (customerTakevoucher) {
@@ -506,10 +502,23 @@ String generateRandomId(int length) {
     }
     if (cashAmount > grandTotal) {
       refundAmount = cashAmount - grandTotal;
-    } else if (cashAmount < grandTotal) {}
+    } else if (cashAmount < grandTotal) {
+      // cashAmount = 0;
+      // refundAmount = 0;
+    }
 
     cashController.text = "";
 
+    setState(() {});
+  }
+
+  ///calculate refund
+  calculateRefund() {
+    // if ((paidOnline + cashAmount) > grand_total) {
+    //   refundAmount = (paidOnline + cashAmount) - grand_total;
+    // } else {
+    //   refundAmount = 0;
+    // }
     setState(() {});
   }
 }

@@ -6,12 +6,12 @@ import 'package:shan_shan/controller/auth_cubit/auth_cubit.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/view/control_panel/pages/control_panel.dart';
 import 'package:shan_shan/view/history/history.dart';
 import 'package:shan_shan/view/sale_report/sale_report_page.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key, required this.onNavigate});
@@ -153,7 +153,7 @@ class HomeDrawer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: customizableOTButton(
+                  child: CustomOutlineButton(
                     bgColor: Colors.white,
                     elevation: 0,
                     height: 60,
@@ -189,7 +189,7 @@ class HomeDrawer extends StatelessWidget {
         await context.read<AuthCubit>().logout();
     if (logoutStatus) {
        if(!context.mounted) return;
-      context.read<CartCubit>().clearOrderr();
+      context.read<CartCubit>().clearOrder();
       context.read<EditSaleCartCubit>().clearOrderr();
     }
   }

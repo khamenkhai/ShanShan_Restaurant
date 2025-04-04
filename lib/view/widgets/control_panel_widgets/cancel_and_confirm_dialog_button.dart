@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class CancelAndConfirmDialogButton extends StatelessWidget {
   const CancelAndConfirmDialogButton({super.key, required this.onConfirm});
@@ -12,7 +12,7 @@ class CancelAndConfirmDialogButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        customizableOTButton(
+        CustomOutlineButton(
           elevation: 0,
           child: Text("ပယ်ဖျက်ရန်"),
           onPressed: () {

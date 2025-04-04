@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
@@ -194,37 +196,6 @@ Shimmer categoryShimmer({double height = 35}) {
   );
 }
 
-///custumizable elevated button
-Container customizableOTButton({
-  Color? fgColor,
-  Color? bgColor,
-  required Widget child,
-  double width = 100,
-  double radius = 15,
-  double height = 45,
-  double elevation = 0,
-  required Function() onPressed,
-}) {
-  return Container(
-    padding: EdgeInsets.symmetric(vertical: 5),
-    //width: width,
-    constraints: BoxConstraints(minWidth: width, minHeight: height),
-
-    child: OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        elevation: elevation,
-        foregroundColor: fgColor ?? ColorConstants.greyColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: SizeConst.kBorderRadius,
-        ),
-        backgroundColor: bgColor ?? Colors.white,
-      ),
-      onPressed: onPressed,
-      child: child,
-    ),
-  );
-}
-
 ///appbar leading
 InkWell appBarLeading({required Function() onTap}) {
   return InkWell(
@@ -286,37 +257,41 @@ InkWell appBarLeading({required Function() onTap}) {
 //   );
 // }
 
-Row copyRightWidget() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      SizedBox(width: 40),
-      Text(
-        "Copyright © 2024 - ${DateFormat('y').format(DateTime.now())} TermsFeed®. All rights reserved.",
-        style: TextStyle(
-          fontSize: 16,
+Widget copyRightWidget() {
+  return Container(
+    width: double.infinity,
+    height: 50,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(width: 40),
+        Text(
+          "Copyright © 2024 - ${DateFormat('y').format(DateTime.now())} TermsFeed®. All rights reserved.",
+          style: TextStyle(
+            fontSize: 16,
+          ),
         ),
-      ),
-      SizedBox(width: 10),
-      Row(
-        children: [
-          Text(
-            "Developed By",
-            style: TextStyle(
-              fontSize: 16,
+        SizedBox(width: 10),
+        Row(
+          children: [
+            Text(
+              "Developed By",
+              style: TextStyle(
+                fontSize: 16,
+              ),
             ),
-          ),
-          Text(
-            " Softnovations",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+            Text(
+              " Softnovations",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
-      ),
-      SizedBox(width: 30),
-    ],
+          ],
+        ),
+        SizedBox(width: 30),
+      ],
+    ),
   );
 }
 

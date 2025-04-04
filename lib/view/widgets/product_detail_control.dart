@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
 class ProductWeightOrDetailControl extends StatefulWidget {
@@ -32,7 +32,7 @@ class _ProductWeightOrDetailControlState
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      child: widget.produt.isGram
+      child: (widget.produt.isGram ?? false)
           ? gramControlWidget(context)
           : quantityControlWidget(),
     );
@@ -59,7 +59,7 @@ class _ProductWeightOrDetailControlState
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            customizableOTButton(
+            CustomOutlineButton(
               elevation: 0,
               child: Text("ပယ်ဖျက်ရန်"),
               onPressed: () {
@@ -193,7 +193,7 @@ class _ProductWeightOrDetailControlState
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            customizableOTButton(
+            CustomOutlineButton(
               elevation: 0,
               child: Text("ပယ်ဖျက်ရန်"),
               onPressed: () {

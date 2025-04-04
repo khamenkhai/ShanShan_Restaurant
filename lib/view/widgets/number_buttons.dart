@@ -75,6 +75,7 @@ class _NumberButtonsState extends State<NumberButtons> {
           ),
 
           ///first row
+            SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -150,6 +151,7 @@ class _NumberButtonsState extends State<NumberButtons> {
           ),
 
           ///secon row
+            SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -216,7 +218,8 @@ class _NumberButtonsState extends State<NumberButtons> {
             ],
           ),
 
-          ///third row
+          /// third row
+            SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -282,6 +285,7 @@ class _NumberButtonsState extends State<NumberButtons> {
           ),
 
           ///fourth row
+            SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

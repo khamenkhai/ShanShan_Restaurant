@@ -59,7 +59,7 @@ class ApiConstants {
   static const String PAST_MONTH_SALE_URL = "sale/pastMonth";
 
   // Sale-related endpoints
-  static const String MAKE_SALE_URL = "sale/make";
+  static const String MAKE_SALE_URL = "sale";
   static const String UPDATE_SALE_URL = "sale/update";
 
   // Timeout settings for network calls

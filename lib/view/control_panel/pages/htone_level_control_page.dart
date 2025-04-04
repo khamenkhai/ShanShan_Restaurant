@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
@@ -166,7 +167,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          customizableOTButton(
+                          CustomOutlineButton(
                             elevation: 0,
                             child: Text("ပယ်ဖျက်ရန်"),
                             onPressed: () {

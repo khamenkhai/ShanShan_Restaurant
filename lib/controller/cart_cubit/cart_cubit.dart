@@ -24,102 +24,33 @@ class CartCubit extends Cubit<CartState> {
         );
 
   ///add menu model
-  void addMenu({required MenuModel menu}) {
-    emit(
-      CartState(
-        dineInOrParcel: state.dineInOrParcel,
-        remark: state.remark,
-        tableNumber: state.tableNumber,
-        items: state.items,
-        menu: menu,
-        spicyLevel: state.spicyLevel,
-        athoneLevel: state.athoneLevel,
-        octopusCount: state.octopusCount,
-        prawnCount: state.prawnCount,
-      ),
-    );
-  }
-
-  void addAdditionalData({
-    required int octopusCount,
-    required int prawnCount,
-    required int tableNumber,
-    required int dineInOrParcel,
-    required String remark,
+  void addData({
+    MenuModel? menu,
+    String? remark,
+    int? dineInOrParcel,
+    int? tableNumber,
+    List<CartItem>? items,
+    SpicyLevelModel? spicyLevel,
+    AhtoneLevelModel? htoneLevel,
+    int? octopusCount,
+    int? prawnCount,
   }) {
     emit(
       CartState(
-        dineInOrParcel: dineInOrParcel,
-        remark: remark,
-        tableNumber: tableNumber,
-        items: state.items,
-        menu: state.menu,
-        spicyLevel: state.spicyLevel,
-        athoneLevel: state.athoneLevel,
-        octopusCount: octopusCount,
-        prawnCount: prawnCount,
+        dineInOrParcel: dineInOrParcel ?? state.dineInOrParcel,
+        remark: remark ?? state.remark,
+        tableNumber: tableNumber ?? state.tableNumber,
+        items: items ?? state.items,
+        menu: menu ?? state.menu,
+        spicyLevel: spicyLevel ?? state.spicyLevel,
+        athoneLevel: htoneLevel ?? state.athoneLevel,
+        octopusCount: octopusCount ?? state.octopusCount,
+        prawnCount: prawnCount ?? state.prawnCount,
       ),
     );
   }
 
-  ///add table number
-  void addTableNumber({
-    required int tableNumber,
-  }) {
-    emit(
-      CartState(
-        dineInOrParcel: state.dineInOrParcel,
-        remark: state.remark,
-        tableNumber: tableNumber,
-        items: state.items,
-        menu: state.menu,
-        spicyLevel: state.spicyLevel,
-        athoneLevel: state.athoneLevel,
-        octopusCount: state.octopusCount,
-        prawnCount: state.prawnCount,
-      ),
-    );
-  }
-
-  ///add menu model
-  void addSpicy({
-    required SpicyLevelModel? spicyLevel,
-    required AhtoneLevelModel? athoneLevel,
-  }) {
-    emit(
-      CartState(
-        dineInOrParcel: state.dineInOrParcel,
-        remark: state.remark,
-        tableNumber: state.tableNumber,
-        items: state.items,
-        menu: state.menu,
-        spicyLevel: spicyLevel,
-        athoneLevel: athoneLevel,
-        octopusCount: state.octopusCount,
-        prawnCount: state.prawnCount,
-      ),
-    );
-  }
-
-  ///add menu model
-  void removeMenu() {
-    emit(
-      CartState(
-        dineInOrParcel: state.dineInOrParcel,
-        remark: state.remark,
-        tableNumber: state.tableNumber,
-        items: state.items,
-        menu: null,
-        spicyLevel: null,
-        athoneLevel: null,
-        octopusCount: state.octopusCount,
-        prawnCount: state.prawnCount,
-      ),
-    );
-  }
-
-  ///checkout success
-  void checkoutSuccess() {}
+ 
 
   // Method to add an item to the cart
   void addToCartByQuantity({
@@ -300,7 +231,7 @@ class CartCubit extends Cubit<CartState> {
   }
 
   // Method to remove an item from the cart
-  void clearOrderr() {
+  void clearOrder() {
     emit(
       CartState(
         dineInOrParcel: 1,

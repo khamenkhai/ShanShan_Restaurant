@@ -95,8 +95,17 @@ class _ReportPageState extends State<ReportPage> {
   Widget _buildReportTabs() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
-      child: const TabBar(
+      child: TabBar(
         dividerColor: Colors.transparent,
+        onTap: (value) {
+          if (value == 0) {
+            context.read<SaleReportCubit>().getDailyReport();
+          } else if (value == 1) {
+            context.read<SaleReportCubit>().getMonthlyReport();
+          } else if (value == 2) {
+            context.read<SaleReportCubit>().getMonthlyReport();
+          }
+        },
         tabs: [
           Tab(text: 'ဒီနေ့'),
           Tab(text: 'အပတ်စဉ်'),
@@ -122,9 +131,9 @@ class _ReportPageState extends State<ReportPage> {
         if (state is SaleReportDaily) {
           return ReportSummaryWidget(
             name: "To Day",
-            cashAmount: state.saleReport.totalPaidCash ,
-            paidOnline: state.saleReport.totalPaidOnline ,
-            totalAmount: state.saleReport.totalSales ,
+            cashAmount: state.saleReport.totalPaidCash,
+            paidOnline: state.saleReport.totalPaidOnline,
+            totalAmount: state.saleReport.totalSales,
           );
         }
         return const ReportSummarySkeleton();
@@ -135,15 +144,18 @@ class _ReportPageState extends State<ReportPage> {
   Widget _buildWeeklyReportView() {
     return BlocBuilder<SaleReportCubit, SaleReportState>(
       builder: (context, state) {
-        if (state is SaleReportWeekly) {
+        if (state is SaleReportLoading) {
+          return const ReportSummarySkeleton();
+        } else if (state is SaleReportWeekly) {
           return ReportSummaryWidget(
             name: "This Week",
-            cashAmount: state.saleReport.totalPaidCash ,
-            paidOnline: state.saleReport.totalPaidOnline ,
-            totalAmount: state.saleReport.totalSales ,
+            cashAmount: state.saleReport.totalPaidCash,
+            paidOnline: state.saleReport.totalPaidOnline,
+            totalAmount: state.saleReport.totalSales,
           );
+        }else{
+          return Container();
         }
-        return const ReportSummarySkeleton();
       },
     );
   }
@@ -158,16 +170,16 @@ class _ReportPageState extends State<ReportPage> {
               _buildReportHeader("ယခင်လ"),
               ReportSummaryWidget(
                 name: "Last Month",
-                cashAmount: state.lastMonthSale.totalPaidCash ,
-                paidOnline: state.lastMonthSale.totalPaidOnline ,
-                totalAmount: state.lastMonthSale.totalSales ,
+                cashAmount: state.lastMonthSale.totalPaidCash,
+                paidOnline: state.lastMonthSale.totalPaidOnline,
+                totalAmount: state.lastMonthSale.totalSales,
               ),
               _buildReportHeader("လက်ရှိလ"),
               ReportSummaryWidget(
                 name: "Current Month",
-                cashAmount: state.currentMonthSale.totalPaidCash ,
-                paidOnline: state.currentMonthSale.totalPaidOnline ,
-                totalAmount: state.currentMonthSale.totalSales ,
+                cashAmount: state.currentMonthSale.totalPaidCash,
+                paidOnline: state.currentMonthSale.totalPaidOnline,
+                totalAmount: state.currentMonthSale.totalSales,
               ),
             ],
           );
@@ -205,9 +217,9 @@ class _ReportPageState extends State<ReportPage> {
 void _printDailyReport(SaleReportDaily state) {
   debugPrint("Daily report date: ${state.saleReport.dailyDate}");
   spu.printReceipt(
-    cashAmount: state.saleReport.totalPaidCash ,
-    paidOnline: state.saleReport.totalPaidOnline ,
-    totalAmount: state.saleReport.totalGrands ,
+    cashAmount: state.saleReport.totalPaidCash,
+    paidOnline: state.saleReport.totalPaidOnline,
+    totalAmount: state.saleReport.totalGrands,
     taxAmount: 500, // Consider making this dynamic if needed
     discountAmount: 0, // Consider making this dynamic if needed
     report: "${state.saleReport.dailyDate}",
@@ -218,13 +230,12 @@ void _printWeeklyReport(SaleReportWeekly state) {
   debugPrint(
       "Weekly report range: ${state.saleReport.startOfWeek} to ${state.saleReport.endOfWeek}");
   spu.printReceipt(
-    cashAmount: state.saleReport.totalPaidCash ,
-    paidOnline: state.saleReport.totalPaidOnline ,
-    totalAmount: state.saleReport.totalGrands ,
+    cashAmount: state.saleReport.totalPaidCash,
+    paidOnline: state.saleReport.totalPaidOnline,
+    totalAmount: state.saleReport.totalGrands,
     taxAmount: 500,
     discountAmount: 0,
-    report:
-        "${state.saleReport.startOfWeek} to ${state.saleReport.endOfWeek}",
+    report: "${state.saleReport.startOfWeek} to ${state.saleReport.endOfWeek}",
   );
 }
 
@@ -236,12 +247,12 @@ void _printMonthlyReport(SaleReportMonthly state) {
   spu.printMontylyReport(
     lastMonthDate: state.lastMonthSale.pastMonth,
     currentMonthDate: state.currentMonthSale.currentMonth,
-    lastMonthcashAmount: state.lastMonthSale.totalPaidCash ,
-    lastMonthpaidOnline: state.lastMonthSale.totalPaidOnline ,
-    lastMonthtotalAmount: state.lastMonthSale.totalGrands ,
-    currentMonthcashAmount: state.currentMonthSale.totalPaidCash ,
-    currentMonthpaidOnline: state.currentMonthSale.totalPaidOnline ,
-    currentMonthtotalAmount: state.currentMonthSale.totalGrands ,
+    lastMonthcashAmount: state.lastMonthSale.totalPaidCash,
+    lastMonthpaidOnline: state.lastMonthSale.totalPaidOnline,
+    lastMonthtotalAmount: state.lastMonthSale.totalGrands,
+    currentMonthcashAmount: state.currentMonthSale.totalPaidCash,
+    currentMonthpaidOnline: state.currentMonthSale.totalPaidOnline,
+    currentMonthtotalAmount: state.currentMonthSale.totalGrands,
   );
 }
 
@@ -341,4 +352,3 @@ class ReportSummaryWidget extends StatelessWidget {
     );
   }
 }
-

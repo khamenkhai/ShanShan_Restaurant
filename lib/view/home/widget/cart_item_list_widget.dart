@@ -40,7 +40,11 @@ class CartItemListWidget extends StatelessWidget {
               menu: state.menu!,
               spicyLevel: state.spicyLevel,
               athoneLevel: state.athoneLevel,
-              onDelete: () => context.read<CartCubit>().removeMenu(),
+              onDelete: () => context.read<CartCubit>().addData(
+                menu: null,
+                spicyLevel: null,
+                htoneLevel: null,
+              ),
               onEdit: () {},
             ),
           ...state.items.map(

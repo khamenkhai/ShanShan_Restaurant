@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/remark_model.dart';
-import 'package:shan_shan/view/pages/payment/edit_bank.dart';
-import 'package:shan_shan/view/pages/payment/edit_bank_and_cash.dart';
-import 'package:shan_shan/view/pages/payment/edit_cash.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
+import 'package:shan_shan/view/payment/edit_bank.dart';
+import 'package:shan_shan/view/payment/edit_bank_and_cash.dart';
+import 'package:shan_shan/view/payment/edit_cash.dart';
 
 class EditSaleCheckoutDialog extends StatefulWidget {
   const EditSaleCheckoutDialog({
@@ -189,7 +189,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      customizableOTButton(
+                      CustomOutlineButton(
                         elevation: 0,
                         child: Text("ပယ်ဖျက်ရန်"),
                         onPressed: () {
@@ -242,7 +242,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                redirectTo(
                                 context: context,
                                 //replacement: true,
-                                form: EditKpayScreen(
+                                form: EditOnlinePaymentScreen(
                                   date: widget.date,
                                   orderNo: widget.orderNo,
                                   menu: cartCubit.state.menu!.name.toString(),

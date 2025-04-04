@@ -13,20 +13,11 @@ class SaleService {
   Future<Either<String, bool>> makeSale({
     required Map<String, dynamic> requestBody,
   }) async {
-    return _handleRequest(
-      () => dioClient.postRequest(
+    try {
+      final response = await dioClient.postRequest(
         apiUrl: ApiConstants.MAKE_SALE_URL,
         requestBody: requestBody,
-      ),
-    );
-  }
-
-  /// Generic request handler with status code check
-  Future<Either<String, bool>> _handleRequest(
-    Future<dynamic> Function() request,
-  ) async {
-    try {
-      final response = await request();
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return Right(true);
@@ -34,7 +25,8 @@ class SaleService {
         return Left(response.data["message"]?.toString() ?? "Unknown error");
       }
     } catch (e) {
-      logger.logWarning("Error log : $e", error: 'SaleService : _handleRequest');
+      logger.logWarning("Error log : $e",
+          error: 'SaleService : _handleRequest');
       return Left(e.toString());
     }
   }

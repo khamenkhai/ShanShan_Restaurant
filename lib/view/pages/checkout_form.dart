@@ -5,6 +5,7 @@ import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
@@ -13,7 +14,6 @@ import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/home/home.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/payment_edit_dialog.dart';
 import 'package:shan_shan/view/widgets/voucher_widget.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
@@ -26,26 +26,18 @@ class CheckOutForm extends StatefulWidget {
     required this.saleData,
     required this.dateTime,
     required this.taxAmount,
-    required this.dineInOrParcel,
-    required this.prawnCount,
-    required this.octopusCount,
-    required this.remark,
-    required this.menu,
+    required this.menuTitle,
     required this.ahtoneLevel,
     required this.spicyLevel,
     required this.paymentType,
     required this.customerTakevoucher,
-    required this.isEditSale,
+    this.isEditSale = false,
   });
   final List<CartItem> cartItems;
   final SaleModel saleData;
   final String dateTime;
-  final int dineInOrParcel;
-  final int prawnCount;
-  final int octopusCount;
-  final String remark;
   final int taxAmount;
-  final String menu;
+  final String menuTitle;
   final AhtoneLevelModel? ahtoneLevel;
   final SpicyLevelModel? spicyLevel;
   String paymentType;
@@ -75,7 +67,7 @@ class _CheckOutFormState extends State<CheckOutForm> {
   void initState() {
     super.initState();
 
-    context.read<CartCubit>().clearOrderr();
+    context.read<CartCubit>().clearOrder();
 
     ///initialize sunmi printer
     _initializePrinter();
@@ -107,24 +99,24 @@ class _CheckOutFormState extends State<CheckOutForm> {
       customerTakevoucher: widget.customerTakevoucher,
       paymentType: widget.paymentType,
       tableNumber: widget.saleData.tableNumber,
-      menu: widget.menu,
+      menu: widget.menuTitle,
       ahtoneLevel:
           widget.ahtoneLevel == null ? "" : "${widget.ahtoneLevel!.name}",
       spicyLevel:
           widget.spicyLevel == null ? "" : widget.spicyLevel!.name ?? "",
-      remark: "${widget.remark}",
+      remark: "${widget.saleData.remark}",
       cashAmount: widget.saleData.paidCash,
-      paidOnline: widget.saleData.paidOnline,
+      paidOnline: widget.saleData.paidOnline ?? 0,
       date: "${DateFormat('E d, MMM yyyy').format(DateTime.now())}",
-      discountAmount: widget.saleData.discount,
+      discountAmount: widget.saleData.discount ?? 0,
       grandTotal: widget.saleData.grandTotal,
       subTotal: widget.saleData.subTotal,
       orderNumber: widget.saleData.orderNo,
       products: widget.cartItems,
-      octopusCount: widget.octopusCount,
-      prawnCount: widget.prawnCount,
+      octopusCount: widget.saleData.octopusCount ?? 0,
+      prawnCount: widget.saleData.prawnCount ?? 0,
       taxAmount: widget.taxAmount,
-      dineInOrParcel: widget.dineInOrParcel,
+      dineInOrParcel: widget.saleData.dineInOrParcel,
     );
   }
 
@@ -203,8 +195,8 @@ class _CheckOutFormState extends State<CheckOutForm> {
       children: [
         SizedBox(
           width: (screenSize.width / 2.8),
-          height: 60,
           child: CustomElevatedButton(
+            height: 60,
             child: Text("ဘောက်ချာထုတ်ယူရန်"),
             onPressed: () async {
               _printReceipt();
@@ -213,8 +205,8 @@ class _CheckOutFormState extends State<CheckOutForm> {
         ),
         SizedBox(
           width: (screenSize.width / 2.8),
-          height: 60,
-          child: customizableOTButton(
+          child: CustomOutlineButton(
+            height: 60,
             child: Text("ငွေပေးချေမှုကို edit လုပ်ရန်"),
             onPressed: () async {
               String? result = await showDialog(
@@ -245,7 +237,7 @@ class _CheckOutFormState extends State<CheckOutForm> {
           width: (screenSize.width / 2.8),
           height: 60,
           child: widget.isEditSale
-              ? customizableOTButton(
+              ? CustomOutlineButton(
                   child: Text("အရောင်းမှတ်တမ်းသို့ ပြန်သွားရန်"),
                   onPressed: () {
                     Navigator.pop(context);
@@ -256,7 +248,7 @@ class _CheckOutFormState extends State<CheckOutForm> {
                     Navigator.pop(context);
                   },
                 )
-              : customizableOTButton(
+              : CustomOutlineButton(
                   child: Text("အသစ်မှာယူရန်"),
                   onPressed: () {
                     pushAndRemoveUntil(
@@ -293,20 +285,20 @@ class _CheckOutFormState extends State<CheckOutForm> {
                       showEditButton: true,
                       paymentType: widget.paymentType,
                       tableNumber: saleData.tableNumber,
-                      remark: widget.remark,
-                      discount: saleData.discount,
+                      remark: widget.saleData.remark ?? "",
+                      discount: saleData.discount ?? 0,
                       cashAmount: saleData.paidCash,
-                      bankAmount: saleData.paidOnline,
+                      bankAmount: saleData.paidOnline ?? 0,
                       change: saleData.refund,
                       subTotal: saleData.subTotal,
                       cartItems: widget.cartItems,
-                      menu: widget.menu,
+                      menu: widget.menuTitle,
                       date: widget.dateTime,
                       grandTotal: saleData.grandTotal,
                       orderNumber: saleData.orderNo,
-                      octopusCount: widget.prawnCount,
-                      prawnAmount: widget.octopusCount,
-                      dineInOrParcel: widget.dineInOrParcel,
+                      octopusCount: widget.saleData.prawnCount ?? 0,
+                      prawnAmount: widget.saleData.octopusCount ?? 0,
+                      dineInOrParcel: widget.saleData.dineInOrParcel,
                       ahtoneLevel: widget.ahtoneLevel,
                       spicyLevel: widget.spicyLevel,
                     ),
@@ -339,7 +331,7 @@ class _CheckOutFormState extends State<CheckOutForm> {
     } else if (widget.paymentType == "Kpay") {
       return widget.saleData.paidOnline;
     } else {
-      return widget.saleData.paidOnline + widget.saleData.paidCash;
+      return widget.saleData.paidOnline ?? 0 + widget.saleData.paidCash;
     }
   }
 }

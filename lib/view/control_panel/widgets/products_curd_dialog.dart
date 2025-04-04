@@ -54,7 +54,7 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
       _productPriceController.text = widget.product!.price.toString();
       _selectedCategoryId = widget.product!.categoryId;
       _category = widget.product!.category ?? "";
-      _isGram = widget.product!.isGram;
+      _isGram = widget.product!.isGram ?? false;
       _isDefault = widget.product!.isDefault ?? false;
       _quantityController.text = widget.product!.qty.toString();
     }

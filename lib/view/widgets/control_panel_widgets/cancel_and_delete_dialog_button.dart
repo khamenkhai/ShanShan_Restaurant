@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 
 class CancelAndDeleteDialogButton extends StatelessWidget {
   const CancelAndDeleteDialogButton({super.key, required this.onDelete});
@@ -11,7 +11,7 @@ class CancelAndDeleteDialogButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        customizableOTButton(
+        CustomOutlineButton(
           elevation: 0,
           child: Text("ပယ်ဖျက်ရန်"),
           onPressed: () {

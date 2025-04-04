@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
 
 // ignore: must_be_immutable
@@ -51,7 +51,7 @@ class _CartItemQtyDialogControlState extends State<CartItemQtyDialogControl> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              customizableOTButton(
+              CustomOutlineButton(
                 elevation: 0,
                 child: Text("ပယ်ဖျက်ရန်"),
                 onPressed: () {

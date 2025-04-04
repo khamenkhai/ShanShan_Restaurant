@@ -3,7 +3,7 @@ class ProductModel {
   final String? name;
   final int? price;
   final int? categoryId;
-  final isGram;
+  final bool? isGram;
   final int? qty;
   final String? category;
   final bool? isDefault;
