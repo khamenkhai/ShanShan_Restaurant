@@ -10,7 +10,7 @@ import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
-import 'package:shan_shan/view/pages/checkout_form.dart';
+import 'package:shan_shan/view/sale_success/sale_success_page.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
@@ -362,7 +362,7 @@ class _EditCashScreenState extends State<EditCashScreen> {
                       if (!context.mounted) return;
                       redirectTo(
                         context: context,
-                        form: CheckOutForm(
+                        form: SaleSuccessPage(
                           customerTakevoucher: customerTakevoucher,
                           taxAmount: taxAmount,
                           saleData: saleModel,

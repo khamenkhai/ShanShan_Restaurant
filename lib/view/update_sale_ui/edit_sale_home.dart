@@ -434,7 +434,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
               },
               child: PaymentButton(
                 isSelected: onlinePayment,
-                title: "KBZ Pay",
+                title: "Online Pay",
               ),
             ),
           ),

@@ -44,6 +44,7 @@ class LocalNotificationService {
     required String body,
     Map<String, dynamic>? payload,
   }) async {
+  
     final androidDetails = AndroidNotificationDetails(
       'com.example.chat_app.urgent',
       'mychannelid',

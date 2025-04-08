@@ -268,7 +268,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                 widget.onlinePayment) {
                                redirectTo(
                                 context: context,
-                                form: EditKpayAndCashScreen(
+                                form: EditMultiPaymentPage(
                                   date: widget.date,
                                   orderNo: widget.orderNo,
                                   menu: cartCubit.state.menu!.name.toString(),

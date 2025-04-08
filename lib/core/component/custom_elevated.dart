@@ -7,7 +7,7 @@ class CustomElevatedButton extends StatelessWidget {
   final Widget child;
   final double width;
   final double radius;
-  final double height;
+  final double? height;
   final double elevation;
   final VoidCallback? onPressed;
   final double fontSize;

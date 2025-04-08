@@ -36,7 +36,7 @@ class PaymentOptionsWidget extends StatelessWidget {
               onTap: () => onKpayChanged(!paidOnline),
               child: PaymentButton(
                 isSelected: paidOnline,
-                title: "KBZ Pay",
+                title: "Online Pay",
               ),
             ),
           ),

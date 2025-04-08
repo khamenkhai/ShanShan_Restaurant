@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 
 class CustomOutlineButton extends StatelessWidget {
@@ -18,7 +17,7 @@ class CustomOutlineButton extends StatelessWidget {
     this.bgColor,
     required this.child,
     this.width = 100,
-    this.radius ,
+    this.radius,
     this.height = 45,
     this.elevation = 0,
     required this.onPressed,
@@ -27,8 +26,6 @@ class CustomOutlineButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-
       height: height,
       constraints: BoxConstraints(minWidth: width, minHeight: height),
       child: OutlinedButton(

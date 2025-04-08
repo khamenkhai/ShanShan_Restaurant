@@ -101,7 +101,7 @@ class _ReportPageState extends State<ReportPage> {
           if (value == 0) {
             context.read<SaleReportCubit>().getDailyReport();
           } else if (value == 1) {
-            context.read<SaleReportCubit>().getMonthlyReport();
+            context.read<SaleReportCubit>().getWeeklyReport();
           } else if (value == 2) {
             context.read<SaleReportCubit>().getMonthlyReport();
           }

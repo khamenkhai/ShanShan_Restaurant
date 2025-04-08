@@ -6,6 +6,7 @@ import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/view/payment/cash.dart';
+import 'package:shan_shan/view/payment/multi_payment_page.dart';
 import 'package:shan_shan/view/payment/online_payment.dart';
 
 class CheckoutDialog extends StatefulWidget {
@@ -206,7 +207,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   Widget? _getPaymentScreen(CartCubit cartCubit, String remark) {
 
     if (widget.paidCash && widget.paidOnline) {
-      // return KpayAndCashScreen();
+      return MultiPaymentPage();
     } else if (widget.paidCash) {
       return CashScreen();
     } else if (widget.paidOnline) {

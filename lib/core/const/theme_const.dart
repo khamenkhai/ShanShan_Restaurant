@@ -51,6 +51,7 @@ class ThemeConstants {
         foregroundColor: ColorConstants.primaryColor,
         titleTextStyle: _appBarTitleTextStyle.copyWith(fontFamily: fontFamily),
         centerTitle: false,
+        surfaceTintColor: Colors.transparent
       ),
       textTheme: const TextTheme(bodyMedium: _bodyMediumTextStyle),
       fontFamily: fontFamily,

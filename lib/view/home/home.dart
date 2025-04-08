@@ -114,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return AppBar(
       centerTitle: true,
       leadingWidth: 85,
-      surfaceTintColor: Colors.transparent,
       elevation: 0,
       backgroundColor: Colors.transparent,
       leading: Row(
@@ -152,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody(Size screenSize, CartCubit cartCubit) {
     return Container(
-      padding: EdgeInsets.only(top: 5, bottom: 0),
+      padding: EdgeInsets.only(top: 5),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -186,14 +185,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         state is CategoryLoadedState ? state.categoryList : [],
                       ),
                     );
-                    // if (state is CategoryLoadingState) {
-                    //   return LoadingWidget();
-                    // } else if (state is CategoryLoadedState) {
-                    //   return _buildCategoryList(
-                    //     constraints,
-                    //     state.categoryList,
-                    //   );
-                    // }
                   },
                 ),
               );
@@ -250,9 +241,9 @@ class _HomeScreenState extends State<HomeScreen> {
             height: MediaQuery.of(context).size.height + 100,
             margin: EdgeInsets.only(
               right: SizeConst.kHorizontalPadding,
-              bottom: 10,
+              bottom: SizeConst.kVerticalSpacing,
             ),
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: SizeConst.kBorderRadius,
@@ -313,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => setState(() => _paidOnline = !_paidOnline),
             child: PaymentButton(
               isSelected: _paidOnline,
-              title: "KBZ Pay",
+              title: "Online Pay",
             ),
           ),
         ),

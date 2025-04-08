@@ -18,6 +18,7 @@ import 'package:shan_shan/controller/theme_cubit/theme_cubit.dart';
 import 'package:shan_shan/core/const/api_const.dart';
 import 'package:shan_shan/core/local_data/shared_prefs.dart';
 import 'package:shan_shan/core/network/dio_client.dart';
+import 'package:shan_shan/core/service/local_noti_service.dart';
 import 'package:shan_shan/core/utils/custom_logger.dart';
 import 'package:shan_shan/service/ahtone_level_service.dart';
 import 'package:shan_shan/service/auth_service.dart';
@@ -59,6 +60,7 @@ void primaryInit() {
   getIt.registerLazySingleton(() => SpicyLevelService(dioClient: getIt.call(), logger: getIt.call()));
   getIt.registerLazySingleton(() => MenuService(dioClient: getIt.call(), logger: getIt.call()));
   getIt.registerLazySingleton(() => ReportService(dioClient: getIt.call(), logger: getIt.call()));
+  getIt.registerLazySingleton(() => LocalNotificationService());
 
   //base api
   getIt.registerLazySingleton(() => DioClient(sharedPref: getIt.call(), dio: getIt.call()));

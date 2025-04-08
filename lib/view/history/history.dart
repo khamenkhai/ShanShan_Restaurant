@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh_new/pull_to_refresh.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_cubit.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_state.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
+import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/sale_history_model.dart';
-import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/update_sale_ui/edit_sale_home.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/voucher_widget.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
 
 class SalesHistoryPage extends StatefulWidget {
   const SalesHistoryPage({super.key});
@@ -26,13 +26,14 @@ class SalesHistoryPage extends StatefulWidget {
 class _SalesHistoryPageState extends State<SalesHistoryPage> {
   final TextEditingController _searchController = TextEditingController();
   final RefreshController _refreshController = RefreshController();
+
   int _currentPage = 1;
 
   @override
   void initState() {
     super.initState();
     _initializePrinter();
-    context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
+    _loadInitialData();
   }
 
   @override
@@ -42,11 +43,41 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     super.dispose();
   }
 
+  void _loadInitialData() {
+    context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
+  }
+
   Future<void> _initializePrinter() async {
     await SunmiPrinter.bindingPrinter();
     await SunmiPrinter.paperSize();
     await SunmiPrinter.printerVersion();
     await SunmiPrinter.serialNumber();
+  }
+
+  void _handleRefresh() async {
+    _currentPage = 1;
+    await context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
+    _refreshController.refreshCompleted();
+  }
+
+  void _handleLoading() async {
+    _currentPage += 1;
+
+    if (_searchController.text.isEmpty) {
+      await context
+          .read<SalesHistoryCubit>()
+          .loadMoreHistory(page: _currentPage, requestBody: {});
+    }
+
+    _refreshController.loadComplete();
+  }
+
+  void _searchHistory(String value) {
+    if (value.isEmpty) {
+      _loadInitialData();
+    } else {
+      context.read<SalesHistoryCubit>().searchHistory(query: value);
+    }
   }
 
   @override
@@ -61,23 +92,42 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         title: const Text("အရောင်းမှတ်တမ်း"),
       ),
       body: InternetCheckWidget(
-        onRefresh: _refreshHistory,
+        onRefresh: _loadInitialData,
         child: _buildHistoryContent(),
       ),
     );
   }
 
   Widget _buildHistoryContent() {
-    return Padding(
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
       padding: EdgeInsets.symmetric(
         horizontal: SizeConst.kHorizontalPadding,
-        vertical: SizeConst.kHorizontalPadding - 5,
+      ),
+      margin: EdgeInsets.only(
+        top: 5
       ),
       child: Column(
         children: [
           _buildSearchField(),
           const SizedBox(height: 20),
-          Expanded(child: _buildHistoryList()),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  const _HistoryHeaderRow(),
+                  const SizedBox(height: 25),
+                  _buildHistoryList(),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -85,6 +135,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
 
   Widget _buildSearchField() {
     return SizedBox(
+      width: double.infinity,
       height: 45,
       child: TextField(
         controller: _searchController,
@@ -92,54 +143,48 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
           prefixIcon: const Icon(Icons.search),
           labelText: "အရောင်းမှတ်တမ်းရှာဖွေရန်",
         ),
-        onChanged: (value) => _searchHistory(value),
+        onChanged: _searchHistory,
       ),
     );
   }
 
   Widget _buildHistoryList() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: SizeConst.kBorderRadius,
-      ),
-      child: Column(
-        children: [
-          const _HistoryHeaderRow(),
-          const SizedBox(height: 25),
-          BlocBuilder<SalesHistoryCubit, SalesHistoryState>(
-            builder: (context, state) {
-              if (state is SalesHistoryLoadingState) {
-                return const Expanded(child: _HistorySkeletonList());
-              } else if (state is SalesHistoryLoadedState) {
-                return _buildLoadedHistoryList(state.history);
-              } else if (state is SalesHistoryErrorState) {
-                return _buildErrorState();
-              }
-              return const Center(child: Text("Something went wrong"));
-            },
-          ),
-        ],
+    return BlocBuilder<SalesHistoryCubit, SalesHistoryState>(
+      builder: (context, state) {
+        if (state is SalesHistoryLoadingState) {
+          return _buildShimmerLoading();
+        } else if (state is SalesHistoryLoadedState) {
+          return _buildSmartRefresher(state.history);
+        } else if (state is SalesHistoryErrorState) {
+          return _buildErrorState();
+        }
+        return const Center(child: Text("Something went wrong"));
+      },
+    );
+  }
+
+  Widget _buildShimmerLoading() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: 15,
+        itemBuilder: (context, index) => _buildHistoryShimmer(),
       ),
     );
   }
 
-  Widget _buildLoadedHistoryList(List<SaleHistoryModel> histories) {
+  Widget _buildSmartRefresher(List<SaleHistoryModel> histories) {
     return Expanded(
       child: SmartRefresher(
         controller: _refreshController,
-        onRefresh: _refreshHistory,
-        onLoading: _loadMoreHistory,
+        onRefresh: _handleRefresh,
+        onLoading: _handleLoading,
         enablePullDown: true,
         enablePullUp: true,
         child: ListView.builder(
           itemCount: histories.length,
-          itemBuilder: (context, index) => HistoryRow(
+          itemBuilder: (context, index) => _buildHistoryRow(
             history: histories[index],
             index: index + 1,
-            onPrint: () => _printReceipt(histories[index]),
-            onEdit: () => _editSale(histories[index]),
           ),
         ),
       ),
@@ -155,7 +200,11 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
             const Text("History Not Found"),
             const SizedBox(height: 5),
             IconButton(
-              onPressed: _resetHistory,
+              onPressed: () {
+                _currentPage = 1;
+                _loadInitialData();
+                setState(() => _searchController.clear());
+              },
               icon: const Icon(Icons.refresh, size: 35),
             ),
           ],
@@ -164,70 +213,130 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
-  Future<void> _refreshHistory() async {
-    _currentPage = 1;
-    await context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
-    _refreshController.refreshCompleted();
-  }
-
-  Future<void> _loadMoreHistory() async {
-    _currentPage += 1;
-    if (_searchController.text.isEmpty) {
-      await context.read<SalesHistoryCubit>().loadMoreHistory(
-        page: _currentPage, 
-        requestBody: {}
-      );
-    }
-    _refreshController.loadComplete();
-  }
-
-  void _searchHistory(String value) {
-    if (value.isEmpty) {
-      context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
-    } else {
-      context.read<SalesHistoryCubit>().searchHistory(query: value);
-    }
-  }
-
-  void _resetHistory() {
-    _currentPage = 1;
-    _searchController.clear();
-    context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
-  }
-
-  void _printReceipt(SaleHistoryModel history) {
-    // Implement your print logic here
-  }
-
-  void _editSale(SaleHistoryModel history) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditSaleScreen(
-          saleHistory: history,
-          orderNo: history.orderNo,
+  Widget _buildHistoryShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade100,
+      highlightColor: Colors.grey.shade300,
+      child: Container(
+        height: 30,
+        margin: const EdgeInsets.only(bottom: 25),
+        decoration: BoxDecoration(color: Colors.grey),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "category shimer",
+              style: TextStyle(
+                color: Colors.transparent,
+                fontSize: 16,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // ignore: unused_element
+  Widget _buildHistoryRow({
+    required SaleHistoryModel history,
+    required int index,
+  }) {
+    return InkWell(
+      onTap: () => _showHistoryDetails(history),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                history.orderNo,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                history.tableNumber,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                "${formatNumber(history.grandTotal)}  MMK ",
+                textAlign: TextAlign.right,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 20),
+              width: 50,
+              child: Visibility(
+                visible: _getPaymentMethod(
+                      paidCash: history.paidCash,
+                      paidOnline: history.paidOnline,
+                    ) ==
+                    "kpay",
+                child: Text(
+                  "(${_getPaymentMethod(
+                    paidCash: history.paidCash,
+                    paidOnline: history.paidOnline,
+                  )})",
+                ),
+              ),
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _buildPrintButton(history),
+                  const SizedBox(width: 10),
+                  _buildEditButton(history),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPrintButton(SaleHistoryModel history) {
+    return InkWell(
+      onTap: () => _printReceipt(history),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: const Icon(Icons.print),
+      ),
+    );
+  }
+
+  Widget _buildEditButton(SaleHistoryModel history) {
+    return InkWell(
+      onTap: () => _navigateToEditScreen(history),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: const Icon(Icons.edit),
+      ),
+    );
+  }
+
   void _showHistoryDetails(SaleHistoryModel history) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: SizeConst.kBorderRadius,
+          borderRadius: BorderRadius.circular(15),
         ),
-        child: _buildVoucherDialog(history),
+        child: _buildHistoryDialogContent(history),
       ),
     );
   }
 
-  Widget _buildVoucherDialog(SaleHistoryModel history) {
+  Widget _buildHistoryDialogContent(SaleHistoryModel history) {
     return Container(
       width: MediaQuery.of(context).size.width / 2.5,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -235,9 +344,14 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () => Navigator.pop(context),
+                InkWell(
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  onTap: () => Navigator.pop(context),
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 15),
+                    child: Icon(Icons.clear),
+                  ),
                 ),
               ],
             ),
@@ -252,16 +366,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
               orderNumber: history.orderNo,
               ahtoneLevel: AhtoneLevelModel(name: history.ahtoneLevel.name),
               spicyLevel: SpicyLevelModel(name: history.spicyLevel.name),
-              cartItems: history.products
-                  .map((e) => CartItem(
-                        id: e.productId,
-                        name: e.name,
-                        price: e.price,
-                        qty: e.qty,
-                        totalPrice: e.totalPrice,
-                        isGram: false,
-                      ))
-                  .toList(),
+              cartItems: history.products.map(_mapToCartItem).toList(),
               octopusCount: history.octopusCount,
               prawnAmount: history.prawnCount,
               dineInOrParcel: history.dineInOrParcel,
@@ -277,10 +382,62 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
+  CartItem _mapToCartItem(dynamic e) {
+    return CartItem(
+      id: e.productId,
+      name: e.name,
+      price: e.price,
+      qty: e.qty,
+      totalPrice: e.totalPrice,
+      isGram: false,
+    );
+  }
+
+  Future<void> _printReceipt(SaleHistoryModel history) async {
+    await printReceipt(
+      customerTakevoucher: false,
+      tableNumber: int.parse(history.tableNumber),
+      orderNumber: history.orderNo,
+      date: history.createdAt,
+      products: history.products.map(_mapToCartItem).toList(),
+      discountAmount: history.discount,
+      subTotal: history.subTotal,
+      grandTotal: history.grandTotal,
+      cashAmount: history.paidCash,
+      remark: history.remark,
+      menu: history.menu.name ?? "",
+      ahtoneLevel: history.ahtoneLevel.name,
+      spicyLevel: history.spicyLevel.name.toString(),
+      octopusCount: history.octopusCount,
+      prawnCount: history.prawnCount,
+      taxAmount: history.tax,
+      dineInOrParcel: history.dineInOrParcel,
+      paymentType: _getPaymentType(history),
+      paidOnline: history.paidOnline,
+    );
+  }
+
+  void _navigateToEditScreen(SaleHistoryModel history) {
+    redirectTo(
+      context: context,
+      form: EditSaleScreen(
+        saleHistory: history,
+        orderNo: history.orderNo,
+      ),
+    );
+  }
+
   String _getPaymentType(SaleHistoryModel sale) {
     if (sale.paidCash > 0 && sale.paidOnline == 0) return "Cash";
-    if (sale.paidCash == 0 && sale.paidOnline > 0) return "Kpay";
+    if (sale.paidCash == 0 && sale.paidOnline >= 0) return "Kpay";
     return "Cash / Kpay";
+  }
+
+  String _getPaymentMethod({required int paidCash, required int paidOnline}) {
+    if (paidCash > 0 && paidOnline == 0) return "";
+    if (paidOnline > 0 && paidCash == 0) return "kpay";
+    if (paidCash > 0 && paidOnline > 0) return "cash/kpay";
+    return "unknown";
   }
 }
 
@@ -293,114 +450,44 @@ class _HistoryHeaderRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
+          flex: 1,
           child: Text(
             "ပြေစာနံပါတ်",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),),
-        Expanded(
-          child: Center(
-            child: Text(
-                "စားပွဲနံပါတ်",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
         ),
         Expanded(
+          flex: 1,
+          child: Center(
+            child: Text(
+              "စားပွဲနံပါတ်",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
           child: Text(
             "စုစုပေါင်း",
             textAlign: TextAlign.right,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),),
-        SizedBox(width: 70), // Space for action buttons
-      ],
-    );
-  }
-}
-
-class HistoryRow extends StatelessWidget {
-  final SaleHistoryModel history;
-  final int index;
-  final VoidCallback onPrint;
-  final VoidCallback onEdit;
-
-  const HistoryRow({
-    super.key,
-    required this.history,
-    required this.index,
-    required this.onPrint,
-    required this.onEdit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: InkWell(
-        onTap: () => _showHistoryDetails(context),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(history.orderNo, style: const TextStyle(fontSize: 16)),),
-            Expanded(
-              child: Text(history.tableNumber,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16)),),
-            Expanded(
-              child: Text(
-                "${formatNumber(history.grandTotal)} MMK",
-                textAlign: TextAlign.right,
-                style: const TextStyle(fontSize: 16)),),
-            SizedBox(
-              width: 70,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.print),
-                    onPressed: onPrint,
-                    padding: EdgeInsets.zero,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: onEdit,
-                    padding: EdgeInsets.zero,
-                  ),
-                ],
-              ),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showHistoryDetails(BuildContext context) {
-    // Implement details dialog if needed
-  }
-}
-
-class _HistorySkeletonList extends StatelessWidget {
-  const _HistorySkeletonList();
-
-  @override
-  Widget build(BuildContext context) {
-    return Skeletonizer(
-      enabled: true,
-      child: ListView.builder(
-        itemCount: 15,
-        itemBuilder: (context, index) => Container(
-          height: 30,
-          margin: const EdgeInsets.only(bottom: 25),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: Text("Loading...")),
-              Expanded(child: Center(child: Text("Loading..."))),
-              Expanded(child: Align(
-                alignment: Alignment.centerRight,
-                child: Text("Loading..."))),
-              SizedBox(width: 70),
-            ],
           ),
         ),
-      ),
+        SizedBox(width: 70), // Replaced Container with margin
+        Expanded(
+          flex: 1,
+          child: SizedBox(), // Empty widget for alignment
+        ),
+      ],
     );
   }
 }

@@ -109,7 +109,7 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
                     },
                     child: PaymentButton(
                       isSelected: paidOnline,
-                      title: "KBZ Pay",
+                      title: "Online Pay",
                     ),
                   ),
                 ),

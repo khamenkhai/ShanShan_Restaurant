@@ -1,8 +1,8 @@
 import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import 'package:intl/intl.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -128,39 +128,6 @@ InputDecoration customTextDecoration2(
   );
 }
 
-///custumizable elevated button
-// Container CustomElevatedButton({
-//   Color fgColor = Colors.white,
-//   Color? bgColor,
-//   required Widget child,
-//   double width = 100,
-//   double radius = 15,
-//   double height = 45,
-//   double elevation = 0,
-//   required Function() onPressed,
-//   double fontSize = 16,
-//   bool enabled = true,
-// }) {
-//   return Container(
-//     padding: EdgeInsets.symmetric(vertical: 5),
-//     //width: width,
-//     height: height,
-//     constraints: BoxConstraints(minWidth: width),
-//     child: ElevatedButton(
-//       style: ElevatedButton.styleFrom(
-//         textStyle: TextStyle(fontWeight: FontWeight.normal, fontSize: fontSize),
-//         elevation: elevation,
-//         foregroundColor: Colors.white,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: SizeConst.kBorderRadius,
-//         ),
-//         backgroundColor: bgColor == null ? ColorConstants.primaryColor : bgColor,
-//       ),
-//       onPressed: enabled ? onPressed : null,
-//       child: child,
-//     ),
-//   );
-// }
 
 ///shimmer loading widget
 Shimmer categoryShimmer({double height = 35}) {
@@ -229,84 +196,64 @@ InkWell appBarLeading({required Function() onTap}) {
             ),
           ),
         ),
-        // SizedBox(width: 5),
-        // Text(
-        //   "${tr(LocaleKeys.lblBack)}",
-        //   style: TextStyle(
-        //     color: ColorConstants.primaryColor,
-        //     fontWeight: FontWeight.normal,
-        //   ),
-        // )
+
       ],
     ),
   );
 }
 
-///locading Circle widget
-// Widget LoadingWidget({
-//   Color? color,
-//   double? size,
-//   double? height,
-// }) {
-//   return Center(
-//     //child: CircularProgressIndicator(),
-//     child: SpinKitFadingCircle(
-//       color: ColorConstants.primaryColor,
-//       size: 50.0,
-//     ),
-//   );
-// }
+
 
 Widget copyRightWidget() {
-  return Container(
-    width: double.infinity,
-    height: 50,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(width: 40),
-        Text(
-          "Copyright © 2024 - ${DateFormat('y').format(DateTime.now())} TermsFeed®. All rights reserved.",
-          style: TextStyle(
-            fontSize: 16,
+  return InkWell(
+    onTap: (){
+  
+    },
+    child: Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+       color: Colors.white,
+       border: Border(
+        top: BorderSide(
+          width: 0.5,
+          color: Colors.grey
+        )
+       )
+      ),
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(width: 40),
+          Text(
+            "Copyright © 2024 - ${DateFormat('y').format(DateTime.now())} TermsFeed®. All rights reserved.",
+            style: TextStyle(
+              fontSize: 16,
+            ),
           ),
-        ),
-        SizedBox(width: 10),
-        Row(
-          children: [
-            Text(
-              "Developed By",
-              style: TextStyle(
-                fontSize: 16,
+          SizedBox(width: 10),
+          Row(
+            children: [
+              Text(
+                "Developed By",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
               ),
-            ),
-            Text(
-              " Softnovations",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+              Text(
+                " Softnovations",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(width: 30),
-      ],
+            ],
+          ),
+          SizedBox(width: 30),
+        ],
+      ),
     ),
   );
 }
 
 
-// ///locading Circle widget
-// Widget loadingDots({
-//   Color? color,
-//   double? size,
-//   double? height,
-// }) {
-//   return Center(
-//     child: Image.asset(
-      
-//       height: height == null ? 80 : height,
-//       fit: BoxFit.contain,
-//     ),
-//   );
-// }

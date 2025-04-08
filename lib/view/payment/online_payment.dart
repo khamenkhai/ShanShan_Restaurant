@@ -12,7 +12,7 @@ import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
-import 'package:shan_shan/view/pages/checkout_form.dart';
+import 'package:shan_shan/view/sale_success/sale_success_page.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 
@@ -214,7 +214,7 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
       LocalNotificationService().showNotification(title: "Sale Success!", body: "");
       NavigationHelper.pushReplacement(
         context,
-        CheckOutForm(
+        SaleSuccessPage(
           customerTakevoucher: customerTakesVoucher,
           taxAmount: taxAmount,
           saleData: saleModel,
