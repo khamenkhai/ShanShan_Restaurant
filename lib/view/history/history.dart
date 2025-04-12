@@ -111,13 +111,13 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       child: Column(
         children: [
           _buildSearchField(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
+                 borderRadius: SizeConst.kBorderRadius
               ),
               child: Column(
                 children: [
@@ -326,7 +326,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       context: context,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: SizeConst.kBorderRadius
         ),
         child: _buildHistoryDialogContent(history),
       ),

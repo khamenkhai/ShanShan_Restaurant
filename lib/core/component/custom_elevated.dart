@@ -43,7 +43,7 @@ class CustomElevatedButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: SizeConst.kBorderRadius,
           ),
-          backgroundColor: bgColor ?? ColorConstants.primaryColor,
+          backgroundColor: bgColor ?? Theme.of(context).primaryColor,
         ),
         onPressed: isEnabled ? onPressed : null,
         child: child,

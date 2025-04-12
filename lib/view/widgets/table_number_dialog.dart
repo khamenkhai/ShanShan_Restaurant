@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/utils/utils.dart';
-import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
+import 'package:shan_shan/core/component/custom_dialog.dart';
 
 class TableNumberDialog extends StatelessWidget {
   final TextEditingController tableController;

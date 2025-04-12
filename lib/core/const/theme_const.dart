@@ -5,99 +5,242 @@ import 'package:shan_shan/core/const/color_const.dart';
 @immutable
 class ThemeConstants {
   // Common styles and themes (all const to reduce runtime overhead)
-  static const SystemUiOverlayStyle _systemOverlayStyle = SystemUiOverlayStyle(
+  static const SystemUiOverlayStyle _lightSystemOverlayStyle = SystemUiOverlayStyle(
+    statusBarIconBrightness: Brightness.dark,
+    statusBarColor: Colors.transparent,
+  );
+
+  static const SystemUiOverlayStyle _darkSystemOverlayStyle = SystemUiOverlayStyle(
     statusBarIconBrightness: Brightness.light,
     statusBarColor: Colors.transparent,
   );
 
-  static const TextStyle _appBarTitleTextStyle = TextStyle(
-    color: Colors.black,
+  static TextStyle _appBarTitleTextStyle(Color color) => TextStyle(
+    color: color,
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
 
   static const TextStyle _bodyMediumTextStyle = TextStyle(fontSize: 16);
-
-  static const IconThemeData _iconTheme = IconThemeData(
-    color: ColorConstants.primaryColor,
-  );
-
-  static const SwitchThemeData _switchTheme = SwitchThemeData(
+  
+  static SwitchThemeData _switchTheme(Color primaryColor) => SwitchThemeData(
+    thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
+      if (states.contains(MaterialState.selected)) {
+        return primaryColor;
+      }
+      return Colors.grey;
+    }),
+    trackColor: MaterialStateProperty.resolveWith<Color>((states) {
+      if (states.contains(MaterialState.selected)) {
+        return primaryColor.withOpacity(0.5);
+      }
+      return Colors.grey.withOpacity(0.5);
+    }),
     splashRadius: 10,
   );
 
-  static const BottomNavigationBarThemeData _bottomNavigationBarTheme =
-      BottomNavigationBarThemeData(
-    selectedItemColor: ColorConstants.primaryColor,
-  );
+  static BottomNavigationBarThemeData _bottomNavigationBarTheme(Color primaryColor) =>
+    BottomNavigationBarThemeData(
+      selectedItemColor: primaryColor,
+      unselectedItemColor: Colors.grey,
+      backgroundColor: Colors.white,
+    );
 
-  /// Light theme (cached for better performance)
-  static ThemeData lightTheme({required String fontFamily}) {
+  static BottomNavigationBarThemeData _darkBottomNavigationBarTheme(Color primaryColor) =>
+    BottomNavigationBarThemeData(
+      selectedItemColor: primaryColor,
+      unselectedItemColor: Colors.grey[400]!,
+      backgroundColor: ColorConstants.backgroundColorDark,
+    );
+
+  /// Light theme
+  static ThemeData lightTheme({
+    required String fontFamily,
+    Color? primaryColor,
+  }) {
+    final color = primaryColor ?? ColorConstants.primaryColor;
+    final onPrimary = color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    
     return ThemeData(
-      useMaterial3: true,
       brightness: Brightness.light,
-      colorScheme: const ColorScheme.light(
-        primary: ColorConstants.primaryColor,
-        secondary: ColorConstants.secondaryColor,
+      primaryColor: color,
+      colorScheme: ColorScheme.light(
+        primary: color,
+        onPrimary: onPrimary,
+        secondary: color.withOpacity(0.8),
         surface: Colors.white,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onSurface: Colors.black,
+        background: ColorConstants.backgroundColorLight,
       ),
       appBarTheme: AppBarTheme(
-        systemOverlayStyle: _systemOverlayStyle,
+        systemOverlayStyle: _lightSystemOverlayStyle,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: ColorConstants.primaryColor,
-        titleTextStyle: _appBarTitleTextStyle.copyWith(fontFamily: fontFamily),
+        foregroundColor: color,
+        titleTextStyle: _appBarTitleTextStyle(Colors.black).copyWith(fontFamily: fontFamily),
         centerTitle: false,
-        surfaceTintColor: Colors.transparent
+        surfaceTintColor: Colors.transparent,
+        iconTheme: IconThemeData(color: color),
       ),
-      textTheme: const TextTheme(bodyMedium: _bodyMediumTextStyle),
-      fontFamily: fontFamily,
+      textTheme: TextTheme(
+        bodyMedium: _bodyMediumTextStyle.copyWith(color: Colors.black87),
+        titleMedium: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        labelLarge: TextStyle(color: Colors.white), // For buttons
+      ),
       scaffoldBackgroundColor: ColorConstants.backgroundColorLight,
-      switchTheme: _switchTheme,
-      iconTheme: _iconTheme,
-      dialogTheme: const DialogTheme(backgroundColor: Colors.white),
-      bottomNavigationBarTheme: _bottomNavigationBarTheme,
-      
+      switchTheme: _switchTheme(color),
+      iconTheme: IconThemeData(color: color),
+      dialogTheme: DialogTheme(
+        backgroundColor: Colors.white,
+        titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        contentTextStyle: TextStyle(color: Colors.black87),
+      ),
+      bottomNavigationBarTheme: _bottomNavigationBarTheme(color),
+      cardTheme: CardTheme(
+        color: Colors.white,
+        elevation: 1,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      buttonTheme: ButtonThemeData(
+        buttonColor: color,
+        textTheme: ButtonTextTheme.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: onPrimary,
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+            cardColor: ColorConstants.cardColorLight,
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: color, width: 2),
+        ),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
+      ),
     );
   }
 
-  /// Dark theme (cached for better performance)
-  static ThemeData darkTheme({required String fontFamily}) {
-    return ThemeData(
-      useMaterial3: true,
+  /// Dark theme
+  static ThemeData darkTheme({
+    required String fontFamily,
+    Color? primaryColor,
+  }) {
+    final color = primaryColor ?? Colors.blue;
+    final onPrimary = color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    
+    return ThemeData.dark().copyWith(
       brightness: Brightness.dark,
-      colorScheme: const ColorScheme.dark(
-        primary: ColorConstants.primaryColor,
-        secondary: ColorConstants.secondaryColor,
-        // surface: ColorConstants.customColor,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onSurface: Colors.white,
+      primaryColor: color,
+      colorScheme: ColorScheme.dark(
+        primary: color,
+        onPrimary: onPrimary,
+        secondary: color.withOpacity(0.8),
+        surface: ColorConstants.backgroundColorDark,
+        background: ColorConstants.backgroundColorDark,
       ),
       appBarTheme: AppBarTheme(
-        systemOverlayStyle: _systemOverlayStyle,
-        backgroundColor: ColorConstants.primaryColor,
+        systemOverlayStyle: _darkSystemOverlayStyle,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.white,
-        titleTextStyle: _appBarTitleTextStyle.copyWith(fontFamily: fontFamily),
+        titleTextStyle: _appBarTitleTextStyle(Colors.white).copyWith(fontFamily: fontFamily),
         centerTitle: false,
+        iconTheme: IconThemeData(color: color),
       ),
-      textTheme: const TextTheme(bodyMedium: _bodyMediumTextStyle),
-      fontFamily: fontFamily,
+      textTheme: TextTheme(
+        bodyMedium: _bodyMediumTextStyle.copyWith(color: Colors.white.withOpacity(0.87)),
+        titleMedium: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        labelLarge: TextStyle(color: Colors.black), // For buttons
+      ),
       scaffoldBackgroundColor: ColorConstants.backgroundColorDark,
-      switchTheme: _switchTheme,
-      iconTheme: _iconTheme,
-      iconButtonTheme: const IconButtonThemeData(style: ButtonStyle()),
-      dialogTheme: const DialogTheme(
+      switchTheme: _switchTheme(color),
+      iconTheme: IconThemeData(color: color),
+      dialogTheme: DialogTheme(
         backgroundColor: ColorConstants.backgroundColorDark,
+        titleTextStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        contentTextStyle: TextStyle(color: Colors.white.withOpacity(0.87)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
-      popupMenuTheme: const PopupMenuThemeData(
+      popupMenuTheme: PopupMenuThemeData(
         color: ColorConstants.backgroundColorDark,
+        textStyle: TextStyle(color: Colors.white),
       ),
-      bottomNavigationBarTheme: _bottomNavigationBarTheme,
+      bottomNavigationBarTheme: _darkBottomNavigationBarTheme(color),
+      cardTheme: CardTheme(
+        color: ColorConstants.cardColorDark,
+        elevation: 1,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      cardColor: ColorConstants.cardColorDark,
+      buttonTheme: ButtonThemeData(
+        buttonColor: color,
+        textTheme: ButtonTextTheme.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: onPrimary,
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade700),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade700),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: color, width: 2),
+        ),
+        labelStyle: TextStyle(color: Colors.grey.shade400),
+        fillColor: ColorConstants.cardColorDark,
+        filled: true,
+      ),
+      dividerTheme: DividerThemeData(
+        color: Colors.grey.shade800,
+        thickness: 1,
+        space: 1,
+      ),
     );
   }
 }

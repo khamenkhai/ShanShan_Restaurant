@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/view/control_panel/widgets/products_curd_dialog.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
-import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
@@ -38,7 +37,7 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
         title: Text(widget.title),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: ColorConstants.primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         label: const Text("ပစ္စည်းအသစ်ထည့်ရန်"),
         icon: const Icon(Icons.add),
         onPressed: () => showDialog(

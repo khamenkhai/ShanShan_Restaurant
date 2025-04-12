@@ -24,7 +24,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   ic.primaryInit();
-  runApp(MyApp());
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('my', 'MM'),
+      ],
+      path: 'assets/translations',
+      fallbackLocale: Locale('en', 'US'),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -57,7 +68,8 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider(create: (context) => ic.getIt<InternetConnectionCubit>()),
         BlocProvider(create: (context) => ic.getIt<ThemeCubit>()),
-        BlocProvider(create: (context) => ic.getIt<AuthCubit>()..checkLoginStatus()),
+        BlocProvider(
+            create: (context) => ic.getIt<AuthCubit>()..checkLoginStatus()),
         BlocProvider(create: (context) => ic.getIt<CartCubit>()),
         BlocProvider(create: (context) => ic.getIt<ProductsCubit>()),
         BlocProvider(create: (context) => ic.getIt<CategoryCubit>()),
@@ -76,6 +88,9 @@ class _MyAppState extends State<MyApp> {
             title: 'ShanShan',
             theme: state.theme,
             debugShowCheckedModeBanner: false,
+            locale: context.locale, // The current locale
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
             home: App(),
           );
         },

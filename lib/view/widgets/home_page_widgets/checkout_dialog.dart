@@ -105,7 +105,6 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
         style: const TextStyle(
           fontSize: 19,
           fontWeight: FontWeight.bold,
-          color: ColorConstants.primaryColor,
         ),
       );
 
@@ -205,7 +204,6 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   }
 
   Widget? _getPaymentScreen(CartCubit cartCubit, String remark) {
-
     if (widget.paidCash && widget.paidOnline) {
       return MultiPaymentPage();
     } else if (widget.paidCash) {

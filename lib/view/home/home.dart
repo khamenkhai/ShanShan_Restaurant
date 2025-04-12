@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             margin: const EdgeInsets.symmetric(vertical: 7),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: SizeConst.kBorderRadius,
             ),
             child: Center(
@@ -139,11 +139,11 @@ class _HomeScreenState extends State<HomeScreen> {
         // const DateActionWidget(),
         const SizedBox(width: SizeConst.kHorizontalPadding),
       ],
-      title: const Text(
+      title:  Text(
         "ရှန်းရှန်း",
         style: TextStyle(
           fontFamily: "Outfit",
-          color: Colors.black,
+          color: Theme.of(context).cardColor
         ),
       ),
     );
@@ -245,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: SizeConst.kBorderRadius,
             ),
             child: Column(

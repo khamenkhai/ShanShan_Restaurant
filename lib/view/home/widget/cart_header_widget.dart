@@ -4,7 +4,7 @@ import 'package:shan_shan/core/const/const_export.dart';
 
 class CartHeaderWidget extends StatelessWidget {
   final VoidCallback onClearOrder;
-  
+
   const CartHeaderWidget({
     super.key,
     required this.onClearOrder,
@@ -22,7 +22,6 @@ class CartHeaderWidget extends StatelessWidget {
             "Order",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: ColorConstants.primaryColor,
               fontSize: 17,
             ),
           ),
@@ -30,13 +29,12 @@ class CartHeaderWidget extends StatelessWidget {
           InkWell(
             onTap: onClearOrder,
             child: Container(
-              padding: const EdgeInsets.symmetric( vertical: 3),
-              decoration: BoxDecoration(
-                borderRadius: SizeConst.kBorderRadius,
-                color: Colors.white,
-              ),
-              child: Icon(IconlyBold.close_square)
-            ),
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  borderRadius: SizeConst.kBorderRadius,
+                  color: Colors.white,
+                ),
+                child: Icon(IconlyBold.close_square)),
           ),
         ],
       ),

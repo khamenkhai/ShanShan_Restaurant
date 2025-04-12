@@ -62,7 +62,7 @@ class _ReportPageState extends State<ReportPage> {
     return BlocBuilder<SaleReportCubit, SaleReportState>(
       builder: (context, state) {
         return FloatingActionButton.extended(
-          backgroundColor: ColorConstants.primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           onPressed: () => _handlePrintAction(state),
           label: const Text("အရောင်းအစီရင်ခံစာပရင့်ထုတ်ရန်"),
           icon: const Icon(CupertinoIcons.printer),

@@ -25,7 +25,7 @@ class CategoryBoxWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       borderRadius: SizeConst.kBorderRadius,
-      color: Colors.white,
+      color: Theme.of(context).cardColor,
       child: Container(
         width: ((constraints.maxWidth - SizeConst.kHorizontalPadding) / 2),
         height: constraints.maxHeight / 1.2,

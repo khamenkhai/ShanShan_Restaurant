@@ -56,8 +56,12 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
     remarkController.text = context.read<EditSaleCartCubit>().state.remark;
     tableController.text =
         context.read<EditSaleCartCubit>().state.tableNumber.toString();
-    setState(() {});
+    resetPage();
     super.initState();
+  }
+
+  void resetPage() {
+    setState(() {});
   }
 
   @override
@@ -75,8 +79,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
           listener: (context, state) {},
           builder: (context, state) {
             return Container(
-              width:
-                  widget.width ?? screenSize.width / 3.8,
+              width: widget.width ?? screenSize.width / 3.8,
               padding: EdgeInsets.all(15),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -85,7 +88,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                   Text(
                     "မှာယူမှု ",
                     style: TextStyle(
-                        fontSize: 24- 5,
+                        fontSize: 24 - 5,
                         color: ColorConstants.primaryColor,
                         fontWeight: FontWeight.bold),
                   ),
@@ -130,9 +133,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                   SizedBox(height: 10),
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        isParcel = false;
-                      });
+                      isParcel = false;
+                      resetPage();
                     },
                     child: Row(
                       children: [
@@ -147,9 +149,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                   SizedBox(height: 15),
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        isParcel = true;
-                      });
+                      isParcel = true;
+                      resetPage();
                     },
                     child: Row(
                       children: [
@@ -228,7 +229,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   spicyLevel: cartCubit.state.spicyLevel == null
                                       ? 000
                                       : cartCubit.state.spicyLevel!.id!,
-                                  menuId: cartCubit.state.menu!.id ,
+                                  menuId: cartCubit.state.menu!.id,
                                   tableNumber: int.parse(tableController.text),
                                   dineInOrParcel: isParcel ? 0 : 1,
                                   subTotal: cartCubit.getTotalAmount(),
@@ -239,7 +240,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                               );
                             } else if (!widget.paidCash &&
                                 widget.onlinePayment) {
-                               redirectTo(
+                              redirectTo(
                                 context: context,
                                 //replacement: true,
                                 form: EditOnlinePaymentScreen(
@@ -254,7 +255,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   spicyLevel: cartCubit.state.spicyLevel == null
                                       ? 000
                                       : cartCubit.state.spicyLevel!.id!,
-                                  menuId: cartCubit.state.menu!.id ,
+                                  menuId: cartCubit.state.menu!.id,
                                   tableNo: int.parse(tableController.text),
                                   dineInOrParcel: isParcel ? 0 : 1,
                                   subTotal: cartCubit.getTotalAmount(),
@@ -266,7 +267,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                               );
                             } else if (widget.paidCash &&
                                 widget.onlinePayment) {
-                               redirectTo(
+                              redirectTo(
                                 context: context,
                                 form: EditMultiPaymentPage(
                                   date: widget.date,
@@ -280,7 +281,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                                   spicyLevel: cartCubit.state.spicyLevel == null
                                       ? 000
                                       : cartCubit.state.spicyLevel!.id!,
-                                  menuId: cartCubit.state.menu!.id ,
+                                  menuId: cartCubit.state.menu!.id,
                                   tableNumber: int.parse(tableController.text),
                                   dineInOrParcel: isParcel ? 0 : 1,
                                   subTotal: cartCubit.getTotalAmount(),
@@ -323,9 +324,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
           onPressed: () {
             if (octopusCount == 0) {
             } else {
-              setState(() {
-                octopusCount -= 1;
-              });
+              octopusCount -= 1;
+              resetPage();
             }
           },
           icon: Icon(
@@ -346,9 +346,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onPressed: () {
-            setState(() {
-              octopusCount += 1;
-            });
+            octopusCount += 1;
+            resetPage();
           },
           icon: Icon(
             Icons.add_circle,
@@ -374,9 +373,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
           onPressed: () {
             if (prawnCount == 0) {
             } else {
-              setState(() {
-                prawnCount -= 1;
-              });
+              prawnCount -= 1;
+              resetPage();
             }
           },
           icon: Icon(
@@ -397,9 +395,8 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onPressed: () {
-            setState(() {
-              prawnCount += 1;
-            });
+            prawnCount += 1;
+            resetPage();
           },
           icon: Icon(
             Icons.add_circle,

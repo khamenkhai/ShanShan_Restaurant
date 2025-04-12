@@ -6,7 +6,6 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
-import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
@@ -47,7 +46,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
         title: Text("${widget.title}"),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: ColorConstants.primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         label: Text("အထုံ Level အသစ်ထည့်ရန်"),
         icon: Icon(Icons.add),
         onPressed: () {

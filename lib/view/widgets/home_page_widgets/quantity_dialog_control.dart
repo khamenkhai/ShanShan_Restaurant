@@ -6,7 +6,7 @@ import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.d
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
-import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
+import 'package:shan_shan/core/component/custom_dialog.dart';
 
 // ignore: must_be_immutable
 class CartItemQtyDialogControl extends StatefulWidget {

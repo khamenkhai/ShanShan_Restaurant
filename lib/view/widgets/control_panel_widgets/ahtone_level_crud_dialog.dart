@@ -7,7 +7,7 @@ import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
-import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
+import 'package:shan_shan/core/component/custom_dialog.dart';
 
 class AhtoneLevelCRUDDialog extends StatefulWidget {
   const AhtoneLevelCRUDDialog({

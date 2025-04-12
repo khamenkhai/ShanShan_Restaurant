@@ -6,7 +6,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
-import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
+import 'package:shan_shan/core/component/custom_dialog.dart';
 
 class ProductWeightOrDetailControl extends StatefulWidget {
   const ProductWeightOrDetailControl({

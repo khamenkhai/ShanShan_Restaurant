@@ -5,7 +5,6 @@ import 'package:shan_shan/view/widgets/control_panel_widgets/cancel_and_delete_d
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shan_shan/controller/category_cubit/category_cubit.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
-import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/response_models/category_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
@@ -39,7 +38,7 @@ class _CategoriesControlPageState extends State<CategoriesControlPage> {
         title: Text(widget.title),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: ColorConstants.primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         label: const Text("အသစ်ထည့်ရန်"),
         icon: const Icon(Icons.add),
         onPressed: () => _showCategoryDialog(context, screenSize),

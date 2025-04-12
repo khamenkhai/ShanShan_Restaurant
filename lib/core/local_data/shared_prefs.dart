@@ -83,7 +83,8 @@ class SharedPref {
   }
 
   // Save a list of strings
-  Future<void> setStringList({required List<String> value, required String key}) async {
+  Future<void> setStringList(
+      {required List<String> value, required String key}) async {
     await _ensureInitialized();
     await _sharedPreferences!.setStringList(key, value);
   }
@@ -104,5 +105,15 @@ class SharedPref {
   Future<void> clearAllData() async {
     await _ensureInitialized();
     await _sharedPreferences!.clear();
+  }
+
+  Future<void> setThemeColor(String colorValue) async {
+    await _ensureInitialized();
+    await _sharedPreferences!.setString('theme_color', colorValue);
+  }
+
+  Future<String?> getThemeColor() async {
+    await _ensureInitialized();
+    return _sharedPreferences!.getString('theme_color');
   }
 }

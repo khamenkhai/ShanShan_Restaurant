@@ -40,7 +40,7 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
         title: const Text("မီနူး"),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: ColorConstants.primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         label: const Text("မီနူးအသစ်ထည့်ရန်"),
         icon: const Icon(Icons.add),
         onPressed: () => _showMenuDialog(screenSize),
@@ -190,8 +190,12 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
       menuNameController.text = widget.menu!.name.toString();
       isTaseRequired = widget.menu!.isFish ?? false;
     }
-    setState(() {});
+    resetPage();
     super.initState();
+  }
+
+  void resetPage() {
+    setState(() {});
   }
 
   bool isTaseRequired = false;
@@ -241,9 +245,8 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                   SizedBox(height: 10),
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        isTaseRequired = !isTaseRequired;
-                      });
+                      isTaseRequired = !isTaseRequired;
+                      resetPage();
                     },
                     child: Row(
                       children: [

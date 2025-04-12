@@ -184,9 +184,7 @@ InkWell appBarLeading({required Function() onTap}) {
             ),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(
-                15,
-              ),
+                 borderRadius: SizeConst.kBorderRadius
             ),
             child: Center(
               child: Icon(

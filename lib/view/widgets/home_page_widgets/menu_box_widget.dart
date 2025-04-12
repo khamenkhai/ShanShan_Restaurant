@@ -22,7 +22,7 @@ class MenuBoxWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       borderRadius: SizeConst.kBorderRadius,
-      color: Colors.white,
+      color: Theme.of(context).cardColor,
       child: Container(
         width: constraints.maxWidth,
         decoration: BoxDecoration(
@@ -57,7 +57,7 @@ class MenuBoxWidget extends StatelessWidget {
                   return const LoadingWidget();
                 } else if (state is MenuLoadedState) {
                   List<MenuModel> menuList = state.menuList;
-            
+
                   return Padding(
                     padding: const EdgeInsets.only(right: 0, bottom: 10),
                     child: SingleChildScrollView(

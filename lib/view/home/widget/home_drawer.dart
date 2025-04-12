@@ -11,6 +11,7 @@ import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/view/control_panel/pages/control_panel.dart';
 import 'package:shan_shan/view/history/history.dart';
+import 'package:shan_shan/view/localization/localization.dart';
 import 'package:shan_shan/view/sale_report/sale_report_page.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -22,9 +23,7 @@ class HomeDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       width: 400,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
       backgroundColor: Colors.white,
       child: SafeArea(
         child: Column(
@@ -80,6 +79,21 @@ class HomeDrawer extends StatelessWidget {
               },
               leading: CircleAvatar(child: Icon(CupertinoIcons.doc)),
               title: Text("အရောင်းမှတ်တမ်း"),
+            ),
+
+            SizedBox(height: 10),
+
+            /// language
+            ListTile(
+              onTap: () {
+                Navigator.pop(context);
+                redirectTo(
+                  context: context,
+                  form: ColorPickerScreen(),
+                );
+              },
+              leading: CircleAvatar(child: Icon(CupertinoIcons.globe)),
+              title: Text("Language"),
             ),
 
             SizedBox(height: 10),
@@ -142,7 +156,7 @@ class HomeDrawer extends StatelessWidget {
               child: Text(
                 "ထွက်ဖို့သေချာပါသလား ?",
                 style: TextStyle(
-                  color: ColorConstants.primaryColor,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -166,7 +180,7 @@ class HomeDrawer extends StatelessWidget {
                 SizedBox(width: 10),
                 Expanded(
                   child: CustomElevatedButton(
-                    bgColor: ColorConstants.primaryColor,
+                    bgColor: Theme.of(context).primaryColor,
                     elevation: 0,
                     height: 60,
                     child: Text("ထွက်ရန်"),
@@ -185,10 +199,9 @@ class HomeDrawer extends StatelessWidget {
 
   ///logout process
   void logout(BuildContext context) async {
-    bool logoutStatus =
-        await context.read<AuthCubit>().logout();
+    bool logoutStatus = await context.read<AuthCubit>().logout();
     if (logoutStatus) {
-       if(!context.mounted) return;
+      if (!context.mounted) return;
       context.read<CartCubit>().clearOrder();
       context.read<EditSaleCartCubit>().clearOrderr();
     }

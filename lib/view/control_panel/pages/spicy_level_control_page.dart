@@ -45,7 +45,7 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
         title: Text("အစပ် Level"),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: ColorConstants.primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         label: Text("အစပ်Levelအသစ်ထည့်ရန်"),
         icon: Icon(Icons.add),
         onPressed: () {

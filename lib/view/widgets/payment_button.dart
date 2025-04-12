@@ -19,7 +19,7 @@ class PaymentButton extends StatelessWidget {
         borderRadius: SizeConst.kBorderRadius,
         border: Border.all(
           width: 1.5,
-          color: isSelected ? ColorConstants.primaryColor : Colors.transparent,
+          color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
         ),
       ),
       child: Center(
@@ -27,7 +27,7 @@ class PaymentButton extends StatelessWidget {
           "$title",
           style: TextStyle(
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? ColorConstants.primaryColor : Colors.grey,
+            color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
           ),
         ),
       ),

@@ -9,7 +9,7 @@ import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
-import 'package:shan_shan/view/common_widgets/custom_dialog.dart';
+import 'package:shan_shan/core/component/custom_dialog.dart';
 
 class TasteChooseDialog extends StatefulWidget {
   const TasteChooseDialog({super.key});
