@@ -7,6 +7,7 @@ class ReportSummarySkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color cardColor = Theme.of(context).cardColor;
     return Skeletonizer(
       enabled: true,
       child: Padding(
@@ -16,11 +17,11 @@ class ReportSummarySkeleton extends StatelessWidget {
           children: [
             Row(
               children: [
-                _buildSkeletonCard(),
+                _buildSkeletonCard(cardColor),
                 const SizedBox(width: 15),
-                _buildSkeletonCard(),
+                _buildSkeletonCard(cardColor),
                 const SizedBox(width: 15),
-                _buildSkeletonCard(),
+                _buildSkeletonCard(cardColor),
               ],
             ),
             const SizedBox(height: 35),
@@ -30,13 +31,13 @@ class ReportSummarySkeleton extends StatelessWidget {
     );
   }
 
-  Widget _buildSkeletonCard() {
+  Widget _buildSkeletonCard(Color cardColor) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: SizeConst.kBorderRadius,
-          color: Colors.white,
+          color: cardColor,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

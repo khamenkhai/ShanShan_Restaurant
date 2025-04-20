@@ -32,7 +32,7 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
         },
       );
     } catch (e) {
-      emit(SaleProcessFailedState(error: 'make Sale(Cubit) : ${e}'));
+      emit(SaleProcessFailedState(error: 'make Sale(Cubit) : $e'));
       return false;
     }
   }
@@ -60,7 +60,7 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
         },
       );
     } catch (e) {
-      emit(SaleProcessFailedState(error: 'Update Sale(Cubit) : ${e}'));
+      emit(SaleProcessFailedState(error: 'Update Sale(Cubit) : $e'));
       return false;
     }
   }

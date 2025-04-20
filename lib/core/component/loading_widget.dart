@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:shan_shan/core/const/color_const.dart';
+import 'package:flutter/material.dart';
 
 class LoadingWidget extends StatelessWidget {
   const LoadingWidget({super.key, this.color, this.radius});
@@ -10,7 +10,7 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: CupertinoActivityIndicator(
-        color: color ?? ColorConstants.primaryColor,
+        color: color ?? Theme.of(context).primaryColor,
         radius: radius ?? 10,
       ),
     );

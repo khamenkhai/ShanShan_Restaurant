@@ -73,6 +73,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
                 },
                 decoration: customTextDecoration2(
                   labelText: "အစပ် Level ကိုထည့်ရန်",
+                    primaryColor: Theme.of(context).primaryColor
                 ),
               ),
 
@@ -107,7 +108,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
                         }
                       },
                       decoration: customTextDecoration2(
-                        labelText: "",
+                        labelText: "",  primaryColor: Theme.of(context).primaryColor
                       ),
                     );
                   } else {
@@ -129,7 +130,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
               TextFormField(
                 controller: descriptionController,
                 decoration: customTextDecoration2(
-                  labelText: "",
+                  labelText: "",  primaryColor: Theme.of(context).primaryColor
                 ),
               ),
               SizedBox(height: 15),

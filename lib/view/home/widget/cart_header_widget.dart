@@ -14,6 +14,7 @@ class CartHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
+      margin: EdgeInsets.only(top: SizeConst.kVerticalSpacing),
       child: Row(
         children: [
           const Icon(IconlyBold.bookmark),
@@ -26,16 +27,13 @@ class CartHeaderWidget extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          InkWell(
-            onTap: onClearOrder,
-            child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 3),
-                decoration: BoxDecoration(
-                  borderRadius: SizeConst.kBorderRadius,
-                  color: Colors.white,
-                ),
-                child: Icon(IconlyBold.close_square)),
-          ),
+          TextButton(
+            onPressed: onClearOrder,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.all(0)
+            ),
+            child: Text("Clear Cart"),
+          )
         ],
       ),
     );

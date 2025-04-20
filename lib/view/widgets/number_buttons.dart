@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
@@ -62,11 +62,11 @@ class _NumberButtonsState extends State<NumberButtons> {
             ),
             child: Text(
               widget.numberController.text == ""
-                  ? "${widget.defaultText}"
+                  ? widget.defaultText
                   : widget.formatNumber
                       ? NumberFormat('#,##0')
                           .format(int.parse(widget.numberController.text))
-                      : "${widget.numberController.text}",
+                      : widget.numberController.text,
               style: TextStyle(
                 fontSize: 20,
               ),

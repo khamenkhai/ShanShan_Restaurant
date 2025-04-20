@@ -1,41 +1,162 @@
 import 'package:flutter/material.dart';
+import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/product_row_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/view/widgets/product_detail_control.dart';
+import 'package:shan_shan/view/widgets/table_number_dialog.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-///product list widget (display with scrollbar)
-Widget productListScrollBar({
-  required List<ProductModel> productList,
-  required ScrollController scrollController,
-  required TextEditingController tableController,
-  required BuildContext context,
-  required bool isEditState,
-}) {
-  return Expanded(
-    child: Container(
-      padding: EdgeInsets.only(right: 0, bottom: 10),
-      child: Scrollbar(
-        //thumbVisibility: true,
-        thickness: 4,
-        controller: scrollController,
-        radius: Radius.circular(25),
-        child: SingleChildScrollView(
-          
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: productList
-                .map(
-                  (e) => productRowWidget(
-                    product: e,
-                    context: context,
-                    tableController: tableController,
-                    isEditState: isEditState,
-                  ),
-                )
-                .toList(),
+class ProductListScrollBar extends StatelessWidget {
+  final TextEditingController tableController;
+  final bool isEditState;
+
+  ProductListScrollBar({
+    super.key,
+    required this.tableController,
+    required this.isEditState,
+  });
+
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.only(right: 0, bottom: 10),
+        child: Scrollbar(
+          thickness: 4,
+          controller: scrollController,
+          radius: const Radius.circular(25),
+          child: SingleChildScrollView(
+            child: BlocBuilder<ProductsCubit, ProductsState>(
+              builder: (context, state) {
+                if (state is ProductsLoadingState) {
+                  return Skeletonizer(
+                    enabled: true,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ProductRowWidget(
+                          product: ProductModel(name: "---------"),
+                          tableController: tableController,
+                          isEditState: isEditState,
+                        ),
+                        ProductRowWidget(
+                          product: ProductModel(name: "---------"),
+                          tableController: tableController,
+                          isEditState: isEditState,
+                        ),
+                        ProductRowWidget(
+                          product: ProductModel(name: "---------"),
+                          tableController: tableController,
+                          isEditState: isEditState,
+                        ),
+                        ProductRowWidget(
+                          product: ProductModel(name: "---------"),
+                          tableController: tableController,
+                          isEditState: isEditState,
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state is ProductsLoadedState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: state.products
+                        .map(
+                          (e) => ProductRowWidget(
+                            product: e,
+                            tableController: tableController,
+                            isEditState: isEditState,
+                          ),
+                        )
+                        .toList(),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
+}
+
+class ProductRowWidget extends StatelessWidget {
+  final ProductModel product;
+  final TextEditingController tableController;
+  final bool isEditState;
+
+  const ProductRowWidget({
+    super.key,
+    required this.product,
+    required this.tableController,
+    required this.isEditState,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cartCubit = BlocProvider.of<CartCubit>(context);
+
+    return InkWell(
+      highlightColor: ColorConstants.primaryColor.withOpacity(0.3),
+      onTap: () {
+        if (isEditState) {
+          showDialog(
+            context: context,
+            builder: (context) => ProductWeightOrDetailControl(
+              produt: product,
+              isEditState: true,
+            ),
+          );
+        } else {
+          if (cartCubit.state.tableNumber == 0) {
+            showDialog(
+              context: context,
+              builder: (context) => TableNumberDialog(
+                tableController: tableController,
+              ),
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) => ProductWeightOrDetailControl(
+                produt: product,
+                isEditState: false,
+              ),
+            );
+          }
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+            horizontal: SizeConst.kHorizontalPadding),
+        height: 50,
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              product.name ?? "",
+              style: const TextStyle(fontSize: 16),
+            ),
+            Text(
+              "${product.price} MMK",
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

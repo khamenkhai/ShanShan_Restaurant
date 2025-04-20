@@ -44,7 +44,7 @@ void showSnackBar({required String text, required BuildContext context}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(
-        "${text}",
+        text,
         textAlign: TextAlign.center,
       ),
       duration: Duration(seconds: 1),
@@ -75,7 +75,7 @@ void showCustomSnackbar({
   IconSnackBar.show(
     context,
     snackBarType: SnackBarType.fail,
-    label: '${message}',
+    label: message,
     behavior: SnackBarBehavior.floating,
   );
 }
@@ -165,12 +165,12 @@ Future<bool> printReceipt({
   required bool customerTakevoucher,
 }) async {
   try {
-    customPrint("voucher : Tax amount -> ${taxAmount}");
-    customPrint("voucher : Sub total -> ${subTotal}");
-    customPrint("voucher : Grand total -> ${grandTotal}");
-    customPrint("voucher : Cash amount -> ${cashAmount}");
-    customPrint("voucher : Kpay amount -> ${paidOnline}");
-    customPrint("voucher : table -> ${tableNumber}");
+    customPrint("voucher : Tax amount -> $taxAmount");
+    customPrint("voucher : Sub total -> $subTotal");
+    customPrint("voucher : Grand total -> $grandTotal");
+    customPrint("voucher : Cash amount -> $cashAmount");
+    customPrint("voucher : Online Pay -> $paidOnline");
+    customPrint("voucher : table -> $tableNumber");
 
     //final converter = ZawGyiConverter();
 
@@ -208,7 +208,7 @@ Future<bool> printReceipt({
         align: SunmiPrintAlign.CENTER,
       ),
       ColumnMaker(
-        text: '${orderNumber}',
+        text: orderNumber,
         width: 25,
         align: SunmiPrintAlign.LEFT,
       ),
@@ -226,7 +226,7 @@ Future<bool> printReceipt({
         align: SunmiPrintAlign.CENTER,
       ),
       ColumnMaker(
-        text: '${tableNumber}',
+        text: '$tableNumber',
         width: 25,
         align: SunmiPrintAlign.LEFT,
       ),
@@ -244,7 +244,7 @@ Future<bool> printReceipt({
         align: SunmiPrintAlign.CENTER,
       ),
       ColumnMaker(
-        text: '${date}',
+        text: date,
         width: 25,
         align: SunmiPrintAlign.LEFT,
       ),
@@ -252,7 +252,7 @@ Future<bool> printReceipt({
 
     await SunmiPrinter.printText("");
     await SunmiPrinter.printText(
-      "${menu}",
+      menu,
       style: SunmiStyle(bold: true),
     );
 
@@ -288,14 +288,14 @@ Future<bool> printReceipt({
     //     align: SunmiPrintAlign.RIGHT,
     //   ),
     // ]);
-    await SunmiPrinter.printText("မှတ်ချက် : ${remark}");
+    await SunmiPrinter.printText("မှတ်ချက် : $remark");
     await SunmiPrinter.lineWrap(1);
 
     if (ahtoneLevel == "" && spicyLevel == "") {
       await SunmiPrinter.printText("");
     } else {
-      await SunmiPrinter.printText("အထုံ Level    : ${ahtoneLevel}");
-      await SunmiPrinter.printText("အစပ် Level    : ${spicyLevel}");
+      await SunmiPrinter.printText("အထုံ Level    : $ahtoneLevel");
+      await SunmiPrinter.printText("အစပ် Level    : $spicyLevel");
     }
 
     //await SunmiPrinter.printText("");
@@ -358,7 +358,7 @@ Future<bool> printReceipt({
         // ),
 
         ColumnMaker(
-          text: "${e.name}",
+          text: e.name,
           width: 25,
           align: SunmiPrintAlign.LEFT,
         ),
@@ -375,7 +375,7 @@ Future<bool> printReceipt({
           align: SunmiPrintAlign.CENTER,
         ),
         ColumnMaker(
-          text: "${formatNumber(e.totalPrice)}",
+          text: formatNumber(e.totalPrice),
           width: 9,
           align: SunmiPrintAlign.RIGHT,
         ),
@@ -441,7 +441,7 @@ Future<bool> printReceipt({
         align: SunmiPrintAlign.LEFT,
       ),
       ColumnMaker(
-        text: '${cashAmount} MMK',
+        text: '$cashAmount MMK',
         width: 20,
         align: SunmiPrintAlign.RIGHT,
       ),
@@ -454,7 +454,7 @@ Future<bool> printReceipt({
         align: SunmiPrintAlign.LEFT,
       ),
       ColumnMaker(
-        text: '${paidOnline} MMK',
+        text: '$paidOnline MMK',
         width: 20,
         align: SunmiPrintAlign.RIGHT,
       ),
@@ -477,7 +477,7 @@ Future<bool> printReceipt({
     await SunmiPrinter.setAlignment(SunmiPrintAlign.CENTER);
 
     await SunmiPrinter.printText(
-      "ပုဇွန် : ${prawnCount} , ရေဘဝဲ : ${octopusCount}",
+      "ပုဇွန် : $prawnCount , ရေဘဝဲ : $octopusCount",
     );
 
     await SunmiPrinter.printText("");

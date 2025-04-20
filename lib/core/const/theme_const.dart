@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shan_shan/core/const/color_const.dart';
@@ -5,53 +7,57 @@ import 'package:shan_shan/core/const/color_const.dart';
 @immutable
 class ThemeConstants {
   // Common styles and themes (all const to reduce runtime overhead)
-  static const SystemUiOverlayStyle _lightSystemOverlayStyle = SystemUiOverlayStyle(
+  static const SystemUiOverlayStyle _lightSystemOverlayStyle =
+      SystemUiOverlayStyle(
     statusBarIconBrightness: Brightness.dark,
     statusBarColor: Colors.transparent,
   );
 
-  static const SystemUiOverlayStyle _darkSystemOverlayStyle = SystemUiOverlayStyle(
+  static const SystemUiOverlayStyle _darkSystemOverlayStyle =
+      SystemUiOverlayStyle(
     statusBarIconBrightness: Brightness.light,
     statusBarColor: Colors.transparent,
   );
 
   static TextStyle _appBarTitleTextStyle(Color color) => TextStyle(
-    color: color,
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
+        color: color,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+      );
 
   static const TextStyle _bodyMediumTextStyle = TextStyle(fontSize: 16);
-  
+
   static SwitchThemeData _switchTheme(Color primaryColor) => SwitchThemeData(
-    thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
-      if (states.contains(MaterialState.selected)) {
-        return primaryColor;
-      }
-      return Colors.grey;
-    }),
-    trackColor: MaterialStateProperty.resolveWith<Color>((states) {
-      if (states.contains(MaterialState.selected)) {
-        return primaryColor.withOpacity(0.5);
-      }
-      return Colors.grey.withOpacity(0.5);
-    }),
-    splashRadius: 10,
-  );
+        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return primaryColor;
+          }
+          return Colors.grey;
+        }),
+        trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return primaryColor.withOpacity(0.5);
+          }
+          return Colors.grey.withOpacity(0.5);
+        }),
+        splashRadius: 10,
+      );
 
-  static BottomNavigationBarThemeData _bottomNavigationBarTheme(Color primaryColor) =>
-    BottomNavigationBarThemeData(
-      selectedItemColor: primaryColor,
-      unselectedItemColor: Colors.grey,
-      backgroundColor: Colors.white,
-    );
+  static BottomNavigationBarThemeData _bottomNavigationBarTheme(
+          Color primaryColor) =>
+      BottomNavigationBarThemeData(
+        selectedItemColor: primaryColor,
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.white,
+      );
 
-  static BottomNavigationBarThemeData _darkBottomNavigationBarTheme(Color primaryColor) =>
-    BottomNavigationBarThemeData(
-      selectedItemColor: primaryColor,
-      unselectedItemColor: Colors.grey[400]!,
-      backgroundColor: ColorConstants.backgroundColorDark,
-    );
+  static BottomNavigationBarThemeData _darkBottomNavigationBarTheme(
+          Color primaryColor) =>
+      BottomNavigationBarThemeData(
+        selectedItemColor: primaryColor,
+        unselectedItemColor: Colors.grey[400]!,
+        backgroundColor: ColorConstants.backgroundColorDark,
+      );
 
   /// Light theme
   static ThemeData lightTheme({
@@ -59,8 +65,9 @@ class ThemeConstants {
     Color? primaryColor,
   }) {
     final color = primaryColor ?? ColorConstants.primaryColor;
-    final onPrimary = color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-    
+    final onPrimary =
+        color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: color,
@@ -76,14 +83,16 @@ class ThemeConstants {
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: color,
-        titleTextStyle: _appBarTitleTextStyle(Colors.black).copyWith(fontFamily: fontFamily),
+        titleTextStyle: _appBarTitleTextStyle(Colors.black)
+            .copyWith(fontFamily: fontFamily),
         centerTitle: false,
         surfaceTintColor: Colors.transparent,
         iconTheme: IconThemeData(color: color),
       ),
       textTheme: TextTheme(
         bodyMedium: _bodyMediumTextStyle.copyWith(color: Colors.black87),
-        titleMedium: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        titleMedium:
+            TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         labelLarge: TextStyle(color: Colors.white), // For buttons
       ),
       scaffoldBackgroundColor: ColorConstants.backgroundColorLight,
@@ -123,7 +132,7 @@ class ThemeConstants {
           ),
         ),
       ),
-            cardColor: ColorConstants.cardColorLight,
+      cardColor: ColorConstants.cardColorLight,
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -148,8 +157,9 @@ class ThemeConstants {
     Color? primaryColor,
   }) {
     final color = primaryColor ?? Colors.blue;
-    final onPrimary = color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-    
+    final onPrimary =
+        color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+
     return ThemeData.dark().copyWith(
       brightness: Brightness.dark,
       primaryColor: color,
@@ -158,20 +168,22 @@ class ThemeConstants {
         onPrimary: onPrimary,
         secondary: color.withOpacity(0.8),
         surface: ColorConstants.backgroundColorDark,
-        background: ColorConstants.backgroundColorDark,
       ),
       appBarTheme: AppBarTheme(
         systemOverlayStyle: _darkSystemOverlayStyle,
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.white,
-        titleTextStyle: _appBarTitleTextStyle(Colors.white).copyWith(fontFamily: fontFamily),
+        titleTextStyle: _appBarTitleTextStyle(Colors.white)
+            .copyWith(fontFamily: fontFamily),
         centerTitle: false,
         iconTheme: IconThemeData(color: color),
       ),
       textTheme: TextTheme(
-        bodyMedium: _bodyMediumTextStyle.copyWith(color: Colors.white.withOpacity(0.87)),
-        titleMedium: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        bodyMedium: _bodyMediumTextStyle.copyWith(
+            color: Colors.white.withOpacity(0.87)),
+        titleMedium:
+            TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         labelLarge: TextStyle(color: Colors.black), // For buttons
       ),
       scaffoldBackgroundColor: ColorConstants.backgroundColorDark,

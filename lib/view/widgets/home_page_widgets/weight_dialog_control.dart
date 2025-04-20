@@ -44,7 +44,7 @@ class _CartItemWeightControlDialogState
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "${widget.cartItem.name}",
+            widget.cartItem.name,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,11 +9,15 @@ import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.d
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
+import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
+import 'package:shan_shan/view/auth/login.dart';
 import 'package:shan_shan/view/control_panel/pages/control_panel.dart';
 import 'package:shan_shan/view/history/history.dart';
 import 'package:shan_shan/view/localization/localization.dart';
 import 'package:shan_shan/view/sale_report/sale_report_page.dart';
+import 'package:shan_shan/view/theme/theme_page.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key, required this.onNavigate});
@@ -24,7 +29,6 @@ class HomeDrawer extends StatelessWidget {
     return Drawer(
       width: 400,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-      backgroundColor: Colors.white,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -41,7 +45,7 @@ class HomeDrawer extends StatelessWidget {
               ],
             ),
 
-            Container(height: 200),
+            Container(height: 150),
 
             ///control panel
             ListTile(
@@ -52,7 +56,7 @@ class HomeDrawer extends StatelessWidget {
                 onNavigate();
               },
               leading: CircleAvatar(child: Icon(CupertinoIcons.settings)),
-              title: Text("ထိန်းချုပ်ရာနေရာ"),
+              title: Text(tr(LocaleKeys.controlPanel)),
             ),
             SizedBox(height: 10),
 
@@ -64,7 +68,7 @@ class HomeDrawer extends StatelessWidget {
                 onNavigate();
               },
               leading: CircleAvatar(child: Icon(CupertinoIcons.square_stack)),
-              title: Text("အရောင်းအစီရင်ခံစာ"),
+              title: Text(tr(LocaleKeys.saleReport)),
             ),
             SizedBox(height: 10),
 
@@ -78,7 +82,7 @@ class HomeDrawer extends StatelessWidget {
                 );
               },
               leading: CircleAvatar(child: Icon(CupertinoIcons.doc)),
-              title: Text("အရောင်းမှတ်တမ်း"),
+              title: Text(tr(LocaleKeys.saleHistory)),
             ),
 
             SizedBox(height: 10),
@@ -89,11 +93,25 @@ class HomeDrawer extends StatelessWidget {
                 Navigator.pop(context);
                 redirectTo(
                   context: context,
-                  form: ColorPickerScreen(),
+                  form: LocalizationPage(),
                 );
               },
               leading: CircleAvatar(child: Icon(CupertinoIcons.globe)),
-              title: Text("Language"),
+              title: Text(tr(LocaleKeys.language)),
+            ),
+            SizedBox(height: 10),
+
+            /// theme
+            ListTile(
+              onTap: () {
+                Navigator.pop(context);
+                redirectTo(
+                  context: context,
+                  form: ColorPickerScreen(),
+                );
+              },
+              leading: CircleAvatar(child: Icon(CupertinoIcons.color_filter)),
+              title: Text(tr(LocaleKeys.themeColor)),
             ),
 
             SizedBox(height: 10),
@@ -112,7 +130,7 @@ class HomeDrawer extends StatelessWidget {
               leading: CircleAvatar(
                 child: Icon(IconlyLight.logout),
               ),
-              title: Text("ထွက်ရန်"),
+              title: Text(tr(LocaleKeys.logout)),
             ),
           ],
         ),
@@ -123,10 +141,10 @@ class HomeDrawer extends StatelessWidget {
   ///logout dialog box
   Dialog _logoutDialogBox(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: SizeConst.kBorderRadius,
       ),
+      backgroundColor: Theme.of(context).cardColor,
       child: Container(
         width: MediaQuery.of(context).size.width / 2.85,
         padding: EdgeInsets.only(
@@ -154,7 +172,7 @@ class HomeDrawer extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(bottom: 25, top: 15),
               child: Text(
-                "ထွက်ဖို့သေချာပါသလား ?",
+                tr(LocaleKeys.logout),
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 16,
@@ -171,7 +189,7 @@ class HomeDrawer extends StatelessWidget {
                     bgColor: Colors.white,
                     elevation: 0,
                     height: 60,
-                    child: Text("ပယ်ဖျက်ပါ"),
+                    child: Text(tr(LocaleKeys.cancel)),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -183,7 +201,7 @@ class HomeDrawer extends StatelessWidget {
                     bgColor: Theme.of(context).primaryColor,
                     elevation: 0,
                     height: 60,
-                    child: Text("ထွက်ရန်"),
+                    child: Text(tr(LocaleKeys.confirm)),
                     onPressed: () async {
                       logout(context);
                     },
@@ -200,10 +218,13 @@ class HomeDrawer extends StatelessWidget {
   ///logout process
   void logout(BuildContext context) async {
     bool logoutStatus = await context.read<AuthCubit>().logout();
+    if(!context.mounted) return;
+    NavigationHelper.pushReplacement(context, Login());
     if (logoutStatus) {
       if (!context.mounted) return;
       context.read<CartCubit>().clearOrder();
       context.read<EditSaleCartCubit>().clearOrderr();
     }
+
   }
 }

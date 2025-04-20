@@ -162,7 +162,7 @@ class _ProductWeightOrDetailControlState
               padding: EdgeInsets.all(5),
               child: Icon(
                 Icons.add,
-                color: Colors.black,
+                color: Colors.red,
               ),
             ),
           ),

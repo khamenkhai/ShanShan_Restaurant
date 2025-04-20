@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 
 class DateActionWidget extends StatelessWidget {
@@ -22,7 +22,7 @@ class DateActionWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "${DateFormat('E d, MMM yyyy').format(DateTime.now())}",
+              DateFormat('E d, MMM yyyy').format(DateTime.now()),
               style: TextStyle(
                 color: ColorConstants.primaryColor,
                 fontSize: 20 - 4,

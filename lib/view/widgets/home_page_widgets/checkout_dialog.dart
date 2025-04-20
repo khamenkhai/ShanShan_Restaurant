@@ -59,11 +59,11 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).cardColor,
       child: SingleChildScrollView(
         child: Container(
           width: widget.width ?? screenWidth / 3.8,
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -193,11 +193,11 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
 
     final remark = _remarkCtrl.text;
     cartCubit.addData(
-      dineInOrParcel: _isParcel ? 0 : 1,
-      octopusCount: _octopusCount,
-      prawnCount: _prawnCount,
-      tableNumber: int.tryParse(_tableCtrl.text) ?? 0,
-    );
+        dineInOrParcel: _isParcel ? 0 : 1,
+        octopusCount: _octopusCount,
+        prawnCount: _prawnCount,
+        tableNumber: int.tryParse(_tableCtrl.text) ?? 0,
+        remark: remark);
 
     final screen = _getPaymentScreen(cartCubit, remark);
     if (screen != null) NavigationHelper.pushPage(context, screen);
@@ -236,9 +236,21 @@ class _CounterRow extends StatelessWidget {
         Text(label, style: const TextStyle(fontSize: 16)),
         const Spacer(),
         IconButton(
-            onPressed: onDecrement, icon: const Icon(Icons.remove_circle)),
-        Text("$count", style: const TextStyle(fontSize: 16)),
-        IconButton(onPressed: onIncrement, icon: const Icon(Icons.add_circle)),
+          onPressed: onDecrement,
+          icon: const Icon(
+            Icons.remove_circle,
+          ),
+        ),
+        Text(
+          "$count",
+          style: const TextStyle(fontSize: 16),
+        ),
+        IconButton(
+          onPressed: onIncrement,
+          icon: const Icon(
+            Icons.add_circle,
+          ),
+        ),
       ],
     );
   }

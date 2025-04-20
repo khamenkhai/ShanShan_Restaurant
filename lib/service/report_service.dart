@@ -17,6 +17,13 @@ class ReportService {
       (response) => SaleReportModel.fromMap(response.data["data"]),
     );
   }
+  /// Get daily sales report
+  Future<Either<String, SaleReportModel>> getWeeklySale() async {
+    return _handleRequest(
+      () => dioClient.getRequest(apiUrl: ApiConstants.WEEKLY_SALE_URL),
+      (response) => SaleReportModel.fromMap(response.data["data"]),
+    );
+  }
 
   /// Get monthly sales report
   Future<Either<String, SaleReportModel>> getMonthlySale({required String url}) async {

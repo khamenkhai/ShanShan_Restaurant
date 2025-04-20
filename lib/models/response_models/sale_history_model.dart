@@ -21,6 +21,7 @@ class SaleHistoryModel {
   final List<SaleProduct> products;
   final int octopusCount;
   final int prawnCount;
+  final int refund;
 
   SaleHistoryModel({
     required this.id,
@@ -42,13 +43,13 @@ class SaleHistoryModel {
     required this.products,
     required this.octopusCount,
     required this.prawnCount,
+    required this.refund,
   });
 
   factory SaleHistoryModel.fromMap(Map<String, dynamic> map) {
     return SaleHistoryModel(
       id: map['id'] ?? 0,
       orderNo: map['order_no'] ?? '',
-      // paymentTypeId: map['payment_type_id'],
       tableNumber: map['table_number'] ?? '',
       dineInOrParcel: map['dine_in_or_percel'] ?? 0,
       subTotal: map['sub_total'] ?? 0,
@@ -65,6 +66,7 @@ class SaleHistoryModel {
       remark: map['remark'] ?? '',
       octopusCount: map["octopus_count"] ?? 0,
       prawnCount: map["pawn_count"] ?? 0,
+      refund: map["refund"] ?? 0,
       products: List<SaleProduct>.from(
         map['products']?.map((x) => SaleProduct.fromMap(x)) ?? [],
       ),

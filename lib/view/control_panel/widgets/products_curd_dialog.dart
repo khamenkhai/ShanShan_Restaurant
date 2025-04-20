@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/category_cubit/category_cubit.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/models/response_models/category_model.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
@@ -64,7 +66,6 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
-      backgroundColor: Colors.white,
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -102,14 +103,16 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("ပစ္စည်းအမည်", style: TextStyle(fontSize: 16)),
+        Text(tr(LocaleKeys.productName), style: TextStyle(fontSize: 16)),
         const SizedBox(height: 5),
         TextFormField(
           controller: _productNameController,
           validator: (value) =>
-              value?.isEmpty ?? true ? "Product Name can't be empty" : null,
-          decoration:
-              customTextDecoration2(labelText: "Enter new product name"),
+              value?.isEmpty ?? true ? tr(LocaleKeys.productNameValidation) : null,
+          decoration: customTextDecoration2(
+            labelText: "Enter new product name",
+            primaryColor: Theme.of(context).primaryColor,
+          ),
         ),
       ],
     );
@@ -119,13 +122,15 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("စျေးနှုန်း", style: TextStyle(fontSize: 16)),
+        Text(tr(LocaleKeys.price), style: TextStyle(fontSize: 16)),
         const SizedBox(height: 5),
         TextFormField(
           controller: _productPriceController,
           validator: (value) =>
-              value?.isEmpty ?? true ? "Product Price can't be empty" : null,
-          decoration: customTextDecoration2(labelText: "Enter price"),
+              value?.isEmpty ?? true ? tr(LocaleKeys.priceValidation) : null,
+          decoration: customTextDecoration2(
+              labelText: "Enter price",
+              primaryColor: Theme.of(context).primaryColor),
         ),
       ],
     );
@@ -135,7 +140,7 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("အမျိုးအစား", style: TextStyle(fontSize: 16)),
+        Text(tr(LocaleKeys.category), style: TextStyle(fontSize: 16)),
         const SizedBox(height: 5),
         BlocBuilder<CategoryCubit, CategoryState>(
           builder: (context, state) {
@@ -162,7 +167,6 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
   InputDecoration _dropdownDecoration() {
     return InputDecoration(
       filled: true,
-      fillColor: Colors.white,
       hintText: _category,
       contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
       border: _inputBorder(),
@@ -180,7 +184,7 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
         color: error
             ? Colors.red
             : focused
-                ? ColorConstants.primaryColor
+                ? Theme.of(context).primaryColor
                 : ColorConstants.greyColor,
       ),
     );
@@ -199,7 +203,7 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
   Widget _buildGramCheckbox() {
     return _CustomCheckbox(
       value: _isGram,
-      label: "ဂရမ်လား",
+      label: tr(LocaleKeys.isGram),
       onChanged: (value) => setState(() => _isGram = value),
     );
   }
@@ -222,7 +226,9 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
         }
       },
       builder: (context, state) {
-        if (state is ProductsAddingState || state is ProductsUpdatingState) return LoadingWidget();
+        if (state is ProductsAddingState || state is ProductsUpdatingState) {
+          return LoadingWidget();
+        }
 
         return CancelAndConfirmDialogButton(
           onConfirm: () {
@@ -290,7 +296,7 @@ class _CustomCheckbox extends StatelessWidget {
         children: [
           Icon(
             value ? Icons.check_box : Icons.check_box_outline_blank,
-            color: value ? ColorConstants.primaryColor : Colors.grey,
+            color: value ? Theme.of(context).primaryColor : Colors.grey,
           ),
           const SizedBox(width: 10),
           Text(label),

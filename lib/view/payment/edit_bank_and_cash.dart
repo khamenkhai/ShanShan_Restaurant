@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
@@ -14,7 +15,6 @@ import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/sale_success/sale_success_page.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/number_buttons.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -97,7 +97,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leadingWidth: 160,
-        leading: appBarLeading(onTap: () {
+        leading: AppBarLeading(onTap: () {
           Navigator.pop(context);
         }),
         title: Text("Cash & Kpay"),
@@ -114,7 +114,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "${widget.orderNo}",
+                    widget.orderNo,
                     style: TextStyle(
                       color: ColorConstants.primaryColor,
                       fontSize: 20 - 4,
@@ -288,7 +288,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
                   Container(
                     margin: EdgeInsets.only(left: 10),
                     child: Text(
-                      "အကျဉ်းချုပ်",
+                      "Summary",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: ColorConstants.primaryColor,
@@ -406,7 +406,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
             ),
           ),
 
-          ///Kpay amount
+          ///Online Pay
           SizedBox(height: 5),
           _amountRowWidget(
             amount: paidOnline,
@@ -454,7 +454,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
         Expanded(
           flex: 2,
           child: Text(
-            "${title}",
+            title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -555,7 +555,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
       dineInOrParcel: widget.dineInOrParcel,
       grandTotal: grandTotal,
       menuId: widget.menuId,
-      orderNo: "${widget.orderNo}",
+      orderNo: widget.orderNo,
       paidCash: cashAmount,
       products: productList,
       tableNumber: widget.tableNumber,

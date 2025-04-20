@@ -113,7 +113,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _SaleSuccessPage(screenSize),
+              _saleSuccessPage(screenSize),
               _voucherWidget(
                   screenSize: screenSize,
                   saleData: widget.saleData,
@@ -125,11 +125,11 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
     );
   }
 
-  Widget _SaleSuccessPage(Size screenSize) {
+  Widget _saleSuccessPage(Size screenSize) {
     return Container(
       width: screenSize.width / 1.8,
       padding: const EdgeInsets.all(35),
-      color: Colors.white,
+      color: Theme.of(context).cardColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -244,7 +244,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
                   discount: saleData.discount ?? 0,
                   cashAmount: saleData.paidCash,
                   bankAmount: saleData.paidOnline ?? 0,
-                  change: saleData.refund,
+                  refund: saleData.refund,
                   subTotal: saleData.subTotal,
                   cartItems: widget.cartItems,
                   menu: widget.menuTitle,

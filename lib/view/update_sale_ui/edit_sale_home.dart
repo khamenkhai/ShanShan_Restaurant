@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconly/iconly.dart';
-import 'package:intl/intl.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
@@ -11,6 +11,7 @@ import 'package:shan_shan/controller/menu_cubit/menu_state.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
@@ -23,12 +24,11 @@ import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/models/response_models/sale_history_model.dart';
 import 'package:shan_shan/view/update_sale_ui/edit_sale_checkkout_dialog.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/product_row_widget.dart';
+import 'package:shan_shan/view/widgets/home_page_widgets/product_list_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/quantity_dialog_control.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/taste_level_dialog.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/weight_dialog_control.dart';
 import 'package:shan_shan/view/widgets/payment_button.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class EditSaleScreen extends StatefulWidget {
   const EditSaleScreen({
@@ -135,7 +135,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           leadingWidth: 160,
-          leading: appBarLeading(
+          leading: AppBarLeading(
             onTap: () {
               context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
               Navigator.pop(context);
@@ -285,7 +285,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                   SizedBox(height: 5),
 
                   ///cart item list widget
-                  _cartItemListWidget(
+                  _cartListWidget(
                     screenSize: screenSize,
                     state: state,
                     context: context,
@@ -444,7 +444,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
   }
 
   /// cart item list widget
-  SizedBox _cartItemListWidget({
+  SizedBox _cartListWidget({
     required Size screenSize,
     required EditSaleCartState state,
     required BuildContext context,
@@ -715,7 +715,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                         );
                       }
                     } catch (e) {
-                      customPrint("error : ${e}");
+                      customPrint("error : $e");
                     }
 
                     List<ProductModel> productList = state.products
@@ -908,9 +908,8 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: productList
                 .map(
-                  (e) => productRowWidget(
+                  (e) => ProductRowWidget(
                     product: e,
-                    context: context,
                     tableController: tableController,
                     isEditState: isEditState,
                   ),

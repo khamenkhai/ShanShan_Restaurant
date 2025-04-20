@@ -46,7 +46,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
             ),
             SizedBox(height: 20),
             Text(
-              "$errorText",
+              errorText,
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 15),

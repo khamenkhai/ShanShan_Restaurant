@@ -88,6 +88,7 @@ class ThemeCubit extends Cubit<ThemeState> {
       ));
     }
     
+    // ignore: deprecated_member_use
     await sharedPref.setThemeColor(color.value.toString());
   }
 

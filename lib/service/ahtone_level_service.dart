@@ -29,7 +29,7 @@ class AhtoneLevelService {
   }) async {
     return _handleRequest(
       () => dioClient.deleteRequest(
-        apiUrl: "${ApiConstants.DELETE_HTONE_LEVEL}/${id}",
+        apiUrl: "${ApiConstants.DELETE_HTONE_LEVEL}/$id",
         requestBody: requestBody,
       ),
     );
@@ -42,7 +42,7 @@ class AhtoneLevelService {
   }) async {
     return _handleRequest(
       () => dioClient.postRequest(
-        apiUrl: "${ApiConstants.Edit_HTONE_LEVEL}/${id}",
+        apiUrl: "${ApiConstants.Edit_HTONE_LEVEL}/$id",
         requestBody: requestBody,
       ),
     );

@@ -25,9 +25,8 @@ class ProductCardWidget extends StatelessWidget {
         left: 15,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: SizeConst.kBorderRadius
-      ),
+          color: Theme.of(context).cardColor,
+          borderRadius: SizeConst.kBorderRadius),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,15 +43,13 @@ class ProductCardWidget extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
                     ),
                   ),
                   Text(
                     "${formatNumber(product.price as num)} MMK",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 19,
-                      color: Colors.black,
+                      fontSize: 20,
                     ),
                   ),
                 ],
@@ -65,7 +62,7 @@ class ProductCardWidget extends StatelessWidget {
                   child: Icon(
                     Icons.edit,
                     size: 20,
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ),

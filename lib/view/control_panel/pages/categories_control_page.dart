@@ -1,6 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/cancel_and_delete_dialog_button.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shan_shan/controller/category_cubit/category_cubit.dart';
@@ -13,8 +16,7 @@ import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/delete_warning_dialog.dart';
 
 class CategoriesControlPage extends StatefulWidget {
-  const CategoriesControlPage({super.key, required this.title});
-  final String title;
+  const CategoriesControlPage({super.key});
 
   @override
   State<CategoriesControlPage> createState() => _CategoriesControlPageState();
@@ -34,12 +36,12 @@ class _CategoriesControlPageState extends State<CategoriesControlPage> {
       appBar: AppBar(
         leadingWidth: 200,
         centerTitle: true,
-        leading: appBarLeading(onTap: () => Navigator.pop(context)),
-        title: Text(widget.title),
+        leading: AppBarLeading(onTap: () => Navigator.pop(context)),
+        title: Text(tr(LocaleKeys.categories)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        label: const Text("အသစ်ထည့်ရန်"),
+        label: Text(tr(LocaleKeys.addNewCategory)),
         icon: const Icon(Icons.add),
         onPressed: () => _showCategoryDialog(context, screenSize),
       ),
@@ -178,7 +180,6 @@ class _CategoriesControlPageDialogState
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
-      backgroundColor: Colors.white,
       child: SizedBox(
         width: 400,
         child: Padding(
@@ -192,7 +193,9 @@ class _CategoriesControlPageDialogState
               TextFormField(
                 controller: categoryNameController,
                 decoration: customTextDecoration2(
-                    labelText: "အမျိုးအစားအမည်အသစ်ရေးရန်"),
+                  labelText: "အမျိုးအစားအမည်အသစ်ရေးရန်",
+                  primaryColor: Theme.of(context).primaryColor
+                ),
               ),
               const SizedBox(height: 15),
               BlocConsumer<CategoryCubit, CategoryState>(

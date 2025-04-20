@@ -82,7 +82,8 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
     return TextFormField(
       controller: controller,
       validator: (value) => value == "" ? "လိုအပ်သည်" : null,
-      decoration: customTextDecoration2(labelText: label),
+      decoration: customTextDecoration2(
+          labelText: label, primaryColor: Theme.of(context).primaryColor),
     );
   }
 
@@ -91,18 +92,22 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
     return BlocBuilder<HtoneLevelCubit, AhtoneLevelCrudState>(
       builder: (context, state) {
         if (state is AhtoneLevelLoaded) {
-          List<int> positions = state.htoneLevels.map((e) => e.position ?? 0).toList();
+          List<int> positions =
+              state.htoneLevels.map((e) => e.position ?? 0).toList();
           return TextFormField(
             controller: positionController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "လိုအပ်သည်";
-              } else if (positions.contains(int.parse(value)) && widget.ahtoneLevel == null) {
+              } else if (positions.contains(int.parse(value)) &&
+                  widget.ahtoneLevel == null) {
                 return "နေရာနံပါတ် ရှိပြီးသားပါ။";
               }
               return null;
             },
-            decoration: customTextDecoration2(labelText: "နေရာ"),
+            decoration: customTextDecoration2(
+                labelText: "နေရာ",
+                primaryColor: Theme.of(context).primaryColor),
           );
         }
         return Container();
@@ -131,7 +136,9 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
               child: const Text("အတည်ပြုရန်"),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  widget.ahtoneLevel != null ? _editAhtoneLevel() : _createAhtoneLevel();
+                  widget.ahtoneLevel != null
+                      ? _editAhtoneLevel()
+                      : _createAhtoneLevel();
                 }
               },
             ),

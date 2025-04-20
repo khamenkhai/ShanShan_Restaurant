@@ -201,7 +201,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
                       CustomElevatedButton(
                         child: Text("အတည်ပြုရန်"),
                         onPressed: () {
-                          String remarkString = "${remarkController.text}";
+                          String remarkString = remarkController.text;
                           context.read<EditSaleCartCubit>().addAdditionalData(
                                 octopusCount: octopusCount,
                                 prawnCount: prawnCount,
@@ -335,7 +335,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
         SizedBox(
           width: 20,
           child: Text(
-            "${octopusCount}",
+            "$octopusCount",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -384,7 +384,7 @@ class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
         SizedBox(
           width: 20,
           child: Text(
-            "${prawnCount}",
+            "$prawnCount",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,

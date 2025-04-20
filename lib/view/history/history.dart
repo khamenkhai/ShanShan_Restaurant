@@ -1,10 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh_new/pull_to_refresh.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_cubit.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_state.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
@@ -86,10 +89,10 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       appBar: AppBar(
         centerTitle: true,
         leadingWidth: 200,
-        leading: appBarLeading(
+        leading: AppBarLeading(
           onTap: () => Navigator.pop(context),
         ),
-        title: const Text("အရောင်းမှတ်တမ်း"),
+        title: Text(tr(LocaleKeys.saleHistory)),
       ),
       body: InternetCheckWidget(
         onRefresh: _loadInitialData,
@@ -105,9 +108,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       padding: EdgeInsets.symmetric(
         horizontal: SizeConst.kHorizontalPadding,
       ),
-      margin: EdgeInsets.only(
-        top: 5
-      ),
+      margin: EdgeInsets.only(top: 5),
       child: Column(
         children: [
           _buildSearchField(),
@@ -116,9 +117,8 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
-                 borderRadius: SizeConst.kBorderRadius
-              ),
+                  color: Theme.of(context).cardColor,
+                  borderRadius: SizeConst.kBorderRadius),
               child: Column(
                 children: [
                   const _HistoryHeaderRow(),
@@ -139,10 +139,9 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       height: 45,
       child: TextField(
         controller: _searchController,
-        decoration: customTextDecoration(
-          prefixIcon: const Icon(Icons.search),
-          labelText: "အရောင်းမှတ်တမ်းရှာဖွေရန်",
-        ),
+        decoration: customTextDecoration2(
+            labelText: tr(LocaleKeys.searchSaleHistory),
+            primaryColor: Theme.of(context).primaryColor),
         onChanged: _searchHistory,
       ),
     );
@@ -325,9 +324,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: SizeConst.kBorderRadius
-        ),
+        shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
         child: _buildHistoryDialogContent(history),
       ),
     );
@@ -358,7 +355,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
             VoucherWidget(
               cashAmount: history.paidCash,
               bankAmount: history.paidOnline,
-              change: 0,
+              refund: history.refund,
               paymentType: _getPaymentType(history),
               subTotal: history.subTotal,
               grandTotal: history.grandTotal,
@@ -446,13 +443,13 @@ class _HistoryHeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           flex: 1,
           child: Text(
-            "ပြေစာနံပါတ်",
+            tr(LocaleKeys.slitNumber),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -463,7 +460,7 @@ class _HistoryHeaderRow extends StatelessWidget {
           flex: 1,
           child: Center(
             child: Text(
-              "စားပွဲနံပါတ်",
+              tr(LocaleKeys.tableNumber),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -474,7 +471,7 @@ class _HistoryHeaderRow extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Text(
-            "စုစုပေါင်း",
+            tr(LocaleKeys.total),
             textAlign: TextAlign.right,
             style: TextStyle(
               fontWeight: FontWeight.bold,

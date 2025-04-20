@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
@@ -12,7 +13,6 @@ import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/sale_success/sale_success_page.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/date_action_widget.dart';
 import 'package:shan_shan/view/widgets/number_buttons.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -161,7 +161,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leadingWidth: 160,
-        leading: appBarLeading(onTap: () => Navigator.pop(context)),
+        leading: AppBarLeading(onTap: () => Navigator.pop(context)),
         actions: const [
           DateActionWidget(),
           SizedBox(width: 25),
@@ -211,7 +211,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
                   Container(
                     margin: const EdgeInsets.only(left: 10),
                     child: Text(
-                      "အကျဉ်းချုပ်",
+                      "Summary",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: ColorConstants.primaryColor,
@@ -337,7 +337,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
   }
 
   Widget _buildCashPaymentButtons(BoxConstraints constraints) {
-    return Container(
+    return SizedBox(
       width: constraints.maxWidth,
       child: NumberButtons(
         defaultText: "0",
@@ -351,7 +351,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
   }
 
   Widget _buildKpayPaymentButtons(BoxConstraints constraints) {
-    return Container(
+    return SizedBox(
       width: constraints.maxWidth,
       child: NumberButtons(
         defaultText: "0",

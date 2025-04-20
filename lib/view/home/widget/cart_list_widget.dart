@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
-import 'package:shan_shan/core/const/const_export.dart';
-import 'package:shan_shan/core/style/app_text_style.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/quantity_dialog_control.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/weight_dialog_control.dart';
 
-class CartItemListWidget extends StatelessWidget {
+class CartListWidget extends StatelessWidget {
   final Size screenSize;
   final CartState state;
 
-  const CartItemListWidget({
+  const CartListWidget({
     super.key,
     required this.screenSize,
     required this.state,
@@ -24,16 +22,6 @@ class CartItemListWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: SizeConst.kHorizontalPadding,
-            ),
-            child: Text(
-              "Table Number : ${state.tableNumber}",
-              style: AppTextStyles.kNormalFont(),
-            ),
-          ),
           if (state.menu != null)
             CartMenuWidget(
               tapDisabled: false,

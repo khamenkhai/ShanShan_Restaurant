@@ -1,11 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_cubit.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_state.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/response_models/menu_model.dart';
 import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
@@ -13,8 +16,7 @@ import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class MenuCRUDScreen extends StatefulWidget {
-  const MenuCRUDScreen({super.key, required this.title});
-  final String title;
+  const MenuCRUDScreen({super.key});
 
   @override
   State<MenuCRUDScreen> createState() => _MenuCRUDScreenState();
@@ -34,14 +36,14 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
       appBar: AppBar(
         leadingWidth: 200,
         centerTitle: true,
-        leading: appBarLeading(
+        leading: AppBarLeading(
           onTap: () => Navigator.pop(context),
         ),
-        title: const Text("မီနူး"),
+        title: Text(tr(LocaleKeys.menu)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        label: const Text("မီနူးအသစ်ထည့်ရန်"),
+        label: Text(tr(LocaleKeys.addNewMenu)),
         icon: const Icon(Icons.add),
         onPressed: () => _showMenuDialog(screenSize),
       ),
@@ -206,7 +208,6 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: SizeConst.kBorderRadius,
       ),
-      backgroundColor: Colors.white,
       child: Container(
         padding: EdgeInsets.all(15),
         width: widget.screenSize.width / 3.8,
@@ -222,7 +223,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                 children: [
                   ///menu name
                   Text(
-                    "မီနူးအမည်",
+                    tr(LocaleKeys.menu),
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -239,6 +240,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                     },
                     decoration: customTextDecoration2(
                       labelText: "မီနူးအမည်အသစ်ထည့်ရန်",
+                        primaryColor: Theme.of(context).primaryColor
                     ),
                   ),
 

@@ -1,7 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
-import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 
 class CancelAndConfirmDialogButton extends StatelessWidget {
   const CancelAndConfirmDialogButton({super.key, required this.onConfirm});
@@ -14,16 +15,15 @@ class CancelAndConfirmDialogButton extends StatelessWidget {
       children: [
         CustomOutlineButton(
           elevation: 0,
-          child: Text("ပယ်ဖျက်ရန်"),
+          child: Text(tr(LocaleKeys.cancel)),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         SizedBox(width: 10),
         CustomElevatedButton(
-          bgColor: ColorConstants.primaryColor,
           onPressed: onConfirm,
-          child: Text("အတည်ပြုရန်"),
+          child: Text(tr(LocaleKeys.confirm)),
         ),
       ],
     );

@@ -1,14 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/scale_on_tap.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/view/control_panel/pages/htone_level_control_page.dart';
 import 'package:shan_shan/view/control_panel/pages/categories_control_page.dart';
 import 'package:shan_shan/view/control_panel/pages/menu_control_page.dart';
 import 'package:shan_shan/view/control_panel/pages/products_control_page.dart';
 import 'package:shan_shan/view/control_panel/pages/spicy_level_control_page.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class ControlPanel extends StatefulWidget {
   const ControlPanel({super.key});
@@ -24,7 +26,7 @@ class _ControlPanelState extends State<ControlPanel> {
       appBar: AppBar(
         leadingWidth: 150,
         centerTitle: true,
-        leading: appBarLeading(
+        leading: AppBarLeading(
           onTap: () {
             Navigator.pop(context);
           },
@@ -45,10 +47,8 @@ class _ControlPanelState extends State<ControlPanel> {
           Row(
             children: [
               _cardWidget(
-                name: "ပစ္စည်းများ",
-                redirectForm: ProductsControlPage(
-                  title: "ပစ္စည်းများ",
-                ),
+                name: tr(LocaleKeys.products),
+                redirectForm: ProductsControlPage(),
                 widget: Icon(
                   CupertinoIcons.bag,
                   size: 35,
@@ -56,8 +56,8 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               SizedBox(width: SizeConst.kHorizontalPadding),
               _cardWidget(
-                name: "အမျိုးအစားများ",
-                redirectForm: CategoriesControlPage(title: "အမျိုးအစားများ"),
+                name: tr(LocaleKeys.categories),
+                redirectForm: CategoriesControlPage(),
                 widget: Icon(
                   CupertinoIcons.square_list,
                   size: 35,
@@ -69,8 +69,8 @@ class _ControlPanelState extends State<ControlPanel> {
           Row(
             children: [
               _cardWidget(
-                name: "မီနူး",
-                redirectForm: MenuCRUDScreen(title: "မီနူး"),
+                name: tr(LocaleKeys.menu),
+                redirectForm: MenuCRUDScreen(),
                 widget: Icon(
                   CupertinoIcons.bars,
                   size: 35,
@@ -78,10 +78,8 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               SizedBox(width: SizeConst.kHorizontalPadding),
               _cardWidget(
-                name: "အထုံ Level",
-                redirectForm: HtoneLevelControlPage(
-                  title: "အထုံ Level",
-                ),
+                name: tr(LocaleKeys.htoneLevel),
+                redirectForm: HtoneLevelControlPage(),
                 widget: Icon(
                   Icons.soup_kitchen,
                   size: 35,
@@ -93,7 +91,7 @@ class _ControlPanelState extends State<ControlPanel> {
           Row(
             children: [
               _cardWidget(
-                name: "အစပ် Level",
+                name: tr(LocaleKeys.spicyLevel),
                 redirectForm: SpicyLevelScreen(),
                 widget: Icon(
                   CupertinoIcons.flame,
@@ -128,7 +126,7 @@ class _ControlPanelState extends State<ControlPanel> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: SizeConst.kBorderRadius,
           ),
           child: Row(
@@ -139,7 +137,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               SizedBox(width: 15),
               Text(
-                "$name",
+                name,
                 style: TextStyle(fontSize: 20),
               ),
             ],

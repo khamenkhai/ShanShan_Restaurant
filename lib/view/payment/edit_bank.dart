@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
@@ -13,7 +14,6 @@ import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/sale_success/sale_success_page.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class EditOnlinePaymentScreen extends StatefulWidget {
   const EditOnlinePaymentScreen({
@@ -90,7 +90,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leadingWidth: 160,
-        leading: appBarLeading(onTap: () {
+        leading: AppBarLeading(onTap: () {
           Navigator.pop(context);
         }),
         title: Text("Kpay ဖြင့်ပေးချေရန်"),
@@ -211,7 +211,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
                   Container(
                     margin: EdgeInsets.only(left: 10),
                     child: Text(
-                      "အကျဉ်းချုပ်",
+                      "Summary",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: ColorConstants.primaryColor,
@@ -318,7 +318,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
                   dineInOrParcel: widget.dineInOrParcel,
                   grandTotal: grandTotal,
                   menuId: widget.menuId,
-                  orderNo: "${widget.orderNo}",
+                  orderNo: widget.orderNo,
                   paidCash: 0,
                   products: context
                       .read<EditSaleCartCubit>()
@@ -406,7 +406,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
         Expanded(
           flex: 2,
           child: Text(
-            "${title}",
+            title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,

@@ -49,7 +49,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
           align: SunmiPrintAlign.CENTER,
         ),
         ColumnMaker(
-          text: '${report}',
+          text: report,
           width: 25,
           align: SunmiPrintAlign.LEFT,
         ),
@@ -79,7 +79,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
       await SunmiPrinter.printRow(
         cols: [
           ColumnMaker(
-            text: 'Kpay Amount',
+            text: 'Online Pay',
             width: 20,
             align: SunmiPrintAlign.LEFT,
           ),
@@ -162,7 +162,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
       );
 
       await SunmiPrinter.printText(
-          "Current Month Report : ${currentMonthDate}");
+          "Current Month Report : $currentMonthDate");
 
       await SunmiPrinter.setAlignment(SunmiPrintAlign.CENTER);
       await SunmiPrinter.printText(
@@ -188,7 +188,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
       await SunmiPrinter.printRow(
         cols: [
           ColumnMaker(
-            text: 'Kpay Amount',
+            text: 'Online Pay',
             width: 20,
             align: SunmiPrintAlign.LEFT,
           ),
@@ -234,7 +234,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
           align: SunmiPrintAlign.CENTER,
         ),
         ColumnMaker(
-          text: '${lastMonthDate}',
+          text: lastMonthDate,
           width: 25,
           align: SunmiPrintAlign.LEFT,
         ),
@@ -264,7 +264,7 @@ import 'package:sunmi_printer_plus/sunmi_style.dart';
       await SunmiPrinter.printRow(
         cols: [
           ColumnMaker(
-            text: 'Kpay Amount',
+            text: 'Online Pay',
             width: 20,
             align: SunmiPrintAlign.LEFT,
           ),

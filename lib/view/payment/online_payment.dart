@@ -1,8 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
@@ -14,7 +15,6 @@ import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/sale_success/sale_success_page.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 
 class OnlinePaymentScreen extends StatefulWidget {
   const OnlinePaymentScreen({super.key});
@@ -61,8 +61,8 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leadingWidth: 160,
-        leading: appBarLeading(onTap: () => Navigator.pop(context)),
-        title: const Text("အွန်လိုင်းငွေပေးချေမှု"),
+        leading: AppBarLeading(onTap: () => Navigator.pop(context)),
+        title: const Text("Online Payment"),
       ),
       body: InternetCheckWidget(
         child: Row(
@@ -84,7 +84,7 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
         child: Container(
           padding: const EdgeInsets.all(SizeConst.kHorizontalPadding),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: SizeConst.kBorderRadius,
           ),
           child: BlocBuilder<CartCubit, CartState>(
@@ -95,10 +95,9 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
                   const Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
-                      "အကျဉ်းချုပ်",
+                      "Summary",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: ColorConstants.primaryColor,
                         fontSize: 20,
                       ),
                     ),
@@ -127,7 +126,7 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
                     children: [
                       Checkbox(
                         value: customerTakesVoucher,
-                        activeColor: ColorConstants.primaryColor,
+                        activeColor: Theme.of(context).primaryColor,
                         onChanged: toggleVoucher,
                       ),
                       const Text("ဘောက်ချာယူမည်"),

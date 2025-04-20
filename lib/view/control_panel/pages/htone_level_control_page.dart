@@ -1,21 +1,22 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_state.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/ahtone_level_crud_dialog.dart';
 import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HtoneLevelControlPage extends StatefulWidget {
-  const HtoneLevelControlPage({super.key, required this.title});
-  final String title;
+  const HtoneLevelControlPage({super.key});
 
   @override
   State<HtoneLevelControlPage> createState() => _HtoneLevelControlPageState();
@@ -38,12 +39,12 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
       appBar: AppBar(
         leadingWidth: 200,
         centerTitle: true,
-        leading: appBarLeading(
+        leading: AppBarLeading(
           onTap: () {
             Navigator.pop(context);
           },
         ),
-        title: Text("${widget.title}"),
+        title: Text(tr(LocaleKeys.htoneLevel)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,

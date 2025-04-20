@@ -23,7 +23,7 @@ class SaleReportCubit extends Cubit<SaleReportState> {
   /// Get the weekly report data
   void getWeeklyReport() async {
     emit(SaleReportLoading());
-    final result = await reportService.getDailySale();
+    final result = await reportService.getWeeklySale();
     result.fold(
       (failure) => emit(SaleReportError(error: failure)),
       (saleReport) => emit(SaleReportWeekly(saleReport: saleReport)),

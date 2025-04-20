@@ -26,7 +26,9 @@ class CrudCard extends StatelessWidget {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: SizeConst.kBorderRadius),
+        color: Theme.of(context).cardColor,
+        borderRadius: SizeConst.kBorderRadius,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -39,7 +41,6 @@ class CrudCard extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.black,
                   ),
                 ),
                 if (description.isNotEmpty) ...[
@@ -47,8 +48,7 @@ class CrudCard extends StatelessWidget {
                   Text(
                     description,
                     style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black.withOpacity(0.8),
+                      fontSize: 14,
                     ),
                   ),
                 ]
@@ -57,7 +57,7 @@ class CrudCard extends StatelessWidget {
           ),
           IconButton(
             onPressed: onEdit,
-            icon: const Icon(Icons.edit, size: 20, color: Colors.blue),
+            icon: Icon(Icons.edit, size: 20, color: Theme.of(context).primaryColor),
           ),
           IconButton(
             onPressed: onDelete,

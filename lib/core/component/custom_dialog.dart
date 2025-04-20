@@ -20,7 +20,7 @@ class CustomDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: SizeConst.kBorderRadius,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).cardColor,
       child: Container(
         padding: EdgeInsets.symmetric(
           vertical:paddingInVertical ? 15 : 0,

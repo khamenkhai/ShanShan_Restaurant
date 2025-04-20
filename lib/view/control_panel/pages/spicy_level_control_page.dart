@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/delete_warning_dialog.dart';
 import 'package:shan_shan/view/control_panel/widgets/spicy_level_crud_dialog.dart';
@@ -37,7 +37,7 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
       appBar: AppBar(
         leadingWidth: 200,
         centerTitle: true,
-        leading: appBarLeading(
+        leading: AppBarLeading(
           onTap: () {
             Navigator.pop(context);
           },

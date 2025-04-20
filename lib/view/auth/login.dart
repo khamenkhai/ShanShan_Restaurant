@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:shan_shan/controller/auth_cubit/auth_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/request_models/shop_login_request_model.dart';
@@ -43,7 +45,6 @@ class _LoginState extends State<Login> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Row(
           children: [
@@ -58,9 +59,7 @@ class _LoginState extends State<Login> {
   Widget _buildLoginForm(Size screenSize) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: screenSize.width / 12),
-      color: Colors.white,
       child: SingleChildScrollView(
-        
         child: Form(
           key: _formKey,
           child: Column(
@@ -69,22 +68,23 @@ class _LoginState extends State<Login> {
               _buildHeader(),
               SizedBox(height: 25),
               _buildTextField(
-                label: "အသုံးပြုသူ နာမည်",
+                label: tr(LocaleKeys.usernameLabel),
                 controller: _nameController,
-                validatorMsg: "အသုံးပြုသူ နာမည် ဖြည့်ရန် လိုအပ်ပါသည်",
+                validatorMsg: tr(LocaleKeys.usernameValidator),
                 icon: CupertinoIcons.person_fill,
               ),
               SizedBox(height: 20),
               _buildTextField(
-                label: "စကားဝှက်",
+                label: tr(LocaleKeys.passwordLabel),
                 controller: _passwordController,
-                validatorMsg: "စကားဝှက်လိုအပ်သည်",
+                validatorMsg: tr(LocaleKeys.passwordValidator),
                 icon: CupertinoIcons.lock_fill,
                 obscureText: _obscureText,
                 suffixIcon: IconButton(
                   icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
-                      color: ColorConstants.primaryColor),
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).primaryColor,
+                  ),
                   onPressed: () => setState(() => _obscureText = !_obscureText),
                 ),
               ),
@@ -101,20 +101,21 @@ class _LoginState extends State<Login> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Center(child: Text("မင်္ဂလာပါ", style: TextStyle(fontSize: 20))),
+        Center(child: Text(tr(LocaleKeys.greeting), style: TextStyle(fontSize: 20))),
         Center(
           child: Text(
             "ရှန်းရှန်း",
             style: TextStyle(
-                fontSize: 49,
-                fontWeight: FontWeight.bold,
-                color: ColorConstants.primaryColor),
+              fontSize: 49,
+              fontWeight: FontWeight.bold,
+              color: ColorConstants.primaryColor,
+            ),
           ),
         ),
         SizedBox(height: 25),
         Center(
           child: Text(
-            "အကောင့်ဖြင် ဝင်ပါ။",
+            tr(LocaleKeys.loginTitle),
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ),
@@ -141,9 +142,14 @@ class _LoginState extends State<Login> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) => value!.isEmpty ? validatorMsg : null,
           decoration: customTextDecoration(
-            labelText: "$label ရိုက်ထည့်ပါ။",
+            labelText: "Enter $label",
+            primaryColor: Theme.of(context).primaryColor,
+            fillColor: Theme.of(context).cardColor,
             prefixIcon: icon != null
-                ? Icon(icon, color: ColorConstants.primaryColor)
+                ? Icon(
+                    icon,
+                    color: Theme.of(context).primaryColor,
+                  )
                 : null,
             suffixIcon: suffixIcon,
           ),
@@ -171,7 +177,7 @@ class _LoginState extends State<Login> {
           height: 63,
           elevation: 0,
           radius: 15,
-          child: Text("ဝင်ရောက်ပါမည်"),
+          child: Text(tr(LocaleKeys.loginButton)),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               context.read<AuthCubit>().login(
@@ -192,7 +198,7 @@ class _LoginState extends State<Login> {
       child: Container(
         padding: EdgeInsets.all(170),
         height: screenSize.height,
-        color: ColorConstants.primaryColor,
+        color: Theme.of(context).primaryColor,
         child: Image.asset("assets/images/cashier.png", fit: BoxFit.contain),
       ),
     );

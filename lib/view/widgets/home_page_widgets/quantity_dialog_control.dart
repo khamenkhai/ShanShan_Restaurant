@@ -36,7 +36,7 @@ class _CartItemQtyDialogControlState extends State<CartItemQtyDialogControl> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "${widget.cartItem.name}",
+            widget.cartItem.name,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -102,7 +102,6 @@ class _CartItemQtyDialogControlState extends State<CartItemQtyDialogControl> {
               padding: EdgeInsets.all(5),
               child: Icon(
                 Icons.remove,
-                color: Colors.black,
                 weight: 10,
               ),
             ),
@@ -128,7 +127,6 @@ class _CartItemQtyDialogControlState extends State<CartItemQtyDialogControl> {
               padding: EdgeInsets.all(5),
               child: Icon(
                 Icons.add,
-                color: Colors.black,
               ),
             ),
           ),

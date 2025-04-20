@@ -1,13 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/sale_report_cubit/sale_report_cubit.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/sunmi_printer_util.dart' as spu;
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/view/sale_report/widgets/sale_report_skeleton.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
 
 class ReportPage extends StatefulWidget {
@@ -49,10 +51,10 @@ class _ReportPageState extends State<ReportPage> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: const Text("အရောင်းအစီရင်ခံစာ"),
+      title: Text(tr(LocaleKeys.saleReport)),
       leadingWidth: 100,
       centerTitle: true,
-      leading: appBarLeading(
+      leading: AppBarLeading(
         onTap: () => Navigator.pop(context),
       ),
     );
@@ -64,7 +66,7 @@ class _ReportPageState extends State<ReportPage> {
         return FloatingActionButton.extended(
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () => _handlePrintAction(state),
-          label: const Text("အရောင်းအစီရင်ခံစာပရင့်ထုတ်ရန်"),
+          label: Text(tr(LocaleKeys.printSaleReport)),
           icon: const Icon(CupertinoIcons.printer),
         );
       },
@@ -107,9 +109,9 @@ class _ReportPageState extends State<ReportPage> {
           }
         },
         tabs: [
-          Tab(text: 'ဒီနေ့'),
-          Tab(text: 'အပတ်စဉ်'),
-          Tab(text: 'လစဉ်'),
+          Tab(text: tr(LocaleKeys.dailyReport)),
+          Tab(text: tr(LocaleKeys.weeklyReport)),
+          Tab(text: tr(LocaleKeys.monthlyReport)),
         ],
       ),
     );
@@ -128,15 +130,18 @@ class _ReportPageState extends State<ReportPage> {
   Widget _buildDailyReportView() {
     return BlocBuilder<SaleReportCubit, SaleReportState>(
       builder: (context, state) {
-        if (state is SaleReportDaily) {
+        if (state is SaleReportLoading) {
+          return const ReportSummarySkeleton();
+        } else if (state is SaleReportDaily) {
           return ReportSummaryWidget(
             name: "To Day",
             cashAmount: state.saleReport.totalPaidCash,
             paidOnline: state.saleReport.totalPaidOnline,
             totalAmount: state.saleReport.totalSales,
           );
+        } else {
+          return Container();
         }
-        return const ReportSummarySkeleton();
       },
     );
   }
@@ -153,7 +158,7 @@ class _ReportPageState extends State<ReportPage> {
             paidOnline: state.saleReport.totalPaidOnline,
             totalAmount: state.saleReport.totalSales,
           );
-        }else{
+        } else {
           return Container();
         }
       },
@@ -167,16 +172,16 @@ class _ReportPageState extends State<ReportPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildReportHeader("ယခင်လ"),
+              _buildReportHeader(tr(LocaleKeys.lastMonth)),
               ReportSummaryWidget(
-                name: "Last Month",
+                name: tr(LocaleKeys.lastMonth),
                 cashAmount: state.lastMonthSale.totalPaidCash,
                 paidOnline: state.lastMonthSale.totalPaidOnline,
                 totalAmount: state.lastMonthSale.totalSales,
               ),
-              _buildReportHeader("လက်ရှိလ"),
+              _buildReportHeader(tr(LocaleKeys.currentMonth)),
               ReportSummaryWidget(
-                name: "Current Month",
+                name: tr(LocaleKeys.currentMonth),
                 cashAmount: state.currentMonthSale.totalPaidCash,
                 paidOnline: state.currentMonthSale.totalPaidOnline,
                 totalAmount: state.currentMonthSale.totalSales,
@@ -187,9 +192,9 @@ class _ReportPageState extends State<ReportPage> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildReportHeader("ယခင်လ"),
+            _buildReportHeader(tr(LocaleKeys.lastMonth)),
             const ReportSummarySkeleton(),
-            _buildReportHeader("လက်ရှိလ"),
+            _buildReportHeader(tr(LocaleKeys.currentMonth)),
             const ReportSummarySkeleton(),
           ],
         );
@@ -222,13 +227,14 @@ void _printDailyReport(SaleReportDaily state) {
     totalAmount: state.saleReport.totalGrands,
     taxAmount: 500, // Consider making this dynamic if needed
     discountAmount: 0, // Consider making this dynamic if needed
-    report: "${state.saleReport.dailyDate}",
+    report: state.saleReport.dailyDate,
   );
 }
 
 void _printWeeklyReport(SaleReportWeekly state) {
   debugPrint(
-      "Weekly report range: ${state.saleReport.startOfWeek} to ${state.saleReport.endOfWeek}");
+    "Weekly report range: ${state.saleReport.startOfWeek} to ${state.saleReport.endOfWeek}",
+  );
   spu.printReceipt(
     cashAmount: state.saleReport.totalPaidCash,
     paidOnline: state.saleReport.totalPaidOnline,
@@ -281,21 +287,24 @@ class ReportSummaryWidget extends StatelessWidget {
             children: [
               _buildReportCard(
                 amount: cashAmount,
-                title: "စုစုပေါင်းငွေ",
+                title: tr(LocaleKeys.totalPaidCash),
                 icon: const Icon(CupertinoIcons.money_dollar, size: 30),
+                cardColor: Theme.of(context).cardColor,
               ),
               const SizedBox(width: 15),
               _buildReportCard(
                 amount: paidOnline,
-                title: "စုစုပေါင်း Kpay",
+                title: tr(LocaleKeys.totalPaidOnline),
                 icon: const Icon(CupertinoIcons.creditcard, size: 30),
+                cardColor: Theme.of(context).cardColor,
               ),
               const SizedBox(width: 15),
               _buildReportCard(
                 amount: totalAmount,
-                title: "စုစုပေါင်းရောင်းအား",
+                title: tr(LocaleKeys.totalSales),
                 isTotalSales: true,
                 icon: const Icon(CupertinoIcons.chart_pie, size: 30),
+                cardColor: Theme.of(context).cardColor,
               ),
             ],
           ),
@@ -309,6 +318,7 @@ class ReportSummaryWidget extends StatelessWidget {
     required String title,
     required int amount,
     required Widget icon,
+    required Color cardColor,
     bool isTotalSales = false,
   }) {
     return Expanded(
@@ -316,7 +326,7 @@ class ReportSummaryWidget extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: SizeConst.kBorderRadius,
-          color: Colors.white,
+          color: cardColor,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

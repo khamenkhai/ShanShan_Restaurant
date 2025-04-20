@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:iconly/iconly.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -11,14 +8,15 @@ InputDecoration customTextDecoration({
   String hintText = "",
   Widget? prefixIcon,
   Widget? suffixIcon,
-  //Widget? prefixWidget,
+  Color? fillColor,
   double fontSize = 14,
   Color? labelColor,
   Color? hintColor,
+  required Color primaryColor,
   bool floatLabel = false,
 }) {
   return InputDecoration(
-    labelText: "$labelText",
+    labelText: labelText,
     labelStyle: TextStyle(
       color: labelColor ?? ColorConstants.greyColor,
       fontSize: fontSize,
@@ -57,13 +55,10 @@ InputDecoration customTextDecoration({
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: SizeConst.kBorderRadius,
-      borderSide: BorderSide(
-        width: 1,
-        color: ColorConstants.primaryColor,
-      ),
+      borderSide: BorderSide(width: 1, color: primaryColor),
     ),
     filled: true,
-    fillColor: Colors.white,
+    fillColor: fillColor,
     focusColor: ColorConstants.greyColor,
     contentPadding: EdgeInsets.symmetric(
       horizontal: 15,
@@ -72,16 +67,18 @@ InputDecoration customTextDecoration({
   );
 }
 
-InputDecoration customTextDecoration2(
-    {String labelText = "",
-    String hintText = "",
-    double fontSize = 14,
-    Color? labelColor,
-    Color? hintColor,
-    bool floatLabel = false,
-    double verticalPadding = 0}) {
+InputDecoration customTextDecoration2({
+  String labelText = "",
+  String hintText = "",
+  double fontSize = 14,
+  Color? labelColor,
+  Color? hintColor,
+  bool floatLabel = false,
+  double verticalPadding = 0,
+  required Color primaryColor,
+}) {
   return InputDecoration(
-    labelText: "$labelText",
+    labelText: labelText,
     labelStyle: TextStyle(
       color: labelColor ?? ColorConstants.greyColor,
       fontSize: fontSize,
@@ -89,7 +86,10 @@ InputDecoration customTextDecoration2(
     floatingLabelBehavior:
         floatLabel ? FloatingLabelBehavior.auto : FloatingLabelBehavior.never,
     hintText: hintText,
-    hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+    hintStyle: TextStyle(
+      fontSize: 14,
+      color: Colors.grey,
+    ),
     border: OutlineInputBorder(
       borderRadius: SizeConst.kBorderRadius,
       borderSide: BorderSide(
@@ -115,11 +115,11 @@ InputDecoration customTextDecoration2(
       borderRadius: SizeConst.kBorderRadius,
       borderSide: BorderSide(
         width: 1,
-        color: ColorConstants.primaryColor,
+        color: primaryColor,
       ),
     ),
     filled: true,
-    fillColor: Colors.white,
+    // fillColor: Colors.white,
     focusColor: ColorConstants.greyColor,
     contentPadding: EdgeInsets.symmetric(
       horizontal: 15,
@@ -127,7 +127,6 @@ InputDecoration customTextDecoration2(
     ),
   );
 }
-
 
 ///shimmer loading widget
 Shimmer categoryShimmer({double height = 35}) {
@@ -163,60 +162,19 @@ Shimmer categoryShimmer({double height = 35}) {
   );
 }
 
-///appbar leading
-InkWell appBarLeading({required Function() onTap}) {
-  return InkWell(
-    onTap: onTap,
-    splashColor: Colors.transparent,
-    highlightColor: Colors.transparent,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(width: SizeConst.kHorizontalPadding),
-        Container(
-          padding: const EdgeInsets.only(top: 5, bottom: 5),
-          child: Container(
-            padding: EdgeInsets.only(
-              left: 13,
-              right: 13,
-              top: 5,
-              bottom: 5,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-                 borderRadius: SizeConst.kBorderRadius
-            ),
-            child: Center(
-              child: Icon(
-                IconlyBold.arrow_left_2,
-                // size: 15,
-              ),
-            ),
-          ),
-        ),
-
-      ],
-    ),
-  );
-}
-
-
-
 Widget copyRightWidget() {
   return InkWell(
-    onTap: (){
-  
-    },
+    onTap: () {},
     child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
-       color: Colors.white,
-       border: Border(
-        top: BorderSide(
-          width: 0.5,
-          color: Colors.grey
-        )
-       )
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            width: 0.5,
+            color: Colors.grey,
+          ),
+        ),
       ),
       padding: EdgeInsets.symmetric(vertical: 5),
       child: Row(
@@ -253,5 +211,3 @@ Widget copyRightWidget() {
     ),
   );
 }
-
-

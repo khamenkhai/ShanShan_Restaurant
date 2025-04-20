@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import 'package:intl/intl.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
@@ -24,12 +24,9 @@ class CartItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).cardColor,
       child: InkWell(
         borderRadius: SizeConst.kBorderRadius,
-        splashColor: ontapDisable ? Colors.transparent : Colors.grey.shade100,
-        highlightColor:
-            ontapDisable ? Colors.transparent : Colors.grey.shade100,
         onTap: onEdit,
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -121,11 +118,11 @@ class CartMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).cardColor,
       child: InkWell(
         borderRadius: SizeConst.kBorderRadius,
-        splashColor: tapDisabled ? Colors.transparent : Colors.grey.shade100,
-        highlightColor: tapDisabled ? Colors.transparent : Colors.grey.shade100,
+        // splashColor: tapDisabled ? Colors.transparent : Colors.grey.shade100,
+        // highlightColor: tapDisabled ? Colors.transparent : Colors.grey.shade100,
         onTap: onEdit,
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -134,8 +131,8 @@ class CartMenuWidget extends StatelessWidget {
           child: Column(
             children: [
               _buildMenuRow(),
-              if (spicyLevel != null) _buildSpicyLevel(),
-              if (athoneLevel != null) _buildAthoneLevel(),
+              if (spicyLevel != null) _buildSpicyLevel(context),
+              if (athoneLevel != null) _buildAthoneLevel(context),
             ],
           ),
         ),
@@ -153,7 +150,7 @@ class CartMenuWidget extends StatelessWidget {
           Expanded(
             child: Text(
               menu.name ?? "",
-              style: const TextStyle(fontSize: 13),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
           if (!tapDisabled) _buildDeleteButton(),
@@ -162,7 +159,7 @@ class CartMenuWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSpicyLevel() {
+  Widget _buildSpicyLevel(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
@@ -173,7 +170,7 @@ class CartMenuWidget extends StatelessWidget {
             child: Text(
               "အစပ် Level ",
               style: TextStyle(
-                color: Colors.grey.shade800,
+                color: Theme.of(context).hintColor,
                 fontSize: 13,
               ),
             ),
@@ -181,8 +178,8 @@ class CartMenuWidget extends StatelessWidget {
           Text(
             "-  ${spicyLevel!.name}",
             style: TextStyle(
-              color: Colors.grey.shade800,
-              fontSize: 13,
+              color: Theme.of(context).hintColor,
+              fontSize: 14,
             ),
           ),
         ],
@@ -190,7 +187,7 @@ class CartMenuWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildAthoneLevel() {
+  Widget _buildAthoneLevel(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
@@ -201,7 +198,7 @@ class CartMenuWidget extends StatelessWidget {
             child: Text(
               "အထုံ Level",
               style: TextStyle(
-                color: Colors.grey.shade800,
+                color: Theme.of(context).hintColor,
                 fontSize: 13,
               ),
             ),
@@ -209,7 +206,7 @@ class CartMenuWidget extends StatelessWidget {
           Text(
             "-  ${athoneLevel!.name}",
             style: TextStyle(
-              color: Colors.grey.shade800,
+              color: Theme.of(context).hintColor,
               fontSize: 13,
             ),
           ),

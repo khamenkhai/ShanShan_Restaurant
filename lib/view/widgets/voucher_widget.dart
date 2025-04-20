@@ -9,7 +9,7 @@ class VoucherWidget extends StatelessWidget {
     super.key,
     required this.cashAmount,
     required this.bankAmount,
-    required this.change,
+    required this.refund,
     required this.subTotal,
     required this.grandTotal,
     required this.date,
@@ -30,7 +30,7 @@ class VoucherWidget extends StatelessWidget {
 
   final int cashAmount;
   final int bankAmount;
-  final int change;
+  final int refund;
   final int subTotal;
   final int grandTotal;
   final String date;
@@ -51,170 +51,81 @@ class VoucherWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final commercialTax = grandTotal - subTotal;
-    final textStyleSmall = TextStyle(
-      fontSize: 13.5, // 16 - 2.5
-      color: Colors.black87,
-    );
-    const textStyleBold = TextStyle(fontWeight: FontWeight.bold);
-    const textStyleNormal = TextStyle(fontWeight: FontWeight.normal);
 
     return Container(
+      padding: const EdgeInsets.all(12),
       decoration: const BoxDecoration(color: Colors.transparent),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 5),
-          const Text(
-            "Order Summary",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 9),
+          _buildHeader(),
+          _buildBasicInfoSection(),
           const SizedBox(height: 15),
-          
-          // Table Number Row
-          _buildInfoRow("Table Number", "$tableNumber", style: textStyleSmall),
+          _buildMenuSection(),
+          _buildLevelSection(),
           const SizedBox(height: 10),
-          
-          // Slip Number Row
-          _buildInfoRow("Slit Number", orderNumber, style: textStyleSmall),
-          const SizedBox(height: 10),
-          
-          // Date Row
-          _buildInfoRow("Date", date, style: textStyleSmall),
-          const SizedBox(height: 25),
-          
-          // Menu and Remark Section
-          Text(menu, style: textStyleBold),
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(dineInOrParcel == 1 ? "ထိုင်စား" : "ပါဆယ်"),
-              Text("Remark : $remark", textAlign: TextAlign.right),
-            ],
-          ),
-          const SizedBox(height: 5),
-          
-          // Ahtone Level
-          if (ahtoneLevel != null && ahtoneLevel!.name!.isNotEmpty)
-            Text(
-              "အထုံ Level - ${ahtoneLevel!.name}",
-              style: TextStyle(
-                fontSize: 13, // 14 - 1
-                color: Colors.black,
-              ),
-            ),
-          
-          // Spicy Level
-          if (spicyLevel != null && spicyLevel!.name!.isNotEmpty)
-            Text(
-              "အစပ် Level - ${spicyLevel!.name}",
-              style: TextStyle(
-                fontSize: 13, // 14 - 1
-                color: Colors.black,
-              ),
-            ),
-          const SizedBox(height: 10),
-          
-          // Products Title Row
           _buildProductsTitleRow(),
           const SizedBox(height: 15),
-          
-          // Product Items
-          ...cartItems.map((e) => _buildVoucherItem(e)).toList(),
-          
-          // Divider
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 15),
-            child: Divider(height: 0, thickness: 1),
-          ),
-          
-          // Totals Section
-          Column(
-            children: [
-              _buildAmountRow("Total Amount", subTotal, 
-                  style: textStyleBold, valueStyle: textStyleNormal),
-              const SizedBox(height: 10),
-              _buildAmountRow("Tax", commercialTax, 
-                  style: textStyleBold, valueStyle: textStyleNormal),
-              const SizedBox(height: 10),
-              _buildAmountRow("GrandTotal", grandTotal, 
-                  style: textStyleBold, valueStyle: textStyleNormal),
-              
-              // Divider
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 18),
-                child: Divider(height: 0, thickness: 1),
-              ),
-              
-              // Payment Details
-              _buildAmountRow("Discount", discount, 
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  valueStyle: const TextStyle(fontSize: 14)),
-              const SizedBox(height: 10),
-              _buildAmountRow("Cash Amount", cashAmount, 
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  valueStyle: const TextStyle(fontSize: 14)),
-              const SizedBox(height: 10),
-              _buildAmountRow("Kpay Amount", bankAmount, 
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  valueStyle: const TextStyle(fontSize: 14)),
-              const SizedBox(height: 15),
-              
-              // Seafood Counts
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (prawnAmount > 0) Text("ပုဇွန် : $prawnAmount , "),
-                  if (octopusCount > 0) Text("ရေဘဝဲ : $octopusCount"),
-                ],
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
+          ...cartItems.map((e) => _buildVoucherItem(e)),
+          const Divider(height: 30),
+          _buildTotalSection(commercialTax),
         ],
       ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value, {TextStyle? style}) {
-    return Row(
+  Widget _buildHeader() {
+    return const Text(
+      "📋 Order Summary",
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildBasicInfoSection() {
+    final style = TextStyle(
+      fontSize: 13.5,
+      // color: Colors.black87,
+    );
+    return Column(
       children: [
-        Expanded(flex: 4, child: Text(label, style: style)),
-        const Expanded(flex: 1, child: Text(":", textAlign: TextAlign.center)),
-        Expanded(
-          flex: 4,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Text(value, style: style),
-          ),
+        SizedBox(height: 10),
+        _buildInfoRow("Table Number", "$tableNumber", style: style),
+        _buildInfoRow("Slip Number", orderNumber, style: style),
+        _buildInfoRow("Date", date, style: style),
+      ]
+          .map((e) =>
+              Padding(padding: const EdgeInsets.only(bottom: 10), child: e))
+          .toList(),
+    );
+  }
+
+  Widget _buildMenuSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(menu, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(dineInOrParcel == 1 ? "ထိုင်စား" : "ပါဆယ်"),
+            Text("Remark: $remark", textAlign: TextAlign.right),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildAmountRow(
-    String label, 
-    num amount, {
-    TextStyle? style,
-    TextStyle? valueStyle,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildLevelSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(flex: 4, child: Text(label, style: style)),
-        const Expanded(flex: 1, child: Text(":", textAlign: TextAlign.center)),
-        Expanded(
-          flex: 4,
-          child: Text(
-            "${NumberFormat('#,##0').format(amount)} MMK",
-            textAlign: TextAlign.right,
-            style: valueStyle,
-          ),
-        ),
+        if (ahtoneLevel != null && ahtoneLevel!.name!.isNotEmpty)
+          Text("အထုံ Level - ${ahtoneLevel!.name}",
+              style: const TextStyle(fontSize: 13)),
+        if (spicyLevel != null && spicyLevel!.name!.isNotEmpty)
+          Text("အစပ် Level - ${spicyLevel!.name}",
+              style: const TextStyle(fontSize: 13)),
       ],
     );
   }
@@ -224,9 +135,15 @@ class VoucherWidget extends StatelessWidget {
     return const Row(
       children: [
         Expanded(flex: 1, child: Text("Name", style: style)),
-        Expanded(flex: 1, child: Text("Qty", textAlign: TextAlign.right, style: style)),
-        Expanded(flex: 1, child: Text("Price", textAlign: TextAlign.right, style: style)),
-        Expanded(flex: 1, child: Text("Amount", textAlign: TextAlign.end, style: style)),
+        Expanded(
+            flex: 1,
+            child: Text("Qty", textAlign: TextAlign.right, style: style)),
+        Expanded(
+            flex: 1,
+            child: Text("Price", textAlign: TextAlign.right, style: style)),
+        Expanded(
+            flex: 1,
+            child: Text("Amount", textAlign: TextAlign.end, style: style)),
       ],
     );
   }
@@ -239,23 +156,90 @@ class VoucherWidget extends StatelessWidget {
           Expanded(flex: 1, child: Text(e.name)),
           Expanded(
             flex: 1,
-            child: Text(
-              e.isGram ? "${e.qty} gram" : "${e.qty}",
-              textAlign: TextAlign.right,
-            ),
+            child: Text(e.isGram ? "${e.qty} gram" : "${e.qty}",
+                textAlign: TextAlign.right),
           ),
           Expanded(
             flex: 1,
-            child: Text(
-              "${e.price}",
-              textAlign: TextAlign.right,
-            ),
+            child: Text("${e.price}", textAlign: TextAlign.right),
           ),
           Expanded(
             flex: 1,
-            child: Text(
-              "${e.totalPrice}",
-              textAlign: TextAlign.end,
+            child: Text("${e.totalPrice}", textAlign: TextAlign.end),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTotalSection(int commercialTax) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildAmountRow("Subtotal", subTotal),
+        _buildAmountRow("Tax", commercialTax),
+        _buildAmountRow("Discount", discount),
+        _buildAmountRow("Grand Total", grandTotal, isBold: true),
+        const Divider(height: 30),
+        _buildAmountRow("Cash Paid", cashAmount),
+        _buildAmountRow("Online Paid", bankAmount),
+        if (refund > 0)
+          _buildAmountRow(
+            "Refund Amount",
+            refund,
+            isBold: true,
+            color: Colors.redAccent,
+          ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (prawnAmount > 0) Text("ပုဇွန် : $prawnAmount , "),
+            if (octopusCount > 0) Text("ရေဘဝဲ : $octopusCount"),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value, {TextStyle? style}) {
+    return Row(
+      children: [
+        Expanded(flex: 4, child: Text(label, style: style)),
+        const Expanded(flex: 1, child: Text(":", textAlign: TextAlign.center)),
+        Expanded(
+            flex: 4,
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(value, style: style))),
+      ],
+    );
+  }
+
+  Widget _buildAmountRow(
+    String label,
+    num amount, {
+    bool isBold = false,
+    Color? color,
+  }) {
+    final style = TextStyle(
+      fontSize: 14,
+      fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+      // color: color ?? Colors.black,
+    );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Expanded(flex: 4, child: Text(label, style: style)),
+          const Expanded(
+              flex: 1, child: Text(":", textAlign: TextAlign.center)),
+          Expanded(
+            flex: 4,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text("${NumberFormat('#,##0').format(amount)} MMK",
+                  style: style),
             ),
           ),
         ],

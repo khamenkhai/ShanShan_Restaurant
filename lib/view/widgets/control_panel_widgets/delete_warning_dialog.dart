@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 
 ///delete category warning dialog box
 Future<dynamic> deleteWarningDialog({
@@ -21,12 +23,12 @@ Future<dynamic> deleteWarningDialog({
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 15),
+              SizedBox(height: 10),
               Text(
-                "ဖျက်ရန် သေချာလား",
+                tr(LocaleKeys.deletePrompt),
                 style: TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 25),
               child
             ],
           ),

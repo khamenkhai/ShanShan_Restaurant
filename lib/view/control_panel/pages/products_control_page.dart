@@ -1,19 +1,19 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/view/control_panel/widgets/products_curd_dialog.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
-import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/cancel_and_delete_dialog_button.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/delete_warning_dialog.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/product_card_widget.dart';
 
-
 class ProductsControlPage extends StatefulWidget {
-  const ProductsControlPage({super.key, required this.title});
-  final String title;
+  const ProductsControlPage({super.key});
 
   @override
   State<ProductsControlPage> createState() => _ProductsControlPageState();
@@ -33,12 +33,12 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
       appBar: AppBar(
         leadingWidth: 200,
         centerTitle: true,
-        leading: appBarLeading(onTap: () => Navigator.pop(context)),
-        title: Text(widget.title),
+        leading: AppBarLeading(onTap: () => Navigator.pop(context)),
+        title: Text(tr(LocaleKeys.controlPanel)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        label: const Text("ပစ္စည်းအသစ်ထည့်ရန်"),
+        label: Text(tr(LocaleKeys.addNewProduct)),
         icon: const Icon(Icons.add),
         onPressed: () => showDialog(
           context: context,
@@ -70,14 +70,15 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
               itemCount: 8, // Simulating 8 skeleton items
               itemBuilder: (context, index) => ProductCardWidget(
                 product: ProductModel(
-                    category: "",
-                    categoryId: 1,
-                    id: 1,
-                    isDefault: true,
-                    isGram: false,
-                    name: "Testing Product",
-                    price: 100,
-                    qty: 1),
+                  category: "",
+                  categoryId: 1,
+                  id: 1,
+                  isDefault: true,
+                  isGram: false,
+                  name: "Testing Product",
+                  price: 100,
+                  qty: 1,
+                ),
                 onDelete: () {},
                 onEdit: () {},
               ),
@@ -146,11 +147,9 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
     BuildContext context,
     String productId,
   ) async {
-    await context.read<ProductsCubit>().deleteProduct(id: productId).then((d){
-      if(!context.mounted) return;
+    await context.read<ProductsCubit>().deleteProduct(id: productId).then((d) {
+      if (!context.mounted) return;
       Navigator.pop(context);
     });
   }
 }
-
-
