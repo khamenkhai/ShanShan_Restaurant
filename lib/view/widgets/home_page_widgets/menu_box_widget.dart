@@ -11,11 +11,13 @@ import 'package:shan_shan/view/widgets/home_page_widgets/menu_row_widget.dart';
 class MenuBoxWidget extends StatelessWidget {
   final BoxConstraints constraints;
   final CartItem? defaultItem;
+  final bool isEditState;
 
   const MenuBoxWidget({
     super.key,
     required this.constraints,
     this.defaultItem,
+    required this.isEditState
   });
 
   @override
@@ -69,6 +71,7 @@ class MenuBoxWidget extends StatelessWidget {
                               (e) => MenuRowWidget(
                                 menu: e,
                                 defaultItem: defaultItem,
+                                isEditState: isEditState,
                               ),
                             )
                             .toList(),

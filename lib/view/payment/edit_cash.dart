@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
@@ -8,517 +10,377 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
+import 'package:shan_shan/core/service/local_noti_service.dart';
+import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/sale_success/sale_success_page.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
+import 'package:shan_shan/view/widgets/number_buttons.dart';
 
 class EditCashScreen extends StatefulWidget {
   const EditCashScreen({
     super.key,
-    required this.subTotal,
-    required this.tax,
-    required this.paidCash,
-    required this.athoneLevel,
-    required this.spicyLevel,
-    required this.dineInOrParcel,
-    required this.menuId,
-    required this.tableNumber,
-    required this.prawnCount,
-    required this.octopusCount,
-    required this.remark,
-    required this.menu,
-    required this.orderNo,
-    required this.date,
+    required this.orderId,
   });
-
-  final int subTotal;
-  final int tax;
-  final bool paidCash;
-  final String remark;
-  final int athoneLevel;
-  final int spicyLevel;
-  final int dineInOrParcel;
-  final int menuId;
-  final String menu;
-  final int tableNumber;
-  final String orderNo;
-  final int prawnCount;
-  final int octopusCount;
-  final String date;
+  final String orderId;
 
   @override
   State<EditCashScreen> createState() => _EditCashScreenState();
 }
 
 class _EditCashScreenState extends State<EditCashScreen> {
-  bool showButtons = true;
+  final TextEditingController cashController = TextEditingController();
+  final ScrollController categoryScrollController = ScrollController();
 
-  TextEditingController cashController = TextEditingController();
-
-  num refundAmount = 0;
   int cashAmount = 0;
-  int grandTotal = 0;
+  int refundAmount = 0;
   int subTotal = 0;
-
-  bool alreadyPrint = false;
-
-  bool customerTakevoucher = true;
-
   int taxAmount = 0;
+  int grandTotal = 0;
+
+  bool customerTakesVoucher = true;
 
   @override
   void initState() {
     super.initState();
+    calculateAmounts();
   }
 
-  ScrollController categoryScrollController = ScrollController();
+  void calculateAmounts() {
+    final cart = context.read<EditSaleCartCubit>();
+    subTotal = cart.getTotalAmount();
+    taxAmount = customerTakesVoucher ? get5percentage(subTotal) : 0;
+    grandTotal = subTotal + taxAmount;
+
+    if (cashAmount > grandTotal) {
+      refundAmount = cashAmount - grandTotal;
+    } else {
+      refundAmount = 0;
+    }
+  }
+
+  void enterClickProcess() {
+    final enteredCash = int.tryParse(cashController.text) ?? 0;
+
+    if (enteredCash < grandTotal) {
+      showSnackBar(text: LocaleKeys.cashNotEnough.tr(), context: context);
+      return;
+    }
+
+    setState(() {
+      cashAmount = enteredCash;
+      refundAmount = cashAmount - grandTotal;
+      cashController.clear();
+    });
+  }
+
+  void toggleVoucher(bool? value) {
+    setState(() {
+      customerTakesVoucher = value ?? true;
+      calculateAmounts();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
+    final cartController = BlocProvider.of<EditSaleCartCubit>(context);
 
-    EditSaleCartCubit cartCubit = BlocProvider.of<EditSaleCartCubit>(context);
-
-    if (customerTakevoucher) {
-      grandTotal = widget.subTotal + widget.tax;
-    } else {
-      grandTotal = widget.subTotal;
-    }
+    calculateAmounts();
 
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          leadingWidth: 160,
-          leading: AppBarLeading(onTap: () {
-            Navigator.pop(context);
-          }),
-          title: Text("ငွေသားဖြင့်ပေးချေရန်"),
-        ),
-        body: InternetCheckWidget(
-            child: Container(
-              padding: EdgeInsets.only(top: 15),
-              child: _paidCashForm(
-                screenSize,
-                cartCubit,
-              ),
-            ),
-            onRefresh: () {}));
-  }
-
-  ///cash payment form widget
-  Widget _paidCashForm(Size screenSize, EditSaleCartCubit cartCubit) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        /// left side of the screen
-        _saleSummaryForm(screenSize, cartCubit),
-
-        ///right side
-        Container(
-          height: 180,
-          padding: EdgeInsets.only(
-            top: 15,
-            right: 15,
-            left: 15,
-            bottom: 15,
-          ),
-          margin:
-              EdgeInsets.only(bottom: 15, right: SizeConst.kHorizontalPadding),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(
-              15,
-            ),
-          ),
-          width: screenSize.width * 0.5,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  //_abc(),
-                  Row(
-                    children: [
-                      Text(
-                        "ငွေပေးချေမှုနည်းလမ်း :",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      Text(
-                        "ငွေသား",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: ColorConstants.primaryColor),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-
-                  Container(
-                    width: 200,
-                    height: 50,
-                    margin: EdgeInsets.only(right: 15),
-                    child: CustomElevatedButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.edit),
-                          SizedBox(width: 7),
-                          Text("အော်ဒါပြင်ရန်"),
-                        ],
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  )
-                ],
-              );
-            },
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leadingWidth: 160,
+        leading: AppBarLeading(onTap: () => Navigator.pop(context)),
+        title: Text(LocaleKeys.cashTitle.tr()),
+      ),
+      body: InternetCheckWidget(
+        child: Container(
+          padding: EdgeInsets.only(top: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _saleSummaryForm(screenSize, cartController),
+              const SizedBox(width: SizeConst.kHorizontalPadding),
+              _numberButtonsForm(screenSize),
+            ],
           ),
         ),
-        SizedBox(width: 5),
-      ],
+        onRefresh: () {},
+      ),
     );
   }
 
-  ///sale summary form
-  Widget _saleSummaryForm(Size screenSize, EditSaleCartCubit cartCubit) {
+  Widget _saleSummaryForm(Size screenSize, EditSaleCartCubit cartController) {
     return Expanded(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: SizeConst.kHorizontalPadding,
-          bottom: SizeConst.kHorizontalPadding,
-          right: SizeConst.kHorizontalPadding,
+      child: Container(
+        padding: const EdgeInsets.all(SizeConst.kHorizontalPadding),
+        margin: EdgeInsets.only(left: SizeConst.kHorizontalPadding),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: SizeConst.kBorderRadius,
         ),
-        child: Container(
-          padding: EdgeInsets.all(SizeConst.kHorizontalPadding),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: SizeConst.kBorderRadius,
-          ),
-          child: BlocBuilder<EditSaleCartCubit, EditSaleCartState>(
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 10),
-                    child: Text(
-                      "Summary",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: ColorConstants.primaryColor,
-                        fontSize: 20,
-                      ),
+        child: BlocBuilder<EditSaleCartCubit, EditSaleCartState>(
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text(
+                    LocaleKeys.summary.tr(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
                   ),
-
-                  SizedBox(
-                    height: screenSize.height * 0.45,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: state.items
-                            .map(
-                              (e) => CartItemWidget(
+                ),
+                SizedBox(
+                  height: screenSize.height * 0.45,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: state.items
+                          .map((e) => CartItemWidget(
                                 ontapDisable: true,
                                 cartItem: e,
                                 onDelete: () {},
                                 onEdit: () {},
-                              ),
-                            )
-                            .toList(),
-                      ),
+                              ))
+                          .toList(),
                     ),
                   ),
-
-                  SizedBox(height: 20),
-
-                  ///total and tax widget
-                  _cashAndCost(cartCubit: cartCubit),
-
-                  Spacer(),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: customerTakevoucher,
-                        activeColor: ColorConstants.primaryColor,
-                        onChanged: (value) {
-                          setState(() {
-                            customerTakevoucher = value!;
-                            // refundAmount = 0;
-                            // cashAmount = 0;
-                            checkProcess();
-                          });
-                        },
-                      ),
-                      //Text("Customer take voucher( no discount )"),
-                      Text("ဘောက်ချာယူမည်"),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  _checkoutButton(
-                    screenSize: screenSize,
-                    cartItems: state.items,
-                    cartCubit: cartCubit,
-                  ),
-                ],
-              );
-            },
-          ),
+                ),
+                const SizedBox(height: 20),
+                _cashAndCost(),
+                const Spacer(),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: customerTakesVoucher,
+                      onChanged: toggleVoucher,
+                    ),
+                    Text(LocaleKeys.takeVoucher.tr()),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                _checkoutButton(state.items, cartController),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  ///checkout button
-  BlocBuilder _checkoutButton({
-    required Size screenSize,
-    required List<CartItem> cartItems,
-    required EditSaleCartCubit cartCubit,
-  }) {
-    return BlocBuilder<SaleProcessCubit, SaleProcessState>(
-      builder: (context, state) {
-        if (state is SaleProcessLoadingState) {
-          return LoadingWidget();
-        } else {
-          return CustomElevatedButton(
-            isEnabled: isCheckoutEnabled(),
-            width: double.infinity,
-            elevation: 0,
-            height: 70,
-            child: Text("ငွေရှင်းရန်လုပ်ဆောင်ပါ"),
-            onPressed: () async {
-              int discountAmount = 0;
-              if (customerTakevoucher) {
-                grandTotal = widget.subTotal + widget.tax;
-                subTotal = widget.subTotal;
-                taxAmount = widget.tax;
-              } else {
-                grandTotal = widget.subTotal;
-                subTotal = widget.subTotal;
-                discountAmount = widget.tax;
-                taxAmount = 0;
-              }
-
-              cashAmount = grandTotal;
-
-              /// **********
-              if (cashAmount == grandTotal) {
-                ///check conditions that if the curret sale process items is from pending orders or not
-
-                SaleModel saleModel = SaleModel(
-                  octopusCount: widget.octopusCount,
-                  prawnCount: widget.prawnCount,
-                  remark: widget.remark,
-                  ahtoneLevelId:
-                      widget.athoneLevel == 000 ? null : widget.athoneLevel,
-                  spicyLevelId:
-                      widget.spicyLevel == 000 ? null : widget.spicyLevel,
-                  dineInOrParcel: widget.dineInOrParcel,
-                  grandTotal: grandTotal,
-                  menuId: widget.menuId,
-                  orderNo: widget.orderNo,
-                  paidCash: grandTotal,
-                  products: context
-                      .read<EditSaleCartCubit>()
-                      .state
-                      .items
-                      .map(
-                        (e) => Product(
-                          productId: e.id,
-                          qty: e.qty,
-                          price: e.price,
-                          totalPrice: e.totalPrice,
-                        ),
-                      )
-                      .toList(),
-                  tableNumber: widget.tableNumber,
-                  refund: 0,
-                  subTotal: subTotal,
-                  tax: taxAmount,
-                  discount: discountAmount,
-                  paidOnline: 0,
-                );
-
-                await context
-                    .read<SaleProcessCubit>()
-                    .updateSale(
-                      saleRequest: saleModel,
-                      orderId: saleModel.orderNo,
-                    )
-                    .then(
-                  (value) {
-                    if (value) {
-                      if (!context.mounted) return;
-                      redirectTo(
-                        context: context,
-                        form: SaleSuccessPage(
-                          customerTakevoucher: customerTakevoucher,
-                          taxAmount: taxAmount,
-                          saleData: saleModel,
-                          cartItems: cartItems,
-                          paymentType: "cash",
-                          dateTime: widget.date,
-                          menuTitle: widget.menu,
-                          ahtoneLevel: cartCubit.state.athoneLevel,
-                          spicyLevel: cartCubit.state.spicyLevel,
-                          isEditSale: true,
-                        ),
-                        replacement: true,
-                      );
-                    } else {
-                      if (!context.mounted) return;
-                      showCustomSnackbar(
-                          message: "Checkout Failed!", context: context);
-                    }
-                  },
-                );
-              }
-            },
-          );
-        }
-      },
-    );
-  }
-
-  Widget _cashAndCost({required EditSaleCartCubit cartCubit}) {
+  Widget _numberButtonsForm(Size screenSize) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(bottom: 15, top: 5),
-            child: Divider(
-              height: 1,
-              thickness: 0.5,
-              color: ColorConstants.greyColor,
-            ),
-          ),
-          SizedBox(height: 5),
-          _amountRowWidget(
-            amount: grandTotal,
-            title: "GrandTotal",
-          ),
-          SizedBox(height: 5),
-          // _amountRowWidget(
-          //   amount: cashAmount,
-          //   title: "Cash",
-          // ),
-          // SizedBox(height: 5),
-          // _amountRowWidget(
-          //   title: "Refund",
-          //   amount: refundAmount,
-          //   isChange: true,
-          // ),
-        ],
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.only(
+        bottom: 15,
+        right: SizeConst.kHorizontalPadding,
+      ),
+      width: screenSize.width * 0.5,
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: SizeConst.kBorderRadius,
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    LocaleKeys.paymentMethod.tr(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Text(
+                    LocaleKeys.cash.tr(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: ColorConstants.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: 200,
+                height: 50,
+                child: CustomElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 7),
+                      Text(LocaleKeys.editOrder.tr()),
+                    ],
+                  ),
+                ),
+              ),
+              NumberButtons(
+                defaultText: "0",
+                formatNumber: true,
+                enterClick: enterClickProcess,
+                numberController: cashController,
+                fullWidth: constraints.maxWidth,
+                gridHeight: 90,
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Row _amountRowWidget({
+  Widget _cashAndCost() {
+    return Column(
+      children: [
+        Divider(thickness: 0.5, color: ColorConstants.greyColor),
+        const SizedBox(height: 5),
+        _amountRowWidget(title: LocaleKeys.grandTotal.tr(), amount: grandTotal),
+        _amountRowWidget(
+            title: LocaleKeys.totalPaidCash.tr(), amount: cashAmount),
+        const SizedBox(height: 5),
+        if (refundAmount > 0)
+          _amountRowWidget(
+            title: LocaleKeys.refund.tr(),
+            amount: refundAmount,
+            isChange: true,
+          ),
+      ],
+    );
+  }
+
+  Widget _amountRowWidget({
     required String title,
-    required num amount,
+    required int amount,
     bool isChange = false,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          flex: 2,
-          child: Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              isChange
-                  ? "${formatNumber(amount)} MMK"
-                  : "${formatNumber(amount)} MMK",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: isChange ? Colors.red : Colors.black,
-              ),
-            ),
+        Text(
+          "${formatNumber(amount)} MMK",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: isChange ? Colors.red : null,
           ),
         ),
       ],
     );
   }
 
-  bool isCheckoutEnabled() {
-    return true;
+  Widget _checkoutButton(
+      List<CartItem> cartItems, EditSaleCartCubit cartController) {
+    return BlocConsumer<SaleProcessCubit, SaleProcessState>(
+      listener: (context, state) {
+        if (state is SaleProcessSuccessState) {}
+      },
+      builder: (context, state) {
+        if (state is SaleProcessLoadingState) return const LoadingWidget();
 
-    ///**********
-    // if ((cashAmount > 0 && cashAmount >= widget.subTotal)) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+        return CustomElevatedButton(
+          isEnabled: true,
+          width: double.infinity,
+          elevation: 0,
+          height: 70,
+          onPressed: () => _checkout(cartItems, cartController),
+          child: Text("Confirm Sale Edit"),
+        );
+      },
+    );
   }
 
-  void enterClickProcess() {
-    cashAmount =
-        cashController.text.isNotEmpty ? int.parse(cashController.text) : 0;
+  void _checkout(
+      List<CartItem> cartItems, EditSaleCartCubit cartController) async {
+    if (cashAmount < grandTotal) {
+      showSnackBar(text: LocaleKeys.cashInsufficient.tr(), context: context);
+      return;
+    }
 
-    if (cashAmount > grandTotal) {
-      refundAmount = cashAmount - grandTotal;
-    } else if (cashAmount < grandTotal) {
-      showSnackBar(
-        text: "ငွေသားက မလုံလောက်ပါ",
+    final dateTime = DateTime.now();
+    final saleModel = SaleModel(
+      octopusCount: cartController.state.octopusCount,
+      prawnCount: cartController.state.prawnCount,
+      remark: cartController.state.remark,
+      ahtoneLevelId: cartController.state.athoneLevel?.id,
+      spicyLevelId: cartController.state.spicyLevel?.id,
+      dineInOrParcel: cartController.state.dineInOrParcel,
+      grandTotal: grandTotal,
+      menuId: cartController.state.menu?.id ?? 0,
+      orderNo: cartController.state.orderNo,
+      paidCash: cashAmount,
+      products: cartItems
+          .map((e) => Product(
+                productId: e.id,
+                qty: e.qty,
+                price: e.price,
+                totalPrice: e.totalPrice,
+              ))
+          .toList(),
+      tableNumber: cartController.state.tableNumber,
+      refund: refundAmount,
+      subTotal: subTotal,
+      tax: taxAmount,
+      discount: 0,
+      paidOnline: 0,
+    );
+
+    final success = await context
+        .read<SaleProcessCubit>()
+        .updateSale( saleRequest: saleModel);
+
+    if (!mounted) return;
+
+    if (success) {
+      LocalNotificationService()
+          .showNotification(title: LocaleKeys.saleSuccess.tr(), body: "");
+      NavigationHelper.pushReplacement(
+        context,
+        SaleSuccessPage(
+          customerTakevoucher: customerTakesVoucher,
+          taxAmount: taxAmount,
+          saleData: saleModel,
+          cartItems: cartItems,
+          paymentType: "cash",
+          dateTime: DateFormat('dd, MMMM yyyy hh:mm a').format(dateTime),
+          menuTitle: cartController.state.menu!.name.toString(),
+          ahtoneLevel: cartController.state.athoneLevel,
+          spicyLevel: cartController.state.spicyLevel,
+        ),
+      );
+    } else {
+      showCustomSnackbar(
+        message: LocaleKeys.checkoutFailed.tr(),
         context: context,
       );
-      cashAmount = 0;
-      refundAmount = 0;
     }
-
-    cashController.text = "";
-
-    setState(() {});
   }
 
-  void checkProcess() {
-    int grandTotal = 0;
-    if (customerTakevoucher) {
-      grandTotal = widget.subTotal + widget.tax;
-    } else {
-      grandTotal = widget.subTotal;
-    }
-    if (cashAmount > grandTotal) {
-      refundAmount = cashAmount - grandTotal;
-    } else if (cashAmount < grandTotal) {
-      // cashAmount = 0;
-      // refundAmount = 0;
-    }
-
-    cashController.text = "";
-
-    setState(() {});
-  }
-
-  ///calculate refund
-  calculateRefund() {
-    // if ((paidOnline + cashAmount) > grand_total) {
-    //   refundAmount = (paidOnline + cashAmount) - grand_total;
-    // } else {
-    //   refundAmount = 0;
-    // }
-    setState(() {});
+  String generateRandomId(int length) {
+    final Random random = Random();
+    return List.generate(length, (_) => random.nextInt(10).toString()).join();
   }
 }

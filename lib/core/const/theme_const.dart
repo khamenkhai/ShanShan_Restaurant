@@ -71,6 +71,7 @@ class ThemeConstants {
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: color,
+      
       colorScheme: ColorScheme.light(
         primary: color,
         onPrimary: onPrimary,

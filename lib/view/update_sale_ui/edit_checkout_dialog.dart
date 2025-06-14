@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
-import 'package:shan_shan/view/payment/cash.dart';
+import 'package:shan_shan/view/payment/edit_cash.dart';
 import 'package:shan_shan/view/payment/multi_payment_page.dart';
 import 'package:shan_shan/view/payment/online_payment.dart';
 
-class CheckoutDialog extends StatefulWidget {
+class CheckoutDialogEdit extends StatefulWidget {
   final bool paidOnline;
   final bool paidCash;
   final double? width;
+  final int orderId;
 
-  const CheckoutDialog({
+  const CheckoutDialogEdit({
     super.key,
     required this.paidOnline,
     required this.paidCash,
     this.width,
+    required this.orderId,
   });
 
   @override
-  State<CheckoutDialog> createState() => _CheckoutDialogState();
+  State<CheckoutDialogEdit> createState() => _CheckoutDialogEditState();
 }
 
-class _CheckoutDialogState extends State<CheckoutDialog> {
+class _CheckoutDialogEditState extends State<CheckoutDialogEdit> {
   final _formKey = GlobalKey<FormState>();
   final _tableCtrl = TextEditingController();
   final _remarkCtrl = TextEditingController();
@@ -39,7 +41,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   @override
   void initState() {
     super.initState();
-    final cart = context.read<CartCubit>().state;
+    final cart = context.read<EditSaleCartCubit>().state;
     _prawnCount = cart.prawnCount;
     _octopusCount = cart.octopusCount;
     _remarkCtrl.text = cart.remark;
@@ -54,10 +56,12 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    final cartCubit = context.read<CartCubit>();
     final screenWidth = MediaQuery.of(context).size.width;
+    final cartCubit = context.read<EditSaleCartCubit>();
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
@@ -69,7 +73,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _header(tr(LocaleKeys.orderTitle)),
+              _header("Edit Order"),
               const SizedBox(height: 15),
               _formField(
                 tr(LocaleKeys.tableNumber),
@@ -89,8 +93,8 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                 label: tr(LocaleKeys.octopus),
                 count: _octopusCount,
                 onIncrement: () => setState(() => _octopusCount++),
-                onDecrement: () => setState(() =>
-                    _octopusCount = (_octopusCount - 1).clamp(0, _octopusCount)),
+                onDecrement: () => setState(() => _octopusCount =
+                    (_octopusCount - 1).clamp(0, _octopusCount)),
               ),
               _CounterRow(
                 label: tr(LocaleKeys.prawn),
@@ -109,24 +113,24 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   }
 
   Widget _header(String title) => Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      Text(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
             title,
             style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.bold,
             ),
           ),
-      Text(
+          Text(
             widget.paidCash ? " (Cash)" : " (Online)",
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-    ],
-  );
+        ],
+      );
 
   Widget _formField(
     String label,
@@ -200,7 +204,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
     );
   }
 
-  Widget _actionButtons(CartCubit cartCubit) {
+  Widget _actionButtons(EditSaleCartCubit cartCubit) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -217,7 +221,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
     );
   }
 
-  void _confirmOrder(CartCubit cartCubit) {
+  void _confirmOrder(EditSaleCartCubit cartCubit) {
     if (!_formKey.currentState!.validate()) return;
 
     final remark = _remarkCtrl.text;
@@ -233,11 +237,12 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
     if (screen != null) NavigationHelper.pushPage(context, screen);
   }
 
-  Widget? _getPaymentScreen(CartCubit cartCubit, String remark) {
+  Widget? _getPaymentScreen(EditSaleCartCubit cartCubit, String remark) {
     if (widget.paidCash && widget.paidOnline) {
       return MultiPaymentPage();
     } else if (widget.paidCash) {
-      return CashScreen(isEditState: false);
+      // return Text("Order Id : ${widget.orderId}");
+      return EditCashScreen(orderId: widget.orderId.toString());
     } else if (widget.paidOnline) {
       return OnlinePaymentScreen();
     }

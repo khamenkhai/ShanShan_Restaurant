@@ -8,6 +8,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/service/local_noti_service.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
@@ -65,22 +66,23 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
         title: const Text("Online Payment"),
       ),
       body: InternetCheckWidget(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _saleSummaryForm(screenSize, cartCubit),
-            const SizedBox(width: 5),
-          ],
-        ),
+        child: _saleSummaryForm(screenSize, cartCubit),
         onRefresh: () {},
       ),
     );
   }
 
   Widget _saleSummaryForm(Size screenSize, CartCubit cartCubit) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(SizeConst.kHorizontalPadding),
+    return Center(
+      child: Container(
+        width: screenSize.width / 2,
+        padding: const EdgeInsets.symmetric(
+          horizontal: SizeConst.kHorizontalPadding,
+        ),
+        margin: EdgeInsets.only(
+          top: 5,
+          bottom: SizeConst.kHorizontalPadding,
+        ),
         child: Container(
           padding: const EdgeInsets.all(SizeConst.kHorizontalPadding),
           decoration: BoxDecoration(
@@ -129,7 +131,7 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
                         activeColor: Theme.of(context).primaryColor,
                         onChanged: toggleVoucher,
                       ),
-                      const Text("ဘောက်ချာယူမည်"),
+                      Text(LocaleKeys.takeVoucher.tr()),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -168,9 +170,8 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
         return CustomElevatedButton(
           isEnabled: true,
           width: double.infinity,
-          height: 70,
           onPressed: () => _checkout(cartItems, cartCubit),
-          child: const Text("ငွေရှင်းရန်လုပ်ဆောင်ပါ"),
+          child: Text(tr(LocaleKeys.checkoutNow)),
         );
       },
     );
@@ -205,12 +206,14 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
       discount: 0,
     );
 
-    final success = await context.read<SaleProcessCubit>().makeSale(saleRequest: saleModel);
+    final success =
+        await context.read<SaleProcessCubit>().makeSale(saleRequest: saleModel);
 
     if (!mounted) return;
 
     if (success) {
-      LocalNotificationService().showNotification(title: "Sale Success!", body: "");
+      LocalNotificationService()
+          .showNotification(title: "Sale Success!", body: "");
       NavigationHelper.pushReplacement(
         context,
         SaleSuccessPage(
@@ -231,6 +234,12 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
   }
 
   String generateRandomId(int length) {
-    return List.generate(length, (_) => (0 + (9 * (1.0 * (DateTime.now().microsecondsSinceEpoch % 10)) ~/ 10)).toString()).join();
+    return List.generate(
+        length,
+        (_) => (0 +
+                (9 *
+                    (1.0 * (DateTime.now().microsecondsSinceEpoch % 10)) ~/
+                    10))
+            .toString()).join();
   }
 }

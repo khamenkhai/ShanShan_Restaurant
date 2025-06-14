@@ -48,7 +48,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        label: Text("အထုံ Level အသစ်ထည့်ရန်"),
+        label: Text(tr(LocaleKeys.addNewHtoneLevel)),
         icon: Icon(Icons.add),
         onPressed: () {
           showDialog(
@@ -155,7 +155,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
               children: [
                 SizedBox(height: 15),
                 Text(
-                  "ဖျက်ရန် သေချာလား",
+                  tr(LocaleKeys.deletePrompt),
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 15),
@@ -169,7 +169,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
                         children: [
                           CustomOutlineButton(
                             elevation: 0,
-                            child: Text("ပယ်ဖျက်ရန်"),
+                            child: Text(tr(LocaleKeys.cancel)),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -177,7 +177,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
                           SizedBox(width: 10),
                           CustomElevatedButton(
                             bgColor: Colors.red,
-                            child: Text("ဖျက်မည်"),
+                            child:  Text(tr(LocaleKeys.delete)),
                             onPressed: () async {
                               await _deleteAhtoneLevelData(
                                 context: context,

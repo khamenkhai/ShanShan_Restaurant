@@ -40,12 +40,12 @@ class SaleProcessCubit extends Cubit<SaleProcessState> {
   /// Update Sale
   Future<bool> updateSale({
     required SaleModel saleRequest,
-    required String orderId,
   }) async {
     emit(SaleProcessLoadingState());
 
     try {
-      final response = await saleService.makeSale(
+      final response = await saleService.updateSale(
+        slipNumber: saleRequest.orderNo,
         requestBody: saleRequest.toMap(),
       );
 

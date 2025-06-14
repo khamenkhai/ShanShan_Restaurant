@@ -188,7 +188,7 @@ class _CategoriesControlPageDialogState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("အမျိုးအစား", style: TextStyle(fontSize: 16)),
+              Text(tr(LocaleKeys.category), style: TextStyle(fontSize: 16)),
               const SizedBox(height: 10),
               TextFormField(
                 controller: categoryNameController,

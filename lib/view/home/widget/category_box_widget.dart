@@ -9,6 +9,7 @@ class CategoryBoxWidget extends StatelessWidget {
   final CategoryModel category;
   final CartItem? defaultItem;
   final TextEditingController tableController;
+  final bool isEditState;
 
   const CategoryBoxWidget({
     super.key,
@@ -16,6 +17,7 @@ class CategoryBoxWidget extends StatelessWidget {
     required this.category,
     required this.defaultItem,
     required this.tableController,
+    this.isEditState = false,
   });
 
   @override
@@ -25,7 +27,7 @@ class CategoryBoxWidget extends StatelessWidget {
       color: Theme.of(context).cardColor,
       child: Container(
         width: ((constraints.maxWidth - SizeConst.kHorizontalPadding) / 2),
-        height: constraints.maxHeight / 1.2,
+        height: constraints.maxHeight / 2,
         decoration: BoxDecoration(
           borderRadius: SizeConst.kBorderRadius,
         ),
@@ -51,7 +53,8 @@ class CategoryBoxWidget extends StatelessWidget {
             ),
             ProductListScrollBar(
               tableController: tableController,
-              isEditState: false,
+              isEditState: isEditState,
+              categoryId: category.id ?? 0,
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
@@ -6,6 +7,7 @@ import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.da
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
@@ -54,14 +56,14 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomOutlineButton(
-                  child: Text("ပယ်ဖျက်ရန်"),
+                  child: Text(tr(LocaleKeys.cancel)),
                   onPressed: () {
                     Navigator.pop(context);
                   },
                 ),
                 SizedBox(width: 10),
                 CustomElevatedButton(
-                  child: Text("ထည့်ရန်"),
+                  child: Text(tr(LocaleKeys.confirm)),
                   onPressed: () {
                     addTasteLevels();
                   },
@@ -80,7 +82,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "အထုံ Level",
+          tr(LocaleKeys.htoneLevel),
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
@@ -119,7 +121,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "အစပ် Level",
+          tr(LocaleKeys.spicyLevel),
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,

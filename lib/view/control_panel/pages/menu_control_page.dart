@@ -142,7 +142,7 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
                     children: [
                       CustomOutlineButton(
                         elevation: 0,
-                        child: const Text("ပယ်ဖျက်ရန်"),
+                        child:  Text(tr(LocaleKeys.cancel)),
                         onPressed: () => Navigator.pop(context),
                       ),
                       const SizedBox(width: 10),
@@ -190,7 +190,6 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
   void initState() {
     if (widget.menu != null) {
       menuNameController.text = widget.menu!.name.toString();
-      isTaseRequired = widget.menu!.isFish ?? false;
     }
     resetPage();
     super.initState();
@@ -239,9 +238,8 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                       return null;
                     },
                     decoration: customTextDecoration2(
-                      labelText: "မီနူးအမည်အသစ်ထည့်ရန်",
-                        primaryColor: Theme.of(context).primaryColor
-                    ),
+                        labelText: "မီနူးအမည်အသစ်tr(LocaleKeys.confirm)",
+                        primaryColor: Theme.of(context).primaryColor),
                   ),
 
                   SizedBox(height: 10),
@@ -261,7 +259,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                               : Colors.grey,
                         ),
                         SizedBox(width: 10),
-                        Text("အထုံ/အစပ် မရွေးပါ")
+                        Text(tr(LocaleKeys.noChoosingTasteLevels))
                       ],
                     ),
                   ),
@@ -279,14 +277,14 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
                           children: [
                             CustomOutlineButton(
                               elevation: 0,
-                              child: Text("ပယ်ဖျက်ရန်"),
+                              child: Text(tr(LocaleKeys.cancel)),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
                             ),
                             SizedBox(width: 10),
                             CustomElevatedButton(
-                              child: Text("အတည်ပြုရန်"),
+                              child: Text(tr(LocaleKeys.confirm)),
                               onPressed: () async {
                                 if (widget.menu != null) {
                                   await context

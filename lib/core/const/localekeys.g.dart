@@ -1,6 +1,8 @@
 class LocaleKeys {
   // General
   static const String greeting = 'greeting'; // မင်္ဂလာပါ
+
+
   static const String appName = 'appName'; // ရှန်းရှန်း
   static const String logout = 'logout'; // ထွက်မည်
   static const String error = 'error'; // အမှား
@@ -53,6 +55,7 @@ class LocaleKeys {
   static const String addNewMenu = 'addNewMenu';
   static const String addNewHtoneLevel = 'addNewHtoneLevel';
   static const String addNewSpicyLevel = 'addNewSpicyLevel';
+  static const String noChoosingTasteLevels = 'noChoosingTasteLevels';
 
   // sale report
   static const String dailyReport = 'dailyReport';
@@ -74,4 +77,43 @@ class LocaleKeys {
 
   // other
   static const String deletePrompt = 'deletePrompt';
+
+  // Checkout Dialog
+  static const String orderTitle = 'orderTitle'; // မှာယူမှု
+  static const String tableNumberHint = 'tableNumberHint'; // စားပွဲနံပါတ်ရေးရန်
+  static const String tableNumberRequired = 'tableNumberRequired'; // စားပွဲနံပါတ် လိုအပ်ပါသည်။!
+  static const String remark = 'remark'; // မှတ်ချက်
+  static const String remarkHint = 'remarkHint'; // မှတ်ချက်ရေးရန်
+  static const String dineInOrParcel = 'dineInOrParcel'; // ထိုင်စား or ပါဆယ်
+  static const String dineIn = 'dineIn'; // ထိုင်စား
+  static const String parcel = 'parcel'; // ပါဆယ်
+  static const String octopus = 'octopus'; // ရေဘဝဲ
+  static const String prawn = 'prawn'; // ပုဇွန်
+  static const String cancelOrder = 'cancelOrder'; // ပယ်ဖျက်ရန်
+  static const String confirmOrder = 'confirmOrder'; // အတည်ပြုရန်
+
+  //levels
+   static const String level = 'level'; 
+   static const String position = 'position'; 
+   static const String description = 'description'; 
+
+     static const String cashTitle = 'cashTitle'; // ငွေသားဖြင့်ပေးချေရန်
+  static const String cashNotEnough = 'cashNotEnough'; // ငွေသားက မလုံလောက်ပါ
+  static const String takeVoucher = 'takeVoucher'; // ဘောက်ချာယူမည်
+  static const String summary = 'summary'; // Summary
+  static const String paymentMethod = 'paymentMethod'; // ငွေပေးချေမှုနည်းလမ်း :
+  static const String cash = 'cash'; // Cash
+  static const String editOrder = 'editOrder'; // အော်ဒါပြင်ရန်
+  static const String checkoutNow = 'checkoutNow'; // ငွေရှင်းရန်လုပ်ဆောင်ပါ
+  static const String refund = 'refund'; // Refund
+  static const String grandTotal = 'grandTotal'; // GrandTotal
+  static const String checkoutFailed = 'checkoutFailed'; // Checkout Failed!
+  static const String saleSuccess = 'saleSuccess'; // Sale Success!
+  static const String cashInsufficient = 'cashInsufficient'; // ငွေသားမလုံလောက်ပါ
+  static const String printVoucher = "printVoucher";
+  static const String backToHistory = "backToHistory";
+  static const String makeNewOrder = "makeNewOrder";
+  static const String editPayment = "editPayment";
 }
+
+

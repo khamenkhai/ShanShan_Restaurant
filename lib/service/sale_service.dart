@@ -30,4 +30,26 @@ class SaleService {
       return Left(e.toString());
     }
   }
+  /// Make a sale request to the server
+  Future<Either<String, bool>> updateSale({
+    required Map<String, dynamic> requestBody,
+    required String slipNumber,
+  }) async {
+    try {
+      final response = await dioClient.postRequest(
+        apiUrl: ApiConstants.UPDATE_SALE_URL(slipNumber),
+        requestBody: requestBody,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return Right(true);
+      } else {
+        return Left(response.data["message"]?.toString() ?? "Unknown error");
+      }
+    } catch (e) {
+      logger.logWarning("Error log : $e",
+          error: 'SaleService : _handleRequest');
+      return Left(e.toString());
+    }
+  }
 }

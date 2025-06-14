@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconly/iconly.dart';
 import 'package:pull_to_refresh_new/pull_to_refresh.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_cubit.dart';
-import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/category_cubit/category_cubit.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
-import 'package:shan_shan/core/component/scale_on_tap.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/service/local_noti_service.dart';
+import 'package:shan_shan/core/style/app_text_style.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/utils.dart';
+import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/category_model.dart';
+import 'package:shan_shan/models/response_models/sale_history_model.dart';
 import 'package:shan_shan/view/home/widget/cart_header_widget.dart';
 import 'package:shan_shan/view/home/widget/category_box_widget.dart';
 import 'package:shan_shan/view/home/widget/cart_list_widget.dart';
 import 'package:shan_shan/view/home/widget/date_action_widget.dart';
-import 'package:shan_shan/view/widgets/home_page_widgets/checkout_dialog.dart';
+import 'package:shan_shan/view/update_sale_ui/edit_checkout_dialog.dart';
+
 import 'package:shan_shan/view/widgets/home_page_widgets/menu_box_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/total_and_tax_widget.dart';
 import 'package:shan_shan/view/home/widget/home_drawer.dart';
@@ -28,14 +34,21 @@ import 'package:shan_shan/view/widgets/payment_button.dart';
 import 'package:shan_shan/view/widgets/table_number_dialog.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class EditSalePage extends StatefulWidget {
+  const EditSalePage({
+    super.key,
+    required this.orderNo,
+    required this.saleHistory,
+  });
+
+  final String orderNo;
+  final SaleHistoryModel saleHistory;
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<EditSalePage> createState() => _EditSalePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _EditSalePageState extends State<EditSalePage> {
   // Controllers
   final TextEditingController _pendingOrderController = TextEditingController();
   final TextEditingController _tableController = TextEditingController();
@@ -53,9 +66,38 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeData();
 
-    localNotificationService.initializeLocalNotification();
+    context.read<MenuCubit>().getMenu();
+    context.read<SpicyLevelCubit>().getAllLevels();
+    context.read<HtoneLevelCubit>().getAllLevels();
+
+    context.read<EditSaleCartCubit>().addData(
+          menu: widget.saleHistory.menu,
+          orderNo: widget.saleHistory.orderNo,
+          dineInOrParcel: widget.saleHistory.dineInOrParcel,
+          octopusCount: widget.saleHistory.octopusCount,
+          prawnCount: widget.saleHistory.prawnCount,
+          items: widget.saleHistory.products
+              .map(
+                (e) => CartItem(
+                  id: e.productId,
+                  name: e.name,
+                  price: e.price,
+                  qty: e.qty,
+                  totalPrice: e.totalPrice,
+                  isGram: e.isGram,
+                ),
+              )
+              .toList(),
+          tableNumber: int.parse(widget.saleHistory.tableNumber),
+          remark: widget.saleHistory.remark,
+          spicyLevel: widget.saleHistory.spicyLevel,
+          
+          htoneLevel: AhtoneLevelModel(
+            id: widget.saleHistory.ahtoneLevel.id,
+            name: widget.saleHistory.ahtoneLevel.name,
+          ),
+        );
   }
 
   @override
@@ -65,14 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _tableController.dispose();
     _refresherController.dispose();
     super.dispose();
-  }
-
-  void _initializeData() {
-    context.read<MenuCubit>().getMenu();
-    context.read<SpicyLevelCubit>().getAllLevels();
-    context.read<HtoneLevelCubit>().getAllLevels();
-    context.read<ProductsCubit>().getAllProducts();
-    context.read<CategoryCubit>().getAllCategories();
   }
 
   // ignore: unused_element
@@ -96,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
 
     final screenSize = MediaQuery.of(context).size;
-    final cartCubit = BlocProvider.of<CartCubit>(context);
+    final cartCubit = BlocProvider.of<EditSaleCartCubit>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -117,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<CategoryCubit>().getAllCategories();
   }
 
-  Widget _buildBody(Size screenSize, CartCubit cartCubit) {
+  Widget _buildBody(Size screenSize, EditSaleCartCubit cartCubit) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -137,52 +171,31 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                /// home drawer
-                ScaleOnTap(
-                  onTap: () => _scaffoldKey.currentState?.openDrawer(),
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                      bottom: SizeConst.kVerticalSpacing,
-                      top: SizeConst.kVerticalSpacing,
-                    ),
-                    height: 45,
-                    width: 45,
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                children: [
+                  /// home drawer
+                  Container(
+                    height: 50,
+                    width: 50,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
+                      color: context.cardColor,
                       borderRadius: SizeConst.kBorderRadius,
                     ),
-                    child: Center(
-                      child: const Icon(Icons.menu),
-                    ),
+                    child: IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(IconlyBold.arrow_left_2)),
                   ),
-                ),
-                // BlocBuilder<CartCubit, CartState>(
-                //   builder: (context, state) {
-                //     return Container(
-                //       height: 50,
-                //       padding: EdgeInsets.symmetric(horizontal: 15),
-                //       decoration: BoxDecoration(
-                //         // color: Colors.white,
-                //         borderRadius: SizeConst.kBorderRadius
-                //       ),
-                //       margin: EdgeInsets.only(
-                //         left: SizeConst.kHorizontalPadding
-                //       ),
-                //       child: Center(
-                //         child: Text(
-                //           state.tableNumber == 0 ? "Table Number : " :
-                //           "Table Number : ${state.tableNumber}",
-                //           style: AppTextStyles.kSubTitle(),
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // ),
-                Spacer(),
-                DateActionWidget()
-              ],
+                  SizedBox(width: 15),
+                  Text(
+                    "Order No. ${widget.orderNo}",
+                    style: AppTextStyles.kSubTitle(),
+                  ),
+                  Spacer(),
+                  DateActionWidget()
+                ],
+              ),
             ),
             Expanded(
               child: LayoutBuilder(
@@ -229,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
         MenuBoxWidget(
           constraints: constraints,
           defaultItem: _defaultItem,
-          isEditState: false,
+          isEditState: true,
         ),
         ...categories.map(
           (category) => CategoryBoxWidget(
@@ -237,6 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
             category: category,
             defaultItem: _defaultItem,
             tableController: _tableController,
+            isEditState: true,
           ),
         ),
       ],
@@ -253,8 +267,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  Widget _buildCartSection(Size screenSize, CartCubit cartCubit) {
-    return BlocBuilder<CartCubit, CartState>(
+  Widget _buildCartSection(Size screenSize, EditSaleCartCubit cartCubit) {
+    return BlocBuilder<EditSaleCartCubit, EditSaleCartState>(
       builder: (context, state) {
         return Expanded(
           child: Container(
@@ -271,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 CartHeaderWidget(onClearOrder: _handleClearOrder),
                 const SizedBox(height: 5),
                 Expanded(
-                  child: CartListWidget(
+                  child: EditCartListWidget(
                     screenSize: screenSize,
                     state: state,
                   ),
@@ -285,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     _handlePlaceOrder(cartCubit, screenSize);
                   },
-                  child: Text("Order"),
+                  child: Text("Edit Sale"),
                 )
               ],
             ),
@@ -296,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _handleClearOrder() {
-    context.read<CartCubit>().clearOrder();
+    context.read<EditSaleCartCubit>().clearOrder();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -332,7 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _handlePlaceOrder(CartCubit cartCubit, Size screenSize) {
+  void _handlePlaceOrder(EditSaleCartCubit cartCubit, Size screenSize) {
     if (cartCubit.state.items.isEmpty) {
       showCustomSnackbar(
         message: "ပစ္စည်းများ ထည့်မထားပါ။",
@@ -352,18 +366,18 @@ class _HomeScreenState extends State<HomeScreen> {
     if (cartCubit.state.menu != null) {
       showDialog(
         context: context,
-        builder: (context) => CheckoutDialog(
-          width: screenSize.width / 3,
-          paidOnline: _paidOnline,
+        builder: (context) => CheckoutDialogEdit(
+          orderId: widget.saleHistory.id,
           paidCash: _paidCash,
+          paidOnline: _paidOnline,
+          width: screenSize.width / 3,
         ),
       );
     } else {
       showCustomSnackbar(
         context: context,
-        message: "Menu ကိုရွေးချယ်ရပါမယ်။",
+        message: "Menu required!",
       );
     }
   }
-
 }

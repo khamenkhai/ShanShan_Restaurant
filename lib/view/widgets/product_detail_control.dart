@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/core/component/custom_dialog.dart';
@@ -61,14 +63,14 @@ class _ProductWeightOrDetailControlState
           children: [
             CustomOutlineButton(
               elevation: 0,
-              child: Text("ပယ်ဖျက်ရန်"),
+              child: Text(tr(LocaleKeys.cancel)),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             SizedBox(width: 10),
             CustomElevatedButton(
-              child: Text("ထည့်ရန်"),
+              child: Text(tr(LocaleKeys.confirm)),
               onPressed: () {
                 addToCartGram(context);
 
@@ -195,14 +197,14 @@ class _ProductWeightOrDetailControlState
           children: [
             CustomOutlineButton(
               elevation: 0,
-              child: Text("ပယ်ဖျက်ရန်"),
+              child: Text(tr(LocaleKeys.cancel)),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             SizedBox(width: 10),
             CustomElevatedButton(
-              child: Text("ထည့်ရန်"),
+              child: Text(tr(LocaleKeys.confirm)),
               onPressed: () {
                 addToCartByQuantity();
               },

@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/core/component/custom_dialog.dart';
 
@@ -52,7 +54,7 @@ class TableNumberDialog extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "စားပွဲနံပါတ်",
+                   tr(LocaleKeys.tableNumber),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -70,9 +72,9 @@ class TableNumberDialog extends StatelessWidget {
                     }
                   },
                   decoration: InputDecoration(
-                    hintText: "စားပွဲနံပါတ်ရေးရန်",
+                    hintText: tr(LocaleKeys.tableNumber),
                     hintStyle: TextStyle(fontSize: 16 - 3),
-                    contentPadding: EdgeInsets.symmetric(vertical: 0),
+                    contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
                   ),
                 ),
                 SizedBox(height: 15),
@@ -93,7 +95,7 @@ class TableNumberDialog extends StatelessWidget {
                         }
                         tableController.clear();
                       },
-                      child: Text("အတည်ပြုရန်"),
+                      child: Text(tr(LocaleKeys.confirm)),
                     )
                   ],
                 ),

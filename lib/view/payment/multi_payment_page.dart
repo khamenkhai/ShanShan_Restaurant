@@ -8,6 +8,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
@@ -36,7 +37,6 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
   int _grandTotal = 0;
   int _paymentIndex = 0;
   bool _customerTakeVoucher = true;
- 
 
   @override
   void dispose() {
@@ -50,21 +50,18 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
     _subTotal = cartCubit.getTotalAmount();
     _taxAmount = _customerTakeVoucher ? get5percentage(_subTotal) : 0;
     _grandTotal = _subTotal + _taxAmount;
-
-    if (_cashAmount > _grandTotal) {
-      _refundAmount = _cashAmount - _grandTotal;
-    } else {
-      _refundAmount = 0;
-    }
   }
 
   void _calculateRefund() {
-    final grandTotal = _customerTakeVoucher 
-        ? _subTotal + _taxAmount 
-        : _subTotal;
-
+    final grandTotal =
+        _customerTakeVoucher ? _subTotal + _taxAmount : _subTotal;
+    customPrint("grand total : $_grandTotal");
+    customPrint("paid total : ${(_paidOnline + _cashAmount) }");
+    customPrint("r : ${(_paidOnline + _cashAmount) - grandTotal}");
     if ((_paidOnline + _cashAmount) > grandTotal) {
+     
       _refundAmount = (_paidOnline + _cashAmount) - grandTotal;
+       customPrint("hello world $_refundAmount");
     } else {
       _refundAmount = 0;
     }
@@ -76,25 +73,23 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
   }
 
   void _handleCashPayment() {
-    _cashAmount = _cashController.text.isNotEmpty 
-        ? int.parse(_cashController.text) 
-        : 0;
+    _cashAmount =
+        _cashController.text.isNotEmpty ? int.parse(_cashController.text) : 0;
     _cashController.text = "0";
     _calculateRefund();
   }
 
   void _handleKpayPayment() {
-    _paidOnline = _cashController.text.isNotEmpty 
-        ? int.parse(_cashController.text) 
-        : 0;
+    _paidOnline =
+        _cashController.text.isNotEmpty ? int.parse(_cashController.text) : 0;
     _cashController.text = "0";
     _calculateRefund();
   }
 
-  Future<void> _processCheckout(List<CartItem> cartItems, CartCubit cartCubit) async {
-    final grandTotal = _customerTakeVoucher 
-        ? _subTotal + _taxAmount 
-        : _subTotal;
+  Future<void> _processCheckout(
+      List<CartItem> cartItems, CartCubit cartCubit) async {
+    final grandTotal =
+        _customerTakeVoucher ? _subTotal + _taxAmount : _subTotal;
     final discountAmount = _customerTakeVoucher ? 0 : _taxAmount;
     final taxAmount = _customerTakeVoucher ? _taxAmount : 0;
 
@@ -110,12 +105,14 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
       menuId: cartCubit.state.menu?.id ?? 0,
       orderNo: "SS-${generateRandomId(6)}",
       paidCash: _cashAmount,
-      products: cartItems.map((e) => Product(
-        productId: e.id,
-        qty: e.qty,
-        price: e.price,
-        totalPrice: e.totalPrice,
-      )).toList(),
+      products: cartItems
+          .map((e) => Product(
+                productId: e.id,
+                qty: e.qty,
+                price: e.price,
+                totalPrice: e.totalPrice,
+              ))
+          .toList(),
       tableNumber: cartCubit.state.tableNumber,
       refund: _refundAmount,
       subTotal: _subTotal,
@@ -125,8 +122,8 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
     );
 
     final success = await context.read<SaleProcessCubit>().makeSale(
-      saleRequest: saleModel,
-    );
+          saleRequest: saleModel,
+        );
 
     if (success && mounted) {
       redirectTo(
@@ -166,7 +163,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
           DateActionWidget(),
           SizedBox(width: 25),
         ],
-        title: const Text("Cash & Kpay"),
+        title: const Text("Cash & Online Pay"),
       ),
       body: InternetCheckWidget(
         child: _buildPaymentForm(screenSize, cartCubit),
@@ -223,12 +220,14 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
                     height: screenSize.height * 0.38,
                     child: SingleChildScrollView(
                       child: Column(
-                        children: state.items.map((e) => CartItemWidget(
-                          ontapDisable: true,
-                          cartItem: e,
-                          onDelete: () {},
-                          onEdit: () {},
-                        )).toList(),
+                        children: state.items
+                            .map((e) => CartItemWidget(
+                                  ontapDisable: true,
+                                  cartItem: e,
+                                  onDelete: () {},
+                                  onEdit: () {},
+                                ))
+                            .toList(),
                       ),
                     ),
                   ),
@@ -246,7 +245,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
                           });
                         },
                       ),
-                      const Text("ဘောက်ချာယူမည်"),
+                      Text(tr(LocaleKeys.takeVoucher)),
                     ],
                   ),
                   const SizedBox(height: 5),
@@ -268,10 +267,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
         left: 15,
         bottom: 20,
       ),
-      margin: EdgeInsets.only(
-        bottom: 15, 
-        right: SizeConst.kHorizontalPadding
-      ),
+      margin: EdgeInsets.only(bottom: 15, right: SizeConst.kHorizontalPadding),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -285,7 +281,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
               Row(
                 children: [
                   const Text(
-                    "ငွေပေးချေမှုနည်းလမ်းများ :",
+                    "Payment methods :",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -300,7 +296,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
                     inactiveFgColor: Colors.white,
                     initialLabelIndex: _paymentIndex,
                     totalSwitches: 2,
-                    labels: ['ငွေသား', 'Kpay'],
+                    labels: ['Cash', 'Online Pay'],
                     radiusStyle: true,
                     onToggle: (index) {
                       setState(() {
@@ -310,24 +306,24 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
                   ),
                 ],
               ),
-              Container(
-                width: 200,
-                height: 50,
-                margin: const EdgeInsets.only(right: 15, top: 5),
-                child: CustomElevatedButton(
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.edit),
-                      SizedBox(width: 7),
-                      Text("အော်ဒါပြင်ရန်"),
-                    ],
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ),
-              _paymentIndex == 0 
-                  ? _buildCashPaymentButtons(constraints) 
+              // Container(
+              //   width: 200,
+              //   height: 40,
+              //   margin: const EdgeInsets.only(right: 15, top: 10),
+              //   child: CustomElevatedButton(
+              //     child:  Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         Icon(Icons.edit,color: Colors.white,),
+              //         SizedBox(width: 7),
+              //         Text(tr(LocaleKeys.editOrder)),
+              //       ],
+              //     ),
+              //     onPressed: () => Navigator.pop(context),
+              //   ),
+              // ),
+              _paymentIndex == 0
+                  ? _buildCashPaymentButtons(constraints)
                   : _buildKpayPaymentButtons(constraints),
             ],
           );
@@ -378,9 +374,9 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
             ),
           ),
           const SizedBox(height: 5),
-          _buildAmountRow("Kpay", _paidOnline),
+          _buildAmountRow("Online Pay", _paidOnline),
           const SizedBox(height: 5),
-          _buildAmountRow("ငွေသား", _cashAmount),
+          _buildAmountRow("Cash", _cashAmount),
           const SizedBox(height: 5),
           _buildAmountRow("Refund", _refundAmount, isChange: true),
           Container(
@@ -435,7 +431,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
           width: double.infinity,
           elevation: 0,
           height: 70,
-          child: const Text("ငွေရှင်းရန်လုပ်ဆောင်ပါ"),
+          child: Text(tr(LocaleKeys.checkoutNow)),
           onPressed: () => _processCheckout(cartItems, cartCubit),
         );
       },

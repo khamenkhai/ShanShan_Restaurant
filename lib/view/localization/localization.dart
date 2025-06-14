@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/view/home/home.dart';
 
@@ -32,7 +33,7 @@ class _LocalizationPageState extends State<LocalizationPage> {
               NavigationHelper.pushAndRemove(context, HomeScreen());
             },
           ),
-          title: Text("Language"),
+          title: Text(tr(LocaleKeys.language)),
         ),
         body: _mainForm(context),
       ),
@@ -49,7 +50,7 @@ class _LocalizationPageState extends State<LocalizationPage> {
         children: [
           RadioListTile<String>(
             title: Text(
-              'English',
+              tr("english"),
               style: TextStyle(fontSize: 16),
             ),
             value: 'en',
@@ -64,7 +65,7 @@ class _LocalizationPageState extends State<LocalizationPage> {
           ),
           RadioListTile<String>(
             title: Text(
-              'Myanmar',
+               tr("myanmar"),
               style: TextStyle(
                 fontSize: 16
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/utils.dart';
@@ -12,12 +13,13 @@ import 'package:shan_shan/view/widgets/home_page_widgets/taste_level_dialog.dart
 class MenuRowWidget extends StatelessWidget {
   final MenuModel menu;
   final CartItem? defaultItem;
+  final bool isEditState;
 
-  const MenuRowWidget({
-    super.key,
-    required this.menu,
-    required this.defaultItem,
-  });
+  const MenuRowWidget(
+      {super.key,
+      required this.menu,
+      required this.defaultItem,
+      required this.isEditState});
 
   @override
   Widget build(BuildContext context) {
@@ -49,41 +51,34 @@ class MenuRowWidget extends StatelessWidget {
   }
 
   void _handleMenuTap(BuildContext context, ProductsState state) async {
-    if (menu.isFish == true) {
+    final result = await showDialog(
+      context: context,
+      builder: (context) => const TasteChooseDialog(),
+    );
+
+    if (result != null && context.mounted) {
       context.read<CartCubit>().addData(
             menu: menu,
-            htoneLevel: null,
-            spicyLevel: null,
+            htoneLevel: result["athoneLevel"],
+            spicyLevel: result["spicyLevel"],
           );
-    } else {
-      final result = await showDialog(
-        context: context,
-        builder: (context) => const TasteChooseDialog(),
-      );
 
-      if (result != null && context.mounted) {
-        context.read<CartCubit>().addData(
-              menu: menu,
-              htoneLevel: result["athoneLevel"],
-              spicyLevel: result["spicyLevel"],
-            );
-
-        if (state is ProductsLoadedState) {
-          DefaultProductChecker.checkDefaultProduct(
-            products: state.products,
-            context: context,
-          );
-        }
+      if (state is ProductsLoadedState) {
+        DefaultProductChecker.checkDefaultProduct(
+          products: state.products,
+          context: context,
+          isEditState: isEditState,
+        );
       }
     }
   }
 }
 
 class DefaultProductChecker {
-  static CartItem? checkDefaultProduct({
-    required List<ProductModel> products,
-    required BuildContext context,
-  }) {
+  static CartItem? checkDefaultProduct(
+      {required List<ProductModel> products,
+      required BuildContext context,
+      required bool isEditState}) {
     try {
       final defaultProduct = products.firstWhere(
         (element) => element.isDefault == true,
@@ -98,10 +93,17 @@ class DefaultProductChecker {
         isGram: defaultProduct.isGram ?? false,
       );
 
-      context.read<CartCubit>().addToCartByQuantity(
-            item: defaultItem,
-            quantity: 1,
-          );
+      if (isEditState) {
+        context.read<EditSaleCartCubit>().addToCartByQuantity(
+              item: defaultItem,
+              quantity: 1,
+            );
+      } else {
+        context.read<CartCubit>().addToCartByQuantity(
+              item: defaultItem,
+              quantity: 1,
+            );
+      }
 
       return defaultItem;
     } catch (e) {

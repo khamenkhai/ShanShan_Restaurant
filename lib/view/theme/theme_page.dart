@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/theme_cubit/theme_cubit.dart';
+import 'package:shan_shan/core/component/app_bar_leading.dart';
+import 'package:shan_shan/core/const/const_export.dart';
 
 class ColorPickerScreen extends StatelessWidget {
   final List<Color> colorOptions = [
@@ -52,22 +54,42 @@ class ColorPickerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Choose Theme Color'),
+        leading: AppBarLeading(onTap: () {
+          Navigator.pop(context);
+        }),
+        leadingWidth: 75,
         actions: [
-          Switch(
-            value: context.watch<ThemeCubit>().state.isDarkMode,
-            onChanged: (value) {
-              context.read<ThemeCubit>().toggleTheme();
-            },
-          )
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: context.watch<ThemeCubit>().state.isDarkMode
+                  ? IconButton(
+                      icon: Icon(Icons.wb_sunny),
+                      onPressed: () {
+                        context.read<ThemeCubit>().toggleTheme();
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(Icons.nightlight_round),
+                      onPressed: () {
+                        context.read<ThemeCubit>().toggleTheme();
+                      },
+                    ),
+            ),
+          ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: SizeConst.kHorizontalPadding + 20,
+          vertical: SizeConst.kVerticalSpacing
+        ),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 6,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+            crossAxisSpacing: 25,
+            mainAxisSpacing: 25,
           ),
           itemCount: colorOptions.length,
           itemBuilder: (context, index) {
@@ -80,7 +102,7 @@ class ColorPickerScreen extends StatelessWidget {
               },
               child: CircleAvatar(
                 backgroundColor: colorOptions[index],
-                radius: 20,
+                radius: 15,
               ),
             );
           },

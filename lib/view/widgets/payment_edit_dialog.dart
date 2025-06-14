@@ -1,10 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
-import 'package:shan_shan/core/component/custom_elevated.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/request_models/sale_request_model.dart';
-import 'package:shan_shan/view/widgets/payment_button.dart';
+import 'package:shan_shan/view/widgets/control_panel_widgets/cancel_and_confirm_dialog_button.dart';
 
 class PaymentEditDialog extends StatefulWidget {
   const PaymentEditDialog({
@@ -12,6 +13,7 @@ class PaymentEditDialog extends StatefulWidget {
     required this.paymentType,
     required this.saleModel,
   });
+
   final String paymentType;
   final SaleModel saleModel;
 
@@ -26,8 +28,8 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
 
   @override
   void initState() {
-    checKpaymentType();
     super.initState();
+    checKpaymentType();
   }
 
   int getCashAmount() {
@@ -51,118 +53,101 @@ class _PaymentEditDialogState extends State<PaymentEditDialog> {
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
-      child: Container(
-        width: MediaQuery.of(context).size.width / 2.8,
-        padding: EdgeInsets.symmetric(
-            horizontal: 15, vertical: SizeConst.kHorizontalPadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(Icons.clear),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width / 4,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              /// Title
+              Text(
+                tr(LocaleKeys.editPayment),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            SizedBox(height: 10),
-            Text(
-              "ငွေပေးချေမှုကို edit လုပ်ရန်",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
               ),
-            ),
-            SizedBox(height: 15),
-            Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      setState(() {
-                        paidCash = !paidCash;
-                        paidOnline = false;
-                      });
-                    },
-                    child: PaymentButton(
-                      isSelected: paidCash,
-                      title: "Cash",
-                    ),
-                  ),
-                ),
-                SizedBox(width: 15),
-                Expanded(
-                  child: InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      setState(() {
-                        paidOnline = !paidOnline;
-                        paidCash = false;
-                      });
-                    },
-                    child: PaymentButton(
-                      isSelected: paidOnline,
-                      title: "Online Pay",
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomElevatedButton(
-                  child: Text("အတည်ပြုရန်"),
-                  onPressed: () async {
-                    if (paidCash && paidOnline) {
-                    } else {
-                      await context
-                          .read<SaleProcessCubit>()
-                          .updateSale(
-                            orderId: widget.saleModel.orderNo,
-                            saleRequest: widget.saleModel.copyWith(
-                              paidCash: getCashAmount(),
-                              paidOnline: getpaidOnline(),
-                            ),
-                          )
-                          .then(
-                        (value) {
-                          if(!context.mounted) return;
-                          Navigator.pop(
-                            context,
-                            getCashAmount() > getpaidOnline() ? "cash" : "Kpay",
-                          );
-                        },
+
+              const SizedBox(height: 25),
+
+              /// Cash checkbox
+              CheckboxListTile(
+                title: const Text("Cash"),
+                value: paidCash,
+                onChanged: (value) {
+                  setState(() {
+                    paidCash = value!;
+                    paidOnline = false;
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+              ),
+
+              /// Online checkbox
+              CheckboxListTile(
+                title: const Text("Online Pay"),
+                value: paidOnline,
+                onChanged: (value) {
+                  setState(() {
+                    paidOnline = value!;
+                    paidCash = false;
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+              ),
+
+              const SizedBox(height: 30),
+
+              /// Confirm buttons
+              CancelAndConfirmDialogButton(
+                onConfirm: () async {
+                  if (paidCash && paidOnline) {
+                    // Do nothing
+                  } else {
+                    await context
+                        .read<SaleProcessCubit>()
+                        .updateSale(
+                          
+                          saleRequest: widget.saleModel.copyWith(
+                            paidCash: getCashAmount(),
+                            paidOnline: getpaidOnline(),
+                          ),
+                        )
+                        .then((value) {
+                      if (!context.mounted) return;
+                      Navigator.pop(
+                        context,
+                        getCashAmount() > getpaidOnline()
+                            ? "Cash"
+                            : "Online Pay",
                       );
-                    }
-                  },
-                ),
-              ],
-            )
-          ],
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  ///to check the payment type
+  /// to check the payment type
   void checKpaymentType() {
     if (widget.paymentType == "cash") {
       paidCash = true;
     }
 
-    if (widget.paymentType == "Kpay") {
+    if (widget.paymentType == "Online Pay") {
       paidOnline = true;
     }
-    if (widget.paymentType == "Cash / Kpay") {
+
+    if (widget.paymentType == "Cash / Online Pay") {
       paidOnline = false;
       paidCash = false;
     }

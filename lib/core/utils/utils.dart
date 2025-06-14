@@ -2,14 +2,14 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:sunmi_printer_plus/column_maker.dart';
 import 'package:sunmi_printer_plus/enums.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
 import 'package:sunmi_printer_plus/sunmi_style.dart';
 
-void customPrint(String data){
+void customPrint(String data) {
   if (kDebugMode) {
     print(data);
   }
@@ -72,11 +72,14 @@ void showCustomSnackbar({
   required BuildContext context,
   required String message,
 }) {
-  IconSnackBar.show(
-    context,
-    snackBarType: SnackBarType.fail,
-    label: message,
-    behavior: SnackBarBehavior.floating,
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.CENTER,
+    timeInSecForIosWeb: 1,
+    backgroundColor: Colors.black,
+    textColor: Colors.white,
+    fontSize: 16.0,
   );
 }
 
@@ -92,13 +95,17 @@ String generateRandomId(int length) {
 
 ///to format number with , and remove .0
 String formatNumber(num number) {
-  String formatted = NumberFormat('#,##0.#').format(number);
+  try {
+    String formatted = NumberFormat('#,##0.#').format(number);
 
-  if (formatted.contains('.')) {
-    formatted = formatted.replaceAll(RegExp(r'(?<=\d)0*$'), '');
+    if (formatted.contains('.')) {
+      formatted = formatted.replaceAll(RegExp(r'(?<=\d)0*$'), '');
+    }
+
+    return formatted;
+  } catch (e) {
+    return number.toString();
   }
-
-  return formatted;
 }
 
 // ///calculate price by grams
@@ -449,7 +456,7 @@ Future<bool> printReceipt({
 
     await SunmiPrinter.printRow(cols: [
       ColumnMaker(
-        text: 'Kpay ',
+        text: 'Online Pay ',
         width: 25,
         align: SunmiPrintAlign.LEFT,
       ),
@@ -461,7 +468,7 @@ Future<bool> printReceipt({
     ]);
     // await SunmiPrinter.printRow(cols: [
     //   ColumnMaker(
-    //     text: 'Kpay ',
+    //     text: 'Online Pay ',
     //     width: 25,
     //     align: SunmiPrintAlign.LEFT,
     //   ),

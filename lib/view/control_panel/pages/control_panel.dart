@@ -5,7 +5,7 @@ import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/scale_on_tap.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
-import 'package:shan_shan/core/utils/utils.dart';
+import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/view/control_panel/pages/htone_level_control_page.dart';
 import 'package:shan_shan/view/control_panel/pages/categories_control_page.dart';
 import 'package:shan_shan/view/control_panel/pages/menu_control_page.dart';
@@ -118,10 +118,7 @@ class _ControlPanelState extends State<ControlPanel> {
     return Expanded(
       child: ScaleOnTap(
         onTap: () {
-          redirectTo(
-            context: context,
-            form: redirectForm,
-          );
+          NavigationHelper.pushPage(context, redirectForm);
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),

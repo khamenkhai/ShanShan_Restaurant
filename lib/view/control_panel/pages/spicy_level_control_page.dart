@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
@@ -7,6 +8,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/delete_warning_dialog.dart';
@@ -46,7 +48,7 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        label: Text("အစပ်Levelအသစ်ထည့်ရန်"),
+        label: Text("အစပ်Levelအသစ်tr(LocaleKeys.confirm)"),
         icon: Icon(Icons.add),
         onPressed: () {
           showDialog(
@@ -148,7 +150,7 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
               children: [
                 CustomOutlineButton(
                   elevation: 0,
-                  child: Text("ပယ်ဖျက်ရန်"),
+                  child: Text(tr(LocaleKeys.cancel)),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -156,7 +158,7 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
                 SizedBox(width: 10),
                 CustomElevatedButton(
                   bgColor: Colors.red,
-                  child: Text("ဖျက်မည်"),
+                  child: Text(tr(LocaleKeys.delete)),
                   onPressed: () async {
                     await deleteSpicyLevelData(context, id);
                   },

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_cubit.dart';
@@ -5,6 +6,7 @@ import 'package:shan_shan/controller/htone_level_cubit/htone_level_state.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/core/component/custom_dialog.dart';
@@ -51,13 +53,13 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 20),
-              _buildLabel("အထုံ Level"),
-              _buildTextField(ahtoneLevelController, "အထုံ Level အသစ်ထည့်ရန်"),
+              _buildLabel(tr(LocaleKeys.htoneLevel)),
+              _buildTextField(ahtoneLevelController, tr(LocaleKeys.htoneLevel)),
               const SizedBox(height: 20),
-              _buildLabel("နေရာ"),
+              _buildLabel(tr(LocaleKeys.position)),
               _buildPositionField(),
               const SizedBox(height: 20),
-              _buildLabel("ဖော်ပြချက်"),
+              _buildLabel(tr(LocaleKeys.description)),
               _buildTextField(descriptionController, ""),
               const SizedBox(height: 15),
               _buildActionButtons(),
@@ -128,12 +130,12 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
           children: [
             CustomOutlineButton(
               elevation: 0,
-              child: const Text("ပယ်ဖျက်ရန်"),
+              child: Text(tr(LocaleKeys.cancel)),
               onPressed: () => Navigator.pop(context),
             ),
             const SizedBox(width: 10),
             CustomElevatedButton(
-              child: const Text("အတည်ပြုရန်"),
+              child: Text(tr(LocaleKeys.confirm)),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   widget.ahtoneLevel != null

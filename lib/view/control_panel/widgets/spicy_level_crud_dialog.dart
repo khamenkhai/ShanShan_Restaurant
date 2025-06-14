@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_cubit.dart';
@@ -5,6 +6,7 @@ import 'package:shan_shan/controller/spicy_level_crud_cubit/spicy_level_state.da
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/core/component/custom_dialog.dart';
@@ -56,7 +58,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
             children: [
               SizedBox(height: 20),
               Text(
-                "အစပ် Level",
+                tr(LocaleKeys.spicyLevel),
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -72,7 +74,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
                   return null;
                 },
                 decoration: customTextDecoration2(
-                  labelText: "အစပ် Level ကိုထည့်ရန်",
+                  labelText: "အစပ် Level ကိုtr(LocaleKeys.confirm)",
                     primaryColor: Theme.of(context).primaryColor
                 ),
               ),
@@ -80,7 +82,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
               ///position
               SizedBox(height: 15),
               Text(
-                "နေရာ",
+                tr(LocaleKeys.position),
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -121,7 +123,7 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
               ///description
 
               Text(
-                "ဖော်ပြချက်",
+                tr(LocaleKeys.description),
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -146,14 +148,14 @@ class _SpicyLevelCRUDDialogState extends State<SpicyLevelCRUDDialog> {
                       children: [
                         CustomOutlineButton(
                           elevation: 0,
-                          child: Text("ပယ်ဖျက်ရန်"),
+                          child: Text(tr(LocaleKeys.cancel)),
                           onPressed: () {
                             Navigator.pop(context);
                           },
                         ),
                         SizedBox(width: 10),
                         CustomElevatedButton(
-                          child: Text("အတည်ပြုရန်"),
+                          child: Text(tr(LocaleKeys.confirm)),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               if (widget.spicyLevel != null) {

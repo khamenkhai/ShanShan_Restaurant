@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 
 class NumberButtons extends StatefulWidget {
@@ -53,7 +54,7 @@ class _NumberButtonsState extends State<NumberButtons> {
               bottom: SizeConst.kHorizontalPadding - 7,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.cardColor,
               borderRadius: SizeConst.kBorderRadius,
               border: Border.all(
                 width: 1,

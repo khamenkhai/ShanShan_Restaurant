@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 @immutable
 class ApiConstants {
   // Base URL for different environments
-  // static const String BASE_URL_DEV = "http://192.168.100.203:8000/api";
-    static const String BASE_URL_DEV = "http://3.115.85.31/api";
-  // static const String BASE_URL_STAGING = "https://staging-api.example.com";
-  // static const String BASE_URL_PROD = "https://api.example.com";
-
+  static const String BASE_URL_DEV = "http://192.168.100.203:8000/api";
+  // static const String BASE_URL_DEV = "http://3.115.85.31/api";
   // Auth API paths (endpoints)
   static const String LOGIN = "$BASE_URL_DEV/auth/login";
   static const String LOGOUT = "$BASE_URL_DEV/auth/logout";
@@ -32,10 +29,14 @@ class ApiConstants {
   static const String EDIT_CATEGORY = "category/edit"; // Update a category
 
   // History API paths (endpoints)
-  static const String GET_HISTORY_LIST ="sale/lists"; // Get sale histories by pagination
-  static const String SEARCH_SALE_HISTORY ="sale/search"; // Search sale history by slip number
-  static const String GET_SALE_HISTORY_DETAIL ="sale/detail"; // Get detailed sale history
-  static const String GET_TOTAL_SALE_AND_SLIPS ="sale/total"; // Get total sales and total slip number
+  static const String GET_HISTORY_LIST =
+      "sale/lists"; // Get sale histories by pagination
+  static const String SEARCH_SALE_HISTORY =
+      "sale/search"; // Search sale history by slip number
+  static const String GET_SALE_HISTORY_DETAIL =
+      "sale/detail"; // Get detailed sale history
+  static const String GET_TOTAL_SALE_AND_SLIPS =
+      "sale/total"; // Get total sales and total slip number
 
   // Menu API endpoints
   static const String GET_MENU_LIST = "menu";
@@ -60,7 +61,10 @@ class ApiConstants {
 
   // Sale-related endpoints
   static const String MAKE_SALE_URL = "sale";
-  static const String UPDATE_SALE_URL = "sale/update";
+  // ignore: non_constant_identifier_names
+  static String UPDATE_SALE_URL(String slipNumber) {
+    return "sale/list/$slipNumber";
+  }
 
   // Timeout settings for network calls
   static const int TIMEOUT_DURATION_IN_SECONDS = 30;

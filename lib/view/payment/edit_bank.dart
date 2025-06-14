@@ -1,4 +1,5 @@
 // ignore_for_file: dead_code
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
@@ -8,6 +9,7 @@ import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/color_const.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/request_models/sale_request_model.dart';
@@ -93,7 +95,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
         leading: AppBarLeading(onTap: () {
           Navigator.pop(context);
         }),
-        title: Text("Kpay ဖြင့်ပေးချေရန်"),
+        title: Text("Online Pay ဖြင့်ပေးချေရန်"),
       ),
       body: Container(
         padding: EdgeInsets.only(top: 15),
@@ -150,7 +152,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
                       ),
                       SizedBox(width: 15),
                       Text(
-                        "Kpay",
+                        "Online Pay",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -256,7 +258,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
                         },
                       ),
                       //Text("Customer take voucher( no discount )"),
-                      Text("ဘောက်ချာယူမည်"),
+                      Text(tr(LocaleKeys.takeVoucher)),
                     ],
                   ),
                   SizedBox(height: 10),
@@ -290,7 +292,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
             width: double.infinity,
             elevation: 0,
             height: 70,
-            child: Text("ငွေရှင်းရန်လုပ်ဆောင်ပါ"),
+            child: Text(""),
             onPressed: () async {
               int discountAmount = 0;
               if (customerTakevoucher) {
@@ -342,7 +344,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
                 );
                 await context
                     .read<SaleProcessCubit>()
-                    .updateSale(saleRequest: saleModel, orderId: widget.orderNo)
+                    .updateSale(saleRequest: saleModel)
                     .then(
                   (value) {
                     if (value) {
@@ -355,7 +357,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
                           taxAmount: taxAmount,
                           saleData: saleModel,
                           cartItems: cartItems,
-                          paymentType: "Kpay",
+                          paymentType: "Online Pay",
                           dateTime: widget.date,
                           ahtoneLevel: cartCubit.state.athoneLevel,
                           spicyLevel: cartCubit.state.spicyLevel,

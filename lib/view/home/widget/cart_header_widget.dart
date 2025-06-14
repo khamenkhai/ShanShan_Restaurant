@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconly/iconly.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 
 class CartHeaderWidget extends StatelessWidget {
@@ -13,12 +12,10 @@ class CartHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 1),
       margin: EdgeInsets.only(top: SizeConst.kVerticalSpacing),
       child: Row(
         children: [
-          const Icon(IconlyBold.bookmark),
-          const SizedBox(width: 10),
           const Text(
             "Order",
             style: TextStyle(

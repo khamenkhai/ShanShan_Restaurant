@@ -9,6 +9,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/service/local_noti_service.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
@@ -19,7 +20,8 @@ import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/number_buttons.dart';
 
 class CashScreen extends StatefulWidget {
-  const CashScreen({super.key});
+  const CashScreen({super.key,required this.isEditState});
+  final bool isEditState;
 
   @override
   State<CashScreen> createState() => _CashScreenState();
@@ -44,8 +46,8 @@ class _CashScreenState extends State<CashScreen> {
   }
 
   void calculateAmounts() {
-    final cartCubit = context.read<CartCubit>();
-    subTotal = cartCubit.getTotalAmount();
+    final cart = context.read<CartCubit>();
+    subTotal = cart.getTotalAmount();
     taxAmount = customerTakesVoucher ? get5percentage(subTotal) : 0;
     grandTotal = subTotal + taxAmount;
 
@@ -60,7 +62,7 @@ class _CashScreenState extends State<CashScreen> {
     final enteredCash = int.tryParse(cashController.text) ?? 0;
 
     if (enteredCash < grandTotal) {
-      showSnackBar(text: "ငွေသားက မလုံလောက်ပါ", context: context);
+      showSnackBar(text: LocaleKeys.cashNotEnough.tr(), context: context);
       return;
     }
 
@@ -81,7 +83,7 @@ class _CashScreenState extends State<CashScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final cartCubit = BlocProvider.of<CartCubit>(context);
+    final cartController = BlocProvider.of<CartCubit>(context);
 
     calculateAmounts();
 
@@ -92,7 +94,7 @@ class _CashScreenState extends State<CashScreen> {
         backgroundColor: Colors.transparent,
         leadingWidth: 160,
         leading: AppBarLeading(onTap: () => Navigator.pop(context)),
-        title: const Text("ငွေသားဖြင့်ပေးချေရန်"),
+        title: Text(LocaleKeys.cashTitle.tr()),
       ),
       body: InternetCheckWidget(
         child: Container(
@@ -100,7 +102,7 @@ class _CashScreenState extends State<CashScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _saleSummaryForm(screenSize, cartCubit),
+              _saleSummaryForm(screenSize, cartController),
               const SizedBox(width: SizeConst.kHorizontalPadding),
               _numberButtonsForm(screenSize),
             ],
@@ -111,7 +113,7 @@ class _CashScreenState extends State<CashScreen> {
     );
   }
 
-  Widget _saleSummaryForm(Size screenSize, CartCubit cartCubit) {
+  Widget _saleSummaryForm(Size screenSize, CartCubit cartController) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(SizeConst.kHorizontalPadding),
@@ -125,13 +127,12 @@ class _CashScreenState extends State<CashScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 10),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
                   child: Text(
-                    "Summary",
-                    style: TextStyle(
+                    LocaleKeys.summary.tr(),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: ColorConstants.primaryColor,
                       fontSize: 20,
                     ),
                   ),
@@ -158,14 +159,13 @@ class _CashScreenState extends State<CashScreen> {
                   children: [
                     Checkbox(
                       value: customerTakesVoucher,
-                      activeColor: ColorConstants.primaryColor,
                       onChanged: toggleVoucher,
                     ),
-                    const Text("ဘောက်ချာယူမည်"),
+                    Text(LocaleKeys.takeVoucher.tr()),
                   ],
                 ),
                 const SizedBox(height: 10),
-                _checkoutButton(state.items, cartCubit),
+                _checkoutButton(state.items, cartController),
               ],
             );
           },
@@ -192,16 +192,21 @@ class _CashScreenState extends State<CashScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
-                  Text("ငွေပေးချေမှုနည်းလမ်း :",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(width: 15),
-                  Text("ငွေသား",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: ColorConstants.primaryColor)),
+                children: [
+                  Text(
+                    LocaleKeys.paymentMethod.tr(),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 15),
+                  Text(
+                    LocaleKeys.cash.tr(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: ColorConstants.primaryColor,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 10),
@@ -210,12 +215,15 @@ class _CashScreenState extends State<CashScreen> {
                 height: 50,
                 child: CustomElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.edit),
-                      SizedBox(width: 7),
-                      Text("အော်ဒါပြင်ရန်")
+                      const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 7),
+                      Text(LocaleKeys.editOrder.tr()),
                     ],
                   ),
                 ),
@@ -240,22 +248,32 @@ class _CashScreenState extends State<CashScreen> {
       children: [
         Divider(thickness: 0.5, color: ColorConstants.greyColor),
         const SizedBox(height: 5),
-        _amountRowWidget(title: "GrandTotal", amount: grandTotal),
+        _amountRowWidget(title: LocaleKeys.grandTotal.tr(), amount: grandTotal),
+        _amountRowWidget(
+            title: LocaleKeys.totalPaidCash.tr(), amount: cashAmount),
         const SizedBox(height: 5),
         if (refundAmount > 0)
           _amountRowWidget(
-              title: "ပြန်အမ်းငွေ", amount: refundAmount, isChange: true),
+            title: LocaleKeys.refund.tr(),
+            amount: refundAmount,
+            isChange: true,
+          ),
       ],
     );
   }
 
-  Widget _amountRowWidget(
-      {required String title, required int amount, bool isChange = false}) {
+  Widget _amountRowWidget({
+    required String title,
+    required int amount,
+    bool isChange = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
         Text(
           "${formatNumber(amount)} MMK",
           style: TextStyle(
@@ -268,7 +286,7 @@ class _CashScreenState extends State<CashScreen> {
     );
   }
 
-  Widget _checkoutButton(List<CartItem> cartItems, CartCubit cartCubit) {
+  Widget _checkoutButton(List<CartItem> cartItems, CartCubit cartController) {
     return BlocConsumer<SaleProcessCubit, SaleProcessState>(
       listener: (context, state) {
         if (state is SaleProcessSuccessState) {}
@@ -281,29 +299,29 @@ class _CashScreenState extends State<CashScreen> {
           width: double.infinity,
           elevation: 0,
           height: 70,
-          onPressed: () => _checkout(cartItems, cartCubit),
-          child: const Text("ငွေရှင်းရန်လုပ်ဆောင်ပါ"),
+          onPressed: () => _checkout(cartItems, cartController),
+          child: Text(LocaleKeys.checkoutNow.tr()),
         );
       },
     );
   }
 
-  void _checkout(List<CartItem> cartItems, CartCubit cartCubit) async {
+  void _checkout(List<CartItem> cartItems, CartCubit cartController) async {
     if (cashAmount < grandTotal) {
-      showSnackBar(text: "ငွေသားမလုံလောက်ပါ", context: context);
+      showSnackBar(text: LocaleKeys.cashInsufficient.tr(), context: context);
       return;
     }
 
     final dateTime = DateTime.now();
     final saleModel = SaleModel(
-      octopusCount: cartCubit.state.octopusCount,
-      prawnCount: cartCubit.state.prawnCount,
-      remark: cartCubit.state.remark,
-      ahtoneLevelId: cartCubit.state.athoneLevel?.id,
-      spicyLevelId: cartCubit.state.spicyLevel?.id,
-      dineInOrParcel: cartCubit.state.dineInOrParcel,
+      octopusCount: cartController.state.octopusCount,
+      prawnCount: cartController.state.prawnCount,
+      remark: cartController.state.remark,
+      ahtoneLevelId: cartController.state.athoneLevel?.id,
+      spicyLevelId: cartController.state.spicyLevel?.id,
+      dineInOrParcel: cartController.state.dineInOrParcel,
       grandTotal: grandTotal,
-      menuId: cartCubit.state.menu?.id ?? 0,
+      menuId: cartController.state.menu?.id ?? 0,
       orderNo: "SS-${generateRandomId(6)}",
       paidCash: cashAmount,
       products: cartItems
@@ -314,7 +332,7 @@ class _CashScreenState extends State<CashScreen> {
                 totalPrice: e.totalPrice,
               ))
           .toList(),
-      tableNumber: cartCubit.state.tableNumber,
+      tableNumber: cartController.state.tableNumber,
       refund: refundAmount,
       subTotal: subTotal,
       tax: taxAmount,
@@ -329,7 +347,7 @@ class _CashScreenState extends State<CashScreen> {
 
     if (success) {
       LocalNotificationService()
-          .showNotification(title: "Sale Success!", body: "");
+          .showNotification(title: LocaleKeys.saleSuccess.tr(), body: "");
       NavigationHelper.pushReplacement(
         context,
         SaleSuccessPage(
@@ -339,13 +357,16 @@ class _CashScreenState extends State<CashScreen> {
           cartItems: cartItems,
           paymentType: "cash",
           dateTime: DateFormat('dd, MMMM yyyy hh:mm a').format(dateTime),
-          menuTitle: cartCubit.state.menu!.name.toString(),
-          ahtoneLevel: cartCubit.state.athoneLevel,
-          spicyLevel: cartCubit.state.spicyLevel,
+          menuTitle: cartController.state.menu!.name.toString(),
+          ahtoneLevel: cartController.state.athoneLevel,
+          spicyLevel: cartController.state.spicyLevel,
         ),
       );
     } else {
-      showCustomSnackbar(message: "Checkout Failed!", context: context);
+      showCustomSnackbar(
+        message: LocaleKeys.checkoutFailed.tr(),
+        context: context,
+      );
     }
   }
 

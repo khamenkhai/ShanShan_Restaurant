@@ -172,7 +172,7 @@ class HomeDrawer extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(bottom: 25, top: 15),
               child: Text(
-                tr(LocaleKeys.logout),
+                "Are you sure to logout?",
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 16,
@@ -218,12 +218,13 @@ class HomeDrawer extends StatelessWidget {
   ///logout process
   void logout(BuildContext context) async {
     bool logoutStatus = await context.read<AuthCubit>().logout();
-    if(!context.mounted) return;
+    // if(!context.mounted) return;
+    // ignore: use_build_context_synchronously
     NavigationHelper.pushReplacement(context, Login());
     if (logoutStatus) {
       if (!context.mounted) return;
       context.read<CartCubit>().clearOrder();
-      context.read<EditSaleCartCubit>().clearOrderr();
+      context.read<EditSaleCartCubit>().clearOrder();
     }
 
   }

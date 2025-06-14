@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -9,6 +10,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
@@ -115,9 +117,10 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
             children: [
               _saleSuccessPage(screenSize),
               _voucherWidget(
-                  screenSize: screenSize,
-                  saleData: widget.saleData,
-                  cartCubit: cartCubit),
+                screenSize: screenSize,
+                saleData: widget.saleData,
+                cartCubit: cartCubit,
+              ),
             ],
           ),
         ),
@@ -133,17 +136,17 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            "အရောင်းအောင်မြင်ပါသည်",
-            style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+          Text(
+            LocaleKeys.saleSuccess.tr(),
+            style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 25),
           Container(
-            padding: EdgeInsets.all(50),
+            padding: const EdgeInsets.all(50),
             height: 250,
             child: Lottie.asset(
               "assets/images/success.json",
-              fit: BoxFit.contain
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(height: 25),
@@ -163,7 +166,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
           child: CustomElevatedButton(
             height: 60,
             onPressed: _printReceipt,
-            child: const Text("ဘောက်ချာထုတ်ယူရန်"),
+            child: Text(tr(LocaleKeys.printVoucher)),
           ),
         ),
         const SizedBox(height: 15),
@@ -171,9 +174,9 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
           width: buttonWidth,
           child: CustomOutlineButton(
             height: 60,
-            child: const Text("ငွေပေးချေမှုကို edit လုပ်ရန်"),
+            child: Text(LocaleKeys.editPayment.tr()),
             onPressed: () async {
-              final result = await showDialog<String>(
+              final result = await showCupertinoDialog<String>(
                 context: context,
                 builder: (_) => PaymentEditDialog(
                   paymentType: widget.paymentType,
@@ -187,7 +190,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
                   if (result == "cash") {
                     widget.saleData.paidCash = widget.saleData.grandTotal;
                     widget.saleData.paidOnline = 0;
-                  } else if (result == "Kpay") {
+                  } else if (result == "Online Pay") {
                     widget.saleData.paidOnline = widget.saleData.grandTotal;
                     widget.saleData.paidCash = 0;
                   }
@@ -202,18 +205,16 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
           height: 60,
           child: widget.isEditSale
               ? CustomOutlineButton(
-                  child: const Text("အရောင်းမှတ်တမ်းသို့ ပြန်သွားရန်"),
+                  child: Text(LocaleKeys.backToHistory.tr()),
                   onPressed: () {
                     Navigator.pop(context);
-                    context
-                        .read<SalesHistoryCubit>()
-                        .getHistoryByPagination(page: 1);
+                    context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
                 )
               : CustomOutlineButton(
-                  child: const Text("အသစ်မှာယူရန်"),
+                  child: Text(LocaleKeys.makeNewOrder.tr()),
                   onPressed: () {
                     pushAndRemoveUntil(form: HomeScreen(), context: context);
                   },
@@ -231,7 +232,9 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(
-            horizontal: 35, vertical: SizeConst.kHorizontalPadding),
+          horizontal: 35,
+          vertical: SizeConst.kHorizontalPadding,
+        ),
         child: BlocBuilder<SaleProcessCubit, SaleProcessState>(
           builder: (context, state) {
             if (state is SaleProcessSuccessState) {

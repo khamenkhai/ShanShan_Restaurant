@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/request_models/sale_request_model.dart';
@@ -100,7 +102,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
         leading: AppBarLeading(onTap: () {
           Navigator.pop(context);
         }),
-        title: Text("Cash & Kpay"),
+        title: Text("Cash & Online Pay"),
         actions: [
           Center(
             child: Container(
@@ -187,7 +189,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
                         inactiveFgColor: Colors.white,
                         initialLabelIndex: paymentIndex,
                         totalSwitches: 2,
-                        labels: ['ငွေသား', 'Kpay'],
+                        labels: ['ငွေသား', 'Online Pay'],
                         radiusStyle: true,
                         onToggle: (index) {
                           paymentIndex = index!;
@@ -333,7 +335,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
                         },
                       ),
                       //Text("Customer take voucher( no discount )"),
-                      Text("ဘောက်ချာယူမည်"),
+                      Text(tr(LocaleKeys.takeVoucher)),
                     ],
                   ),
 
@@ -363,7 +365,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
             width: double.infinity,
             elevation: 0,
             height: 70,
-            child: Text("ငွေရှင်းရန်လုပ်ဆောင်ပါ"),
+            child: Text(""),
             onPressed: () async {
               grandTotal = 0;
               discountAmount = 0;
@@ -410,7 +412,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
           SizedBox(height: 5),
           _amountRowWidget(
             amount: paidOnline,
-            title: "Kpay",
+            title: "Online Pay",
             isChange: false,
           ),
 
@@ -498,7 +500,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
     calculateRefund();
   }
 
-  ///Kpay adding process
+  ///Online Pay adding process
   void onlinePaymentAddProcess() {
     paidOnline =
         cashController.text.isNotEmpty ? int.parse(cashController.text) : 0;
@@ -567,7 +569,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
     );
     await context
         .read<SaleProcessCubit>()
-        .updateSale(saleRequest: saleModel, orderId: widget.orderNo)
+        .updateSale(saleRequest: saleModel)
         .then(
       (value) {
         if (value) {
@@ -582,7 +584,7 @@ class _EditMultiPaymentPageState extends State<EditMultiPaymentPage> {
               taxAmount: taxAmount,
               saleData: saleModel,
               cartItems: cartItems,
-              paymentType: "Cash / Kpay",
+              paymentType: "Cash / Online Pay",
               dateTime: widget.date,
               isEditSale: true,
             ),

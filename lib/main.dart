@@ -68,8 +68,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider(create: (context) => ic.getIt<InternetConnectionCubit>()),
         BlocProvider(create: (context) => ic.getIt<ThemeCubit>()),
-        BlocProvider(
-            create: (context) => ic.getIt<AuthCubit>()..checkLoginStatus()),
+        BlocProvider(create: (context) => ic.getIt<AuthCubit>()..checkLoginStatus()),
         BlocProvider(create: (context) => ic.getIt<CartCubit>()),
         BlocProvider(create: (context) => ic.getIt<ProductsCubit>()),
         BlocProvider(create: (context) => ic.getIt<CategoryCubit>()),

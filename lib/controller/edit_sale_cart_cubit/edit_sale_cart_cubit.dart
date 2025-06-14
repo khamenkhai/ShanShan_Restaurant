@@ -18,98 +18,36 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
             octopusCount: 0,
             prawnCount: 0,
             tableNumber: 0,
+            dineInOrParcel: 1,
+            orderNo: "",
           ),
         );
 
   ///add menu model
-  void addAllData({
-    required MenuModel menu,
-    required List<CartItem> items,
-    required int tableNumber,
-    required String remark,
-    required SpicyLevelModel spicyLevel,
-    required AhtoneLevelModel athoneLevel,
+  void addData({
+    MenuModel? menu,
+    String? remark,
+    int? dineInOrParcel,
+    int? tableNumber,
+    List<CartItem>? items,
+    SpicyLevelModel? spicyLevel,
+    AhtoneLevelModel? htoneLevel,
+    int? octopusCount,
+    int? prawnCount,
+    String? orderNo,
   }) {
     emit(
       EditSaleCartState(
-        remark: remark,
-        tableNumber: tableNumber,
-        items: items,
-        menu: menu,
-        spicyLevel: spicyLevel,
-        athoneLevel: athoneLevel,
-        octopusCount: 0,
-        prawnCount: 0,
-      ),
-    );
-  }
-
-  ///add menu model
-  void addMenu({required MenuModel menu}) {
-    emit(
-      EditSaleCartState(
-        remark: state.remark,
-        tableNumber: state.tableNumber,
-        items: state.items,
-        menu: menu,
-        spicyLevel: state.spicyLevel,
-        athoneLevel: state.athoneLevel,
-        octopusCount: state.octopusCount,
-        prawnCount: state.prawnCount,
-      ),
-    );
-  }
-
-  void addAdditionalData({
-    required int octopusCount,
-    required int prawnCount,
-    required int tableNumber,
-  }) {
-    emit(
-      EditSaleCartState(
-        remark: state.remark,
-        tableNumber: tableNumber,
-        items: state.items,
-        menu: state.menu,
-        spicyLevel: state.spicyLevel,
-        athoneLevel: state.athoneLevel,
-        octopusCount: octopusCount,
-        prawnCount: prawnCount,
-      ),
-    );
-  }
-
-  ///add menu model
-  void addSpicy({
-    required SpicyLevelModel? spicyLevel,
-    required AhtoneLevelModel? athoneLevel,
-  }) {
-    emit(
-      EditSaleCartState(
-        remark: state.remark,
-        tableNumber: state.tableNumber,
-        items: state.items,
-        menu: state.menu,
-        spicyLevel: spicyLevel,
-        athoneLevel: athoneLevel,
-        octopusCount: state.octopusCount,
-        prawnCount: state.prawnCount,
-      ),
-    );
-  }
-
-  ///add menu model
-  void removeMenu() {
-    emit(
-      EditSaleCartState(
-        remark: state.remark,
-        tableNumber: state.tableNumber,
-        items: state.items,
-        menu: null,
-        spicyLevel: null,
-        athoneLevel: null,
-        octopusCount: state.octopusCount,
-        prawnCount: state.prawnCount,
+        dineInOrParcel: dineInOrParcel ?? state.dineInOrParcel,
+        remark: remark ?? state.remark,
+        tableNumber: tableNumber ?? state.tableNumber,
+        items: items ?? state.items,
+        menu: menu ?? state.menu,
+        spicyLevel: spicyLevel ?? state.spicyLevel,
+        athoneLevel: htoneLevel ?? state.athoneLevel,
+        octopusCount: octopusCount ?? state.octopusCount,
+        prawnCount: prawnCount ?? state.prawnCount,
+        orderNo: orderNo ?? state.orderNo,
       ),
     );
   }
@@ -130,14 +68,17 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
       }
       emit(
         EditSaleCartState(
-            remark: state.remark,
-            tableNumber: state.tableNumber,
-            items: updatedItems,
-            menu: state.menu,
-            spicyLevel: state.spicyLevel,
-            athoneLevel: state.athoneLevel,
-            octopusCount: state.octopusCount,
-            prawnCount: state.prawnCount),
+          dineInOrParcel: state.dineInOrParcel,
+          remark: state.remark,
+          tableNumber: state.tableNumber,
+          items: updatedItems,
+          menu: state.menu,
+          spicyLevel: state.spicyLevel,
+          athoneLevel: state.athoneLevel,
+          octopusCount: state.octopusCount,
+          prawnCount: state.prawnCount,
+          orderNo: state.orderNo,
+        ),
       );
     } else {
       List<CartItem> updatedItems = List.from(state.items)
@@ -150,14 +91,17 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
 
       emit(
         EditSaleCartState(
-            remark: state.remark,
-            tableNumber: state.tableNumber,
-            items: updatedItems,
-            menu: state.menu,
-            athoneLevel: state.athoneLevel,
-            spicyLevel: state.spicyLevel,
-            octopusCount: state.octopusCount,
-            prawnCount: state.prawnCount),
+          dineInOrParcel: state.dineInOrParcel,
+          remark: state.remark,
+          tableNumber: state.tableNumber,
+          items: updatedItems,
+          menu: state.menu,
+          athoneLevel: state.athoneLevel,
+          spicyLevel: state.spicyLevel,
+          octopusCount: state.octopusCount,
+          prawnCount: state.prawnCount,
+          orderNo: state.orderNo,
+        ),
       );
     }
   }
@@ -181,6 +125,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
       }
       emit(
         EditSaleCartState(
+          dineInOrParcel: state.dineInOrParcel,
           remark: state.remark,
           tableNumber: state.tableNumber,
           items: updatedItems,
@@ -189,6 +134,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
           athoneLevel: state.athoneLevel,
           octopusCount: state.octopusCount,
           prawnCount: state.prawnCount,
+          orderNo: state.orderNo,
         ),
       );
     } else {
@@ -202,6 +148,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
 
       emit(
         EditSaleCartState(
+          dineInOrParcel: state.dineInOrParcel,
           remark: state.remark,
           tableNumber: state.tableNumber,
           items: updatedItems,
@@ -210,6 +157,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
           athoneLevel: state.athoneLevel,
           octopusCount: state.octopusCount,
           prawnCount: state.prawnCount,
+          orderNo: state.orderNo,
         ),
       );
     }
@@ -231,14 +179,17 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
       }
       emit(
         EditSaleCartState(
-            remark: state.remark,
-            tableNumber: state.tableNumber,
-            items: updatedItems,
-            menu: state.menu,
-            spicyLevel: state.spicyLevel,
-            athoneLevel: state.athoneLevel,
-            octopusCount: state.octopusCount,
-            prawnCount: state.prawnCount),
+          dineInOrParcel: state.dineInOrParcel,
+          remark: state.remark,
+          tableNumber: state.tableNumber,
+          items: updatedItems,
+          menu: state.menu,
+          spicyLevel: state.spicyLevel,
+          athoneLevel: state.athoneLevel,
+          octopusCount: state.octopusCount,
+          prawnCount: state.prawnCount,
+          orderNo: state.orderNo,
+        ),
       );
     } else {
       List<CartItem> updatedItems = List.from(state.items)
@@ -251,14 +202,17 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
 
       emit(
         EditSaleCartState(
-            remark: state.remark,
-            tableNumber: state.tableNumber,
-            items: updatedItems,
-            menu: state.menu,
-            spicyLevel: state.spicyLevel,
-            athoneLevel: state.athoneLevel,
-            octopusCount: state.octopusCount,
-            prawnCount: state.prawnCount),
+          dineInOrParcel: state.dineInOrParcel,
+          remark: state.remark,
+          tableNumber: state.tableNumber,
+          items: updatedItems,
+          menu: state.menu,
+          spicyLevel: state.spicyLevel,
+          athoneLevel: state.athoneLevel,
+          octopusCount: state.octopusCount,
+          prawnCount: state.prawnCount,
+          orderNo: state.orderNo,
+        ),
       );
     }
   }
@@ -275,6 +229,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
 
     emit(
       EditSaleCartState(
+        dineInOrParcel: state.dineInOrParcel,
         remark: state.remark,
         tableNumber: state.tableNumber,
         items: updatedItems,
@@ -283,22 +238,25 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
         athoneLevel: state.athoneLevel,
         octopusCount: state.octopusCount,
         prawnCount: state.prawnCount,
+        orderNo: state.orderNo,
       ),
     );
   }
 
   // Method to remove an item from the cart
-  void clearOrderr() {
+  void clearOrder() {
     emit(
       EditSaleCartState(
-        remark: state.remark,
-        tableNumber: state.tableNumber,
+        dineInOrParcel: 1,
+        remark: "",
+        tableNumber: 0,
         items: [],
         menu: null,
         spicyLevel: null,
         athoneLevel: null,
         octopusCount: 0,
         prawnCount: 0,
+        orderNo: "",
       ),
     );
   }
@@ -307,6 +265,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
   int getTotalAmount() {
     int totalAmount = 0;
     for (var element in state.items) {
+      //totalAmount += element.qty * num.parse(element.price);
       totalAmount += element.totalPrice;
     }
 

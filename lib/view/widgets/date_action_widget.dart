@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 
 class DateActionWidget extends StatelessWidget {
   const DateActionWidget({
@@ -14,7 +14,7 @@ class DateActionWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardColor,
           borderRadius: SizeConst.kBorderRadius,
         ),
         child: Row(
@@ -24,7 +24,7 @@ class DateActionWidget extends StatelessWidget {
             Text(
               DateFormat('E d, MMM yyyy').format(DateTime.now()),
               style: TextStyle(
-                color: ColorConstants.primaryColor,
+                color: context.primaryColor,
                 fontSize: 20 - 4,
               ),
             ),

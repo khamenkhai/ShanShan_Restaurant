@@ -1,5 +1,7 @@
 {
-  "greeting": "Hello",
+  "english" : "English",
+  "myanmar" : "Burmese",
+  "greeting": "Welcome To",
   "appName": "Shan Shan",
   "logout": "Logout",
   "error": "Error",
@@ -42,6 +44,7 @@
   "addNewMenu": "Add New Menu",
   "addNewHtoneLevel": "Add New Htone Level",
   "addNewSpicyLevel": "Add New Spicy Level",
+  "noChoosingTasteLevels": "No taste levels",
 
   "dailyReport": "Daily Report",
   "weeklyReport": "Weekly Report",
@@ -61,5 +64,39 @@
 
   "deletePrompt" : "Are you sure to delete this?",
 
-  "addNewCategory" : "Add new category"
+  "addNewCategory" : "Add new category",
+
+  "orderTitle": "Order",
+  "tableNumberHint": "Enter table number",
+  "tableNumberRequired": "Table number is required!",
+  "remark": "Remark",
+  "remarkHint": "Enter remark",
+  "dineInOrParcel": "Dine-in or Parcel",
+  "dineIn": "Dine-in",
+  "parcel": "Parcel",
+  "octopus": "Octopus",
+  "prawn": "Prawn",
+  "cancelOrder": "Cancel",
+  "confirmOrder": "Confirm",
+
+  "level" : "Level",
+  "position" : "Position",
+  "description" : "Description",
+  "cashTitle": "Pay with Cash",
+  "cashNotEnough": "Insufficient cash",
+  "takeVoucher": "Take voucher",
+  "summary": "Summary",
+  "paymentMethod": "Payment Method:",
+  "cash": "Cash",
+  "editOrder": "Edit Order",
+  "checkoutNow": "Checkout Now",
+  "refund": "Refund",
+  "grandTotal": "Grand Total",
+  "checkoutFailed": "Checkout Failed!",
+  "saleSuccess": "Sale Success!",
+  "cashInsufficient": "Not enough cash",
+  "printVoucher": "Print Voucher",
+  "editPayment": "Edit Payment",
+  "backToHistory": "Back To History",
+  "makeNewOrder": "Make New Order"
 }

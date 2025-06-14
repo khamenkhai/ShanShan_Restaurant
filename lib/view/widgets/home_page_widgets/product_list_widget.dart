@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/view/widgets/product_detail_control.dart';
-import 'package:shan_shan/view/widgets/table_number_dialog.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ProductListScrollBar extends StatelessWidget {
   final TextEditingController tableController;
   final bool isEditState;
+  final int categoryId;
 
   ProductListScrollBar({
     super.key,
     required this.tableController,
     required this.isEditState,
+    required this.categoryId,
   });
 
   final ScrollController scrollController = ScrollController();
@@ -63,10 +63,13 @@ class ProductListScrollBar extends StatelessWidget {
                     ),
                   );
                 } else if (state is ProductsLoadedState) {
+                  List<ProductModel> productList = state.products
+                      .where((element) => element.categoryId == categoryId)
+                      .toList();
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: state.products
+                    children: productList
                         .map(
                           (e) => ProductRowWidget(
                             product: e,
@@ -102,10 +105,8 @@ class ProductRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartCubit = BlocProvider.of<CartCubit>(context);
-
     return InkWell(
-      highlightColor: ColorConstants.primaryColor.withOpacity(0.3),
+      highlightColor: ColorConstants.primaryColor.withValues(alpha:  0.3),
       onTap: () {
         if (isEditState) {
           showDialog(
@@ -116,22 +117,29 @@ class ProductRowWidget extends StatelessWidget {
             ),
           );
         } else {
-          if (cartCubit.state.tableNumber == 0) {
-            showDialog(
-              context: context,
-              builder: (context) => TableNumberDialog(
-                tableController: tableController,
-              ),
-            );
-          } else {
-            showDialog(
-              context: context,
-              builder: (context) => ProductWeightOrDetailControl(
-                produt: product,
-                isEditState: false,
-              ),
-            );
-          }
+          showDialog(
+            context: context,
+            builder: (context) => ProductWeightOrDetailControl(
+              produt: product,
+              isEditState: false,
+            ),
+          );
+          // if (cartCubit.state.tableNumber == 0) {
+          //   showDialog(
+          //     context: context,
+          //     builder: (context) => TableNumberDialog(
+          //       tableController: tableController,
+          //     ),
+          //   );
+          // } else {
+          //   showDialog(
+          //     context: context,
+          //     builder: (context) => ProductWeightOrDetailControl(
+          //       produt: product,
+          //       isEditState: false,
+          //     ),
+          //   );
+          // }
         }
       },
       child: Container(

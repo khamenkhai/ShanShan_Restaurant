@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/auth_cubit/auth_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
-import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/request_models/shop_login_request_model.dart';
@@ -108,7 +108,7 @@ class _LoginState extends State<Login> {
             style: TextStyle(
               fontSize: 49,
               fontWeight: FontWeight.bold,
-              color: ColorConstants.primaryColor,
+              color: context.primaryColor,
             ),
           ),
         ),

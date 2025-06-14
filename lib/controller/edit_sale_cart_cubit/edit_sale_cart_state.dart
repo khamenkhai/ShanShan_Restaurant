@@ -12,6 +12,8 @@ class EditSaleCartState {
   int prawnCount;
   int tableNumber;
   String remark;
+  int dineInOrParcel;
+  String orderNo;
 
   EditSaleCartState({
     required this.items,
@@ -22,5 +24,7 @@ class EditSaleCartState {
     required this.prawnCount,
     required this.tableNumber,
     required this.remark,
+    required this.dineInOrParcel,
+    required this.orderNo
   });
 }

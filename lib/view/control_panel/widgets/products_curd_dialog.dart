@@ -211,7 +211,7 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
   Widget _buildDefaultCheckbox() {
     return _CustomCheckbox(
       value: _isDefault,
-      label: "Menu မှာ လိုအပ်ပါသလား။",
+      label: tr(LocaleKeys.requiredInMenu),
       onChanged: (value) => setState(() => _isDefault = value),
     );
   }
