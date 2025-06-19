@@ -16,18 +16,13 @@ class TotalAndTaxHomeWidget extends StatelessWidget {
     num tax = get5percentage(subtotal.toInt());
     num grandTotal = subtotal + tax;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: SizeConst.kHorizontalPadding,
-      ),
-      child: Column(
-        children: [
-          _buildDivider(),
-          _buildTotalRow("Subtotal", subtotal),
-          _buildTotalRow("Tax (5%)", tax),
-          _buildTotalRow("Grand Total", grandTotal),
-        ],
-      ),
+    return Column(
+      children: [
+        _buildDivider(),
+        _buildTotalRow("Subtotal", subtotal),
+        _buildTotalRow("Tax (5%)", tax),
+        _buildTotalRow("Grand Total", grandTotal),
+      ],
     );
   }
 

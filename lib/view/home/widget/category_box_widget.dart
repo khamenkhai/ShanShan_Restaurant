@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/category_model.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/product_list_widget.dart';
@@ -22,41 +23,42 @@ class CategoryBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      borderRadius: SizeConst.kBorderRadius,
-      color: Theme.of(context).cardColor,
-      child: Container(
-        width: ((constraints.maxWidth - SizeConst.kHorizontalPadding) / 2),
-        height: constraints.maxHeight / 2,
-        decoration: BoxDecoration(
-          borderRadius: SizeConst.kBorderRadius,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 38,
-              child: Center(
+    return Card(
+      child: Material(
+        borderRadius: SizeConst.kBorderRadius,
+        color: Theme.of(context).cardColor,
+        child: Container(
+          width: ((constraints.maxWidth - SizeConst.kGlobalPadding) / 2),
+          height: constraints.maxHeight / 2,
+          decoration: BoxDecoration(
+            borderRadius: SizeConst.kBorderRadius,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConst.kGlobalPadding,
+                  vertical: SizeConst.kGlobalPadding / 2,
+            
+                ),
                 child: Text(
                   category.name ?? "",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
+                  style: context.subTitle()
                 ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 5, bottom: 5),
-              child: const Divider(height: 0, thickness: 1),
-            ),
-            ProductListScrollBar(
-              tableController: tableController,
-              isEditState: isEditState,
-              categoryId: category.id ?? 0,
-            ),
-          ],
+              Container(
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                child: const Divider(height: 0, thickness: 0.5),
+              ),
+              ProductListScrollBar(
+                tableController: tableController,
+                isEditState: isEditState,
+                categoryId: category.id ?? 0,
+              ),
+            ],
+          ),
         ),
       ),
     );

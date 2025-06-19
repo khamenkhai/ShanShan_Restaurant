@@ -2,25 +2,18 @@ import 'package:flutter/material.dart';
 
 class SizeConst {
   /// Horizontal padding constant
-  static const double kHorizontalPadding = 15;
+  static const double kGlobalPadding = 16;
+
+  static const double kGlobalMargin = 16;
 
   /// Vertical spacing constant
-  static const double kVerticalSpacing = 15;
+  static const double kVerticalSpacing = 16;
 
-  /// Card or container padding (Note: can't be const since it depends on dynamic values)
-  static const EdgeInsets kCardPadding = EdgeInsets.symmetric(
-    horizontal: 16,
-    vertical: 12,
-  );
+  static const double radius = 12;
 
   /// Border radius (this can't be `const` directly for dynamic radius)
   static const BorderRadius kBorderRadius = BorderRadius.all(
-    Radius.circular(10),
-  );
-
-  /// Input field padding (can't be `const` for dynamic values)
-  static const EdgeInsets kInputPadding = EdgeInsets.symmetric(
-    horizontal: 18,
+    Radius.circular(12),
   );
 
   /// Margin for general spacing (can't be `const` for dynamic values)

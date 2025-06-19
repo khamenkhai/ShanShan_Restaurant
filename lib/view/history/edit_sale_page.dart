@@ -156,7 +156,7 @@ class _EditSalePageState extends State<EditSalePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildProductsSection(screenSize),
-        const SizedBox(width: SizeConst.kHorizontalPadding),
+        const SizedBox(width: SizeConst.kGlobalPadding),
         _buildCartSection(screenSize, cartCubit),
       ],
     );
@@ -166,7 +166,7 @@ class _EditSalePageState extends State<EditSalePage> {
     return Container(
       width: screenSize.width * 0.675,
       height: MediaQuery.of(context).size.height,
-      margin: EdgeInsets.only(left: SizeConst.kHorizontalPadding),
+      margin: EdgeInsets.only(left: SizeConst.kGlobalPadding),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,8 +236,8 @@ class _EditSalePageState extends State<EditSalePage> {
     List<CategoryModel> categories,
   ) {
     return Wrap(
-      runSpacing: SizeConst.kHorizontalPadding,
-      spacing: SizeConst.kHorizontalPadding,
+      runSpacing: SizeConst.kGlobalPadding,
+      spacing: SizeConst.kGlobalPadding,
       children: [
         MenuBoxWidget(
           constraints: constraints,

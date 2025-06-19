@@ -190,12 +190,12 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(
-          left: SizeConst.kHorizontalPadding,
-          bottom: SizeConst.kHorizontalPadding,
-          right: SizeConst.kHorizontalPadding,
+          left: SizeConst.kGlobalPadding,
+          bottom: SizeConst.kGlobalPadding,
+          right: SizeConst.kGlobalPadding,
         ),
         child: Container(
-          padding: EdgeInsets.all(SizeConst.kHorizontalPadding),
+          padding: EdgeInsets.all(SizeConst.kGlobalPadding),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: SizeConst.kBorderRadius,
@@ -267,7 +267,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
         left: 15,
         bottom: 20,
       ),
-      margin: EdgeInsets.only(bottom: 15, right: SizeConst.kHorizontalPadding),
+      margin: EdgeInsets.only(bottom: 15, right: SizeConst.kGlobalPadding),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -362,7 +362,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
 
   Widget _buildPaymentSummary(CartCubit cartCubit) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
       child: Column(
         children: [
           Container(

@@ -89,9 +89,9 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
           ),
         ),
         SizedBox(height: 10),
-        BlocBuilder<HtoneLevelCubit, AhtoneLevelCrudState>(
+        BlocBuilder<HtoneLevelCubit, HtoneLevelState>(
           builder: (context, state) {
-            if (state is AhtoneLevelLoaded) {
+            if (state is HtoneLevelLoaded) {
               athoneLevels = state.htoneLevels;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

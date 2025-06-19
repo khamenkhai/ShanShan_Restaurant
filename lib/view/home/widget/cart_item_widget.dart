@@ -1,7 +1,10 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:shan_shan/core/const/size_const.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/menu_model.dart';
@@ -23,31 +26,52 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).cardColor,
-      child: InkWell(
-        borderRadius: SizeConst.kBorderRadius,
-        onTap: onEdit,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 8,
-            horizontal: SizeConst.kHorizontalPadding,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              _buildItemInfo(),
-              _buildItemPrice(),
-              if (!ontapDisable) _buildDeleteButton(),
-            ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          color: Theme.of(context).cardColor,
+          child: InkWell(
+            borderRadius: SizeConst.kBorderRadius,
+            onTap: onEdit,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 8,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildItemInfo(context),
+                  Expanded(
+                    flex: 2,
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                        "${NumberFormat('#,##0').format(cartItem.totalPrice)} MMK",
+                        style: context.normalFont(
+                            color: context.primaryColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  if (!ontapDisable) _buildDeleteButton(),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        // Container(
+        //   height: 0.2,
+        //   margin: EdgeInsets.only(top: 4),
+        //   width: double.infinity,
+        //   color: context.hintColor,
+        // )
+      ],
     );
   }
 
-  Widget _buildItemInfo() {
+  Widget _buildItemInfo(BuildContext context) {
     return Expanded(
       flex: 3,
       child: Column(
@@ -55,43 +79,28 @@ class CartItemWidget extends StatelessWidget {
         children: [
           Text(
             cartItem.name,
-            style: const TextStyle(fontSize: 13),
+            style: context.normalFont(),
           ),
+          const SizedBox(height: 4),
           Text(
             cartItem.isGram
                 ? "${cartItem.qty}gram x ${cartItem.price}"
                 : "${cartItem.qty} x ${cartItem.price} MMK",
-            style: const TextStyle(fontSize: 13),
+            style: context.smallFont(color: context.hintColor),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildItemPrice() {
-    return Expanded(
-      flex: 2,
-      child: Align(
-        alignment: Alignment.topRight,
-        child: Text(
-          "${NumberFormat('#,##0').format(cartItem.totalPrice)} MMK",
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildDeleteButton() {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 10),
+      padding: const EdgeInsets.only(left: 10),
       child: InkWell(
         onTap: onDelete,
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        child: const Icon(IconlyBold.delete, size: 20),
+        child: const Icon(IconlyLight.delete, size: 20),
       ),
     );
   }
@@ -117,101 +126,105 @@ class CartMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).cardColor,
-      child: InkWell(
-        borderRadius: SizeConst.kBorderRadius,
-        // splashColor: tapDisabled ? Colors.transparent : Colors.grey.shade100,
-        // highlightColor: tapDisabled ? Colors.transparent : Colors.grey.shade100,
-        onTap: onEdit,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConst.kHorizontalPadding,
+    return InkWell(
+      borderRadius: SizeConst.kBorderRadius,
+      onTap: onEdit,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConst.kGlobalPadding,
+          vertical: SizeConst.kGlobalPadding / 2,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: SizeConst.kBorderRadius,
+          color: context.primaryColor.withOpacity(0.04),
+          border: Border.all(
+            width: 1,
+            color: context.primaryColor.withOpacity(0.5),
           ),
-          child: Column(
-            children: [
-              _buildMenuRow(),
-              if (spicyLevel != null) _buildSpicyLevel(context),
-              if (athoneLevel != null) _buildAthoneLevel(context),
-            ],
-          ),
+        ),
+        child: Column(
+          children: [
+            _buildMenuRow(context),
+            Row(
+              children: [
+                if (spicyLevel != null) _buildSpicyLevel(context),
+                Text(
+                  " •",
+                  style: context.normalFont(color: context.primaryColor),
+                ),
+                if (athoneLevel != null) _buildAthoneLevel(context),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildMenuRow() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Expanded(
-            child: Text(
-              menu.name ?? "",
-              style: const TextStyle(fontSize: 16),
+  Widget _buildMenuRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: Text(
+            menu.name ?? "",
+            style: context.normalFont(
+              color: context.primaryColor,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          if (!tapDisabled) _buildDeleteButton(),
-        ],
-      ),
+        ),
+        if (!tapDisabled) _buildDeleteButton(),
+      ],
     );
   }
 
   Widget _buildSpicyLevel(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        children: [
-          const SizedBox(width: 7),
-          SizedBox(
-            width: 80,
-            child: Text(
-              "အစပ် Level ",
-              style: TextStyle(
-                color: Theme.of(context).hintColor,
-                fontSize: 13,
-              ),
-            ),
+    return Row(
+      children: [
+        const SizedBox(width: 7),
+        SizedBox(
+          width: 80,
+          child: Text(
+            "အစပ် Level ",
+            style: context.smallFont(
+                color: context.primaryColor, fontWeight: FontWeight.bold),
           ),
-          Text(
-            "-  ${spicyLevel!.name}",
-            style: TextStyle(
-              color: Theme.of(context).hintColor,
-              fontSize: 14,
-            ),
+        ),
+        Text(
+          "-  ${spicyLevel!.name}",
+          style: context.smallFont(
+            color: context.primaryColor,
+            fontWeight: FontWeight.bold,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildAthoneLevel(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        children: [
-          const SizedBox(width: 7),
-          SizedBox(
-            width: 80,
-            child: Text(
-              "အထုံ Level",
-              style: TextStyle(
-                color: Theme.of(context).hintColor,
-                fontSize: 13,
-              ),
+    return Row(
+      children: [
+        const SizedBox(width: 7),
+        SizedBox(
+          width: 80,
+          child: Text(
+            "အထုံ Level",
+            style: context.smallFont(
+              color: context.primaryColor,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
-            "-  ${athoneLevel!.name}",
-            style: TextStyle(
-              color: Theme.of(context).hintColor,
-              fontSize: 13,
-            ),
+        ),
+        Text(
+          "-  ${athoneLevel!.name}",
+          style: context.smallFont(
+            color: context.primaryColor,
+            fontWeight: FontWeight.bold,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -222,7 +235,7 @@ class CartMenuWidget extends StatelessWidget {
         onTap: onDelete,
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        child: const Icon(IconlyBold.delete, size: 20),
+        child: const Icon(IconlyLight.delete, size: 20),
       ),
     );
   }

@@ -22,7 +22,7 @@ class CrudCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: SizeConst.kHorizontalPadding - 3,
+        vertical: SizeConst.kGlobalPadding - 3,
         horizontal: 15,
       ),
       decoration: BoxDecoration(

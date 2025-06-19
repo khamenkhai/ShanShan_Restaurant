@@ -11,14 +11,14 @@ import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/core/component/custom_dialog.dart';
 
 class ProductWeightOrDetailControl extends StatefulWidget {
+  final ProductModel product;
+  final bool isEditState;
+
   const ProductWeightOrDetailControl({
     super.key,
-    required this.produt,
+    required this.product,
     required this.isEditState,
   });
-
-  final ProductModel produt;
-  final bool isEditState;
 
   @override
   State<ProductWeightOrDetailControl> createState() =>
@@ -27,275 +27,252 @@ class ProductWeightOrDetailControl extends StatefulWidget {
 
 class _ProductWeightOrDetailControlState
     extends State<ProductWeightOrDetailControl> {
-  TextEditingController gram = TextEditingController(text: "100");
+  late final TextEditingController _gramController;
+  int _quantity = 1;
 
-  int quantity = 1;
+  @override
+  void initState() {
+    super.initState();
+    _gramController = TextEditingController(text: "100");
+  }
+
+  @override
+  void dispose() {
+    _gramController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      child: (widget.produt.isGram ?? false)
-          ? gramControlWidget(context)
-          : quantityControlWidget(),
+      child: widget.product.isGram ?? false
+          ? _buildGramControl(context)
+          : _buildQuantityControl(),
     );
   }
 
-  Column gramControlWidget(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          "${widget.produt.name}",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
+  Widget _buildGramControl(BuildContext context) {
+    return _buildControlLayout(
+      context,
+      title: widget.product.name ?? '',
+      controlWidget: _buildGramAdjuster(),
+      onConfirm: () => _handleGramAddToCart(context),
+    );
+  }
+
+  Widget _buildQuantityControl() {
+    return _buildControlLayout(
+      context,
+      title: widget.product.name ?? '',
+      controlWidget: _buildQuantityAdjuster(),
+      onConfirm: _handleQuantityAddToCart,
+    );
+  }
+
+  Widget _buildControlLayout(
+    BuildContext context, {
+    required String title,
+    required Widget controlWidget,
+    required VoidCallback onConfirm,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
           ),
+          const SizedBox(height: 24),
+          Center(child: controlWidget),
+          const SizedBox(height: 24),
+          _buildActionButtons(context, onConfirm),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context, VoidCallback onConfirm) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        CustomOutlineButton(
+          elevation: 0,
+          child: Text(LocaleKeys.cancel.tr()),
+          onPressed: () => Navigator.pop(context),
         ),
-        SizedBox(height: 15),
-
-        _weightControl(),
-
-        //_levelChoose(),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomOutlineButton(
-              elevation: 0,
-              child: Text(tr(LocaleKeys.cancel)),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            SizedBox(width: 10),
-            CustomElevatedButton(
-              child: Text(tr(LocaleKeys.confirm)),
-              onPressed: () {
-                addToCartGram(context);
-
-                setState(() {});
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        )
+        const SizedBox(width: 12),
+        CustomElevatedButton(
+          child: Text(LocaleKeys.confirm.tr()),
+          onPressed: onConfirm,
+        ),
       ],
     );
   }
 
-  ///add to cart gram
-  void addToCartGram(BuildContext context) {
+  Widget _buildGramAdjuster() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildAdjustButton(
+          icon: Icons.remove,
+          onTap: _decrementGram,
+          isDecrement: true,
+        ),
+        const SizedBox(width: 16),
+        SizedBox(
+          width: 100,
+          child: TextField(
+            controller: _gramController,
+            style: const TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              suffixText: 'g',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        _buildAdjustButton(
+          icon: Icons.add,
+          onTap: _incrementGram,
+          isDecrement: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuantityAdjuster() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildAdjustButton(
+            icon: Icons.remove,
+            onTap: _decrementQuantity,
+            isDecrement: true,
+          ),
+          const SizedBox(width: 16),
+          SizedBox(
+            width: 40,
+            child: Text(
+              '$_quantity',
+              style: const TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 16),
+          _buildAdjustButton(
+            icon: Icons.add,
+            onTap: _incrementQuantity,
+            isDecrement: false,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdjustButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    required bool isDecrement,
+  }) {
+    return IconButton(
+      icon: Icon(icon),
+      color: isDecrement ? Colors.grey : Theme.of(context).primaryColor,
+      iconSize: 24,
+      onPressed: onTap,
+      style: IconButton.styleFrom(
+        backgroundColor: Colors.grey.withOpacity(0.1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
+  void _incrementGram() {
+    setState(() {
+      final value = num.tryParse(_gramController.text) ?? 100;
+      _gramController.text = (value + 100).toString();
+    });
+  }
+
+  void _decrementGram() {
+    setState(() {
+      final value = num.tryParse(_gramController.text) ?? 100;
+      _gramController.text = value > 100 ? (value - 100).toString() : '100';
+    });
+  }
+
+  void _incrementQuantity() {
+    setState(() => _quantity++);
+  }
+
+  void _decrementQuantity() {
+    if (_quantity > 1) {
+      setState(() => _quantity--);
+    }
+  }
+
+  void _handleGramAddToCart(BuildContext context) {
+    final gramValue = num.tryParse(_gramController.text) ?? 100;
+    final cartItem = CartItem(
+      isGram: widget.product.isGram ?? false,
+      name: widget.product.name?.replaceAll(',', '') ?? '',
+      id: widget.product.id!,
+      qty: gramValue.toInt(),
+      price: widget.product.price ?? 0,
+      totalPrice: widget.product.price ?? 0,
+    );
+
     if (widget.isEditState) {
       context.read<EditSaleCartCubit>().addToCartByGram(
-            item: CartItem(
-                isGram: widget.produt.isGram ?? false,
-                name: "${widget.produt.name?.replaceAll(',', '')}",
-                id: widget.produt.id!,
-                qty: int.parse(gram.text),
-                price: widget.produt.price ?? 0,
-                totalPrice: widget.produt.price ?? 0),
-            gram: int.parse(gram.text),
+            item: cartItem,
+            gram: gramValue.toInt(),
           );
     } else {
       context.read<CartCubit>().addToCartByGram(
-            item: CartItem(
-              isGram: widget.produt.isGram ?? false,
-              name: "${widget.produt.name?.replaceAll(',', '')}",
-              id: widget.produt.id!,
-              qty: int.parse(gram.text),
-              price: widget.produt.price ?? 0,
-              totalPrice: widget.produt.price ?? 0,
-            ),
-            gram: int.parse(gram.text),
+            item: cartItem,
+            gram: gramValue.toInt(),
           );
     }
-  }
-
-  ///weight control widget
-  Center _weightControl() {
-    return Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          InkWell(
-            onTap: () {
-              num value = num.parse(gram.text);
-              if (value > 0) {
-                value -= 100;
-                gram.text = value.toString();
-              }
-              if (value == 0) {
-                gram.text = "100";
-              }
-              setState(() {});
-            },
-            child: Container(
-              padding: EdgeInsets.all(5),
-              child: Icon(
-                Icons.remove,
-                color: Colors.black,
-                weight: 10,
-              ),
-            ),
-          ),
-          SizedBox(width: 30),
-          SizedBox(
-            width: 100,
-            child: TextField(
-              controller: gram,
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          Text("/g"),
-          SizedBox(width: 30),
-          InkWell(
-            onTap: () {
-              setState(() {
-                num value = num.parse(gram.text);
-                value += 100;
-                gram.text = value.toString();
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.all(5),
-              child: Icon(
-                Icons.add,
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  ///quantity control
-  Widget quantityControlWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          "${widget.produt.name}",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 15),
-
-        _quantityControl(),
-
-        //_levelChoose(),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomOutlineButton(
-              elevation: 0,
-              child: Text(tr(LocaleKeys.cancel)),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            SizedBox(width: 10),
-            CustomElevatedButton(
-              child: Text(tr(LocaleKeys.confirm)),
-              onPressed: () {
-                addToCartByQuantity();
-              },
-            ),
-          ],
-        )
-      ],
-    );
-  }
-
-  ///add to cart by quantity
-  void addToCartByQuantity() {
-    if (widget.isEditState) {
-      context.read<EditSaleCartCubit>().addToCartByQuantity(
-            item: CartItem(
-              isGram: widget.produt.isGram ?? false,
-              name: "${widget.produt.name?.replaceAll(',', '')}",
-              id: widget.produt.id!,
-              qty: 1,
-              price: widget.produt.price ?? 0,
-              totalPrice: widget.produt.price ?? 0,
-            ),
-            quantity: quantity,
-          );
-    } else {
-      context.read<CartCubit>().addToCartByQuantity(
-            item: CartItem(
-              isGram: widget.produt.isGram ?? false,
-              name: "${widget.produt.name?.replaceAll(',', '')}",
-              id: widget.produt.id!,
-              qty: 1,
-              price: widget.produt.price ?? 0,
-              totalPrice: widget.produt.price ?? 0,
-            ),
-            quantity: quantity,
-          );
-    }
-
     Navigator.pop(context);
   }
 
-  ///weight control widget
-  Center _quantityControl() {
-    return Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          InkWell(
-            onTap: () {
-              if (quantity > 1) {
-                quantity--;
-                setState(() {});
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.all(5),
-              child: Icon(
-                Icons.remove,
-                color: Colors.black,
-                weight: 10,
-              ),
-            ),
-          ),
-          SizedBox(width: 30),
-          Center(
-            child: SizedBox(
-              width: 70,
-              child: Text(
-                "$quantity",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          ),
-          SizedBox(width: 30),
-          InkWell(
-            onTap: () {
-              quantity++;
-              setState(() {});
-            },
-            child: Container(
-              padding: EdgeInsets.all(5),
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ],
-      ),
+  void _handleQuantityAddToCart() {
+    final cartItem = CartItem(
+      isGram: widget.product.isGram ?? false,
+      name: widget.product.name?.replaceAll(',', '') ?? '',
+      id: widget.product.id!,
+      qty: 1,
+      price: widget.product.price ?? 0,
+      totalPrice: widget.product.price ?? 0,
     );
+
+    if (widget.isEditState) {
+      context.read<EditSaleCartCubit>().addToCartByQuantity(
+            item: cartItem,
+            quantity: _quantity,
+          );
+    } else {
+      context.read<CartCubit>().addToCartByQuantity(
+            item: cartItem,
+            quantity: _quantity,
+          );
+    }
+    Navigator.pop(context);
   }
 }

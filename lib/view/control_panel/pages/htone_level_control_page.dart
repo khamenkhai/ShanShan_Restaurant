@@ -62,7 +62,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
       body: InternetCheckWidget(
         child: Container(
           padding:
-              EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+              EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
           child: _productListTest(screenSize),
         ),
         onRefresh: () {
@@ -73,7 +73,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
   }
 
   Widget _productListTest(Size screenSize) {
-    return BlocBuilder<HtoneLevelCubit, AhtoneLevelCrudState>(
+    return BlocBuilder<HtoneLevelCubit, HtoneLevelState>(
       builder: (context, state) {
         if (state is AhtoneLevelLoading) {
           return Skeletonizer(
@@ -86,7 +86,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
               },
             ),
           );
-        } else if (state is AhtoneLevelLoaded) {
+        } else if (state is HtoneLevelLoaded) {
           return GridView.builder(
             padding: EdgeInsets.only(bottom: 20, top: 7.5),
             gridDelegate: _gridDelegate(screenSize),
@@ -127,8 +127,8 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
   SliverGridDelegateWithFixedCrossAxisCount _gridDelegate(Size screenSize) {
     return SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: 4,
-      mainAxisSpacing: SizeConst.kHorizontalPadding,
-      crossAxisSpacing: SizeConst.kHorizontalPadding,
+      mainAxisSpacing: SizeConst.kGlobalPadding,
+      crossAxisSpacing: SizeConst.kGlobalPadding,
       childAspectRatio: screenSize.width * 0.002,
     );
   }
@@ -159,7 +159,7 @@ class _HtoneLevelControlPageState extends State<HtoneLevelControlPage> {
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 15),
-                BlocBuilder<HtoneLevelCubit, AhtoneLevelCrudState>(
+                BlocBuilder<HtoneLevelCubit, HtoneLevelState>(
                   builder: (context, state) {
                     if (state is AhtoneLevelLoading) {
                       return LoadingWidget();

@@ -125,7 +125,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
           ),
           margin: EdgeInsets.only(
             bottom: 15,
-            right: SizeConst.kHorizontalPadding,
+            right: SizeConst.kGlobalPadding,
           ),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -195,12 +195,12 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(
-          left: SizeConst.kHorizontalPadding,
-          bottom: SizeConst.kHorizontalPadding,
-          right: SizeConst.kHorizontalPadding,
+          left: SizeConst.kGlobalPadding,
+          bottom: SizeConst.kGlobalPadding,
+          right: SizeConst.kGlobalPadding,
         ),
         child: Container(
-          padding: EdgeInsets.all(SizeConst.kHorizontalPadding),
+          padding: EdgeInsets.all(SizeConst.kGlobalPadding),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: SizeConst.kBorderRadius,
@@ -378,7 +378,7 @@ class _EditOnlinePaymentScreenState extends State<EditOnlinePaymentScreen> {
 
   Widget _cashAndCost({required EditSaleCartCubit cartCubit}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
       child: Column(
         children: [
           Container(

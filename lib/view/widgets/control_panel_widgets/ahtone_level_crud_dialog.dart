@@ -91,9 +91,9 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
 
   /// Builds the position text field with validation
   Widget _buildPositionField() {
-    return BlocBuilder<HtoneLevelCubit, AhtoneLevelCrudState>(
+    return BlocBuilder<HtoneLevelCubit, HtoneLevelState>(
       builder: (context, state) {
-        if (state is AhtoneLevelLoaded) {
+        if (state is HtoneLevelLoaded) {
           List<int> positions =
               state.htoneLevels.map((e) => e.position ?? 0).toList();
           return TextFormField(
@@ -119,7 +119,7 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
 
   /// Builds the action buttons row
   Widget _buildActionButtons() {
-    return BlocConsumer<HtoneLevelCubit, AhtoneLevelCrudState>(
+    return BlocConsumer<HtoneLevelCubit, HtoneLevelState>(
       listener: (context, state) {},
       builder: (context, state) {
         if (state is AhtoneLevelLoading) {

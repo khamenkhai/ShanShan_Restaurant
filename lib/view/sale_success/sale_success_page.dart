@@ -233,7 +233,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 35,
-          vertical: SizeConst.kHorizontalPadding,
+          vertical: SizeConst.kGlobalPadding,
         ),
         child: BlocBuilder<SaleProcessCubit, SaleProcessState>(
           builder: (context, state) {

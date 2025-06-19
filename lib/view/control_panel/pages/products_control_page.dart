@@ -46,7 +46,7 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+        padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
         child: _productListWidget(screenSize),
       ),
     );
@@ -63,8 +63,8 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
               padding: const EdgeInsets.only(bottom: 20, top: 7.5),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                mainAxisSpacing: SizeConst.kHorizontalPadding,
-                crossAxisSpacing: SizeConst.kHorizontalPadding,
+                mainAxisSpacing: SizeConst.kGlobalPadding,
+                crossAxisSpacing: SizeConst.kGlobalPadding,
                 childAspectRatio: screenSize.width * 0.002,
               ),
               itemCount: 8, // Simulating 8 skeleton items
@@ -89,8 +89,8 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
             padding: const EdgeInsets.only(bottom: 20, top: 7.5),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
-              mainAxisSpacing: SizeConst.kHorizontalPadding,
-              crossAxisSpacing: SizeConst.kHorizontalPadding,
+              mainAxisSpacing: SizeConst.kGlobalPadding,
+              crossAxisSpacing: SizeConst.kGlobalPadding,
               childAspectRatio: screenSize.width * 0.002,
             ),
             itemCount: state.products.length,

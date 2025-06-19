@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shan_shan/core/const/color_const.dart';
+import 'package:shan_shan/core/const/const_export.dart';
 
 @immutable
-class ThemeConstants {
+sealed class ThemeConstants {
   // Common styles and themes (all const to reduce runtime overhead)
   static const SystemUiOverlayStyle _lightSystemOverlayStyle =
       SystemUiOverlayStyle(
@@ -111,10 +111,10 @@ class ThemeConstants {
       bottomNavigationBarTheme: _bottomNavigationBarTheme(color),
       cardTheme: CardTheme(
         color: Colors.white,
-        elevation: 1,
+        elevation: 0.1,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(SizeConst.radius),
         ),
       ),
       buttonTheme: ButtonThemeData(

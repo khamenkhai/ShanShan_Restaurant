@@ -148,9 +148,9 @@ class HomeDrawer extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width / 2.85,
         padding: EdgeInsets.only(
-          left: SizeConst.kHorizontalPadding,
-          right: SizeConst.kHorizontalPadding,
-          bottom: SizeConst.kHorizontalPadding,
+          left: SizeConst.kGlobalPadding,
+          right: SizeConst.kGlobalPadding,
+          bottom: SizeConst.kGlobalPadding,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -48,7 +48,7 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
         onPressed: () => _showMenuDialog(screenSize),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+        padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
         child: _buildMenuList(screenSize),
       ),
     );
@@ -100,8 +100,8 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
   SliverGridDelegateWithFixedCrossAxisCount _gridDelegate(Size screenSize) {
     return SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: 4,
-      mainAxisSpacing: SizeConst.kHorizontalPadding,
-      crossAxisSpacing: SizeConst.kHorizontalPadding,
+      mainAxisSpacing: SizeConst.kGlobalPadding,
+      crossAxisSpacing: SizeConst.kGlobalPadding,
       childAspectRatio: screenSize.width * 0.002,
     );
   }
@@ -215,7 +215,7 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 0.25,
-              padding: EdgeInsets.all(SizeConst.kHorizontalPadding),
+              padding: EdgeInsets.all(SizeConst.kGlobalPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,

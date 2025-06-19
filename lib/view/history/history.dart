@@ -106,7 +106,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       width: double.infinity,
       height: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: SizeConst.kHorizontalPadding,
+        horizontal: SizeConst.kGlobalPadding,
       ),
       margin: EdgeInsets.only(top: 5),
       child: Column(

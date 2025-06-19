@@ -221,7 +221,7 @@
 //           child: Container(
 //             height: MediaQuery.of(context).size.height + 100,
 //             margin: EdgeInsets.only(
-//               right: SizeConst.kHorizontalPadding,
+//               right: SizeConst.kGlobalPadding,
 //               top: 5,
 //               bottom: 10,
 //             ),
@@ -431,7 +431,7 @@
 //           children: [
 //             SizedBox(height: 10),
 //             Container(
-//               padding: EdgeInsets.only(left: SizeConst.kHorizontalPadding),
+//               padding: EdgeInsets.only(left: SizeConst.kGlobalPadding),
 //               child: Text("စားပွဲနံပါတ် : ${state.tableNumber}"),
 //             ),
 //             state.menu == null
@@ -494,7 +494,7 @@
 //     num grandTotal =
 //         get5percentage(cartCubit.getTotalAmount()) + cartCubit.getTotalAmount();
 //     return Container(
-//       padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+//       padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
 //       child: Column(
 //         children: [
 //           Container(
@@ -594,7 +594,7 @@
 //     return Container(
 //       width: maxWidth,
 //       height: MediaQuery.of(context).size.height,
-//       margin: EdgeInsets.only(left: SizeConst.kHorizontalPadding, top: 6),
+//       margin: EdgeInsets.only(left: SizeConst.kGlobalPadding, top: 6),
 //       child: BlocBuilder<CategoryCubit, CategoryState>(
 //         builder: (context, state) {
 //           if (state is CategoryLoadingState) {
@@ -602,8 +602,8 @@
 //           } else if (state is CategoryLoadedState) {
 //             return SingleChildScrollView(
 //               child: Wrap(
-//                 runSpacing: SizeConst.kHorizontalPadding,
-//                 spacing: SizeConst.kHorizontalPadding,
+//                 runSpacing: SizeConst.kGlobalPadding,
+//                 spacing: SizeConst.kGlobalPadding,
 //                 alignment: WrapAlignment.start,
 //                 children: [
 //                   ///categories box row
@@ -638,7 +638,7 @@
 //       borderRadius: SizeConst.kBorderRadius,
 //       color: Colors.white,
 //       child: Container(
-//         width: (maxWidth / 2) - (SizeConst.kHorizontalPadding),
+//         width: (maxWidth / 2) - (SizeConst.kGlobalPadding),
 //         height: 500,
 //         decoration: BoxDecoration(
 //           borderRadius: SizeConst.kBorderRadius,
@@ -724,7 +724,7 @@
 //       borderRadius: SizeConst.kBorderRadius,
 //       color: Colors.white,
 //       child: Container(
-//         width: (maxWidth / 2) - (SizeConst.kHorizontalPadding),
+//         width: (maxWidth / 2) - (SizeConst.kGlobalPadding),
 //         height: 500,
 //         decoration: BoxDecoration(
 //           //color: Colors.white,
@@ -826,7 +826,7 @@
 //         );
 //       },
 //       child: Container(
-//         padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+//         padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
 //         height: 50,
 //         width: double.infinity,
 //         margin: EdgeInsets.only(bottom: 2),

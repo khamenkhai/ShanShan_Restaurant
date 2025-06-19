@@ -96,7 +96,7 @@ class _ReportPageState extends State<ReportPage> {
 
   Widget _buildReportTabs() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
       child: TabBar(
         dividerColor: Colors.transparent,
         onTap: (value) {
@@ -279,7 +279,7 @@ class ReportSummaryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

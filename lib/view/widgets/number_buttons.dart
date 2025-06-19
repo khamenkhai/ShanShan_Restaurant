@@ -50,8 +50,8 @@ class _NumberButtonsState extends State<NumberButtons> {
             width: screenSize,
             padding: EdgeInsets.only(top: 15, bottom: 15, right: 30, left: 20),
             margin: EdgeInsets.only(
-              top: SizeConst.kHorizontalPadding,
-              bottom: SizeConst.kHorizontalPadding - 7,
+              top: SizeConst.kGlobalPadding,
+              bottom: SizeConst.kGlobalPadding - 7,
             ),
             decoration: BoxDecoration(
               color: context.cardColor,
@@ -144,7 +144,7 @@ class _NumberButtonsState extends State<NumberButtons> {
                 },
                 child: Icon(
                   Icons.backspace,
-                  size: SizeConst.kHorizontalPadding,
+                  size: SizeConst.kGlobalPadding,
                   color: Colors.black,
                 ),
               ),

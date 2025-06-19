@@ -61,7 +61,7 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
       ),
       body: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: SizeConst.kHorizontalPadding,
+          horizontal: SizeConst.kGlobalPadding,
         ),
         child: mainForm(screenSize),
       ),
@@ -125,8 +125,8 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
   SliverGridDelegateWithFixedCrossAxisCount _gridDelegate(Size screenSize) {
     return SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: 4,
-      mainAxisSpacing: SizeConst.kHorizontalPadding,
-      crossAxisSpacing: SizeConst.kHorizontalPadding,
+      mainAxisSpacing: SizeConst.kGlobalPadding,
+      crossAxisSpacing: SizeConst.kGlobalPadding,
       childAspectRatio: screenSize.width * 0.002,
     );
   }

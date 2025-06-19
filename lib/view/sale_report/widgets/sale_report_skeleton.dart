@@ -11,7 +11,7 @@ class ReportSummarySkeleton extends StatelessWidget {
     return Skeletonizer(
       enabled: true,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+        padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -45,7 +45,7 @@ class _LocalizationPageState extends State<LocalizationPage> {
     String selectedLanguage = context.locale.languageCode;
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: SizeConst.kHorizontalPadding, vertical: 5),
+          horizontal: SizeConst.kGlobalPadding, vertical: 5),
       child: Column(
         children: [
           RadioListTile<String>(

@@ -82,7 +82,7 @@ class ColorPickerScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: SizeConst.kHorizontalPadding + 20,
+          horizontal: SizeConst.kGlobalPadding + 20,
           vertical: SizeConst.kVerticalSpacing
         ),
         child: GridView.builder(

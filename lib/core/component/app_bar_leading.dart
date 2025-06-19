@@ -7,7 +7,7 @@ class AppBarLeading extends StatelessWidget {
   const AppBarLeading(
       {super.key,
       required this.onTap,
-      this.padding = SizeConst.kHorizontalPadding});
+      this.padding = SizeConst.kGlobalPadding});
   final VoidCallback onTap;
   final double padding;
 

@@ -20,8 +20,8 @@ class ProductCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        top: SizeConst.kHorizontalPadding - 3,
-        bottom: SizeConst.kHorizontalPadding - 3,
+        top: SizeConst.kGlobalPadding - 3,
+        bottom: SizeConst.kGlobalPadding - 3,
         left: 15,
       ),
       decoration: BoxDecoration(

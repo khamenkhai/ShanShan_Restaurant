@@ -49,7 +49,7 @@ class _CategoriesControlPageState extends State<CategoriesControlPage> {
         onRefresh: () => context.read<CategoryCubit>().getAllCategories(),
         child: Padding(
           padding:
-              EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+              EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
           child: _categoryList(screenSize),
         ),
       ),
@@ -100,8 +100,8 @@ class _CategoriesControlPageState extends State<CategoriesControlPage> {
       Size screenSize) {
     return SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: 4,
-      mainAxisSpacing: SizeConst.kHorizontalPadding,
-      crossAxisSpacing: SizeConst.kHorizontalPadding,
+      mainAxisSpacing: SizeConst.kGlobalPadding,
+      crossAxisSpacing: SizeConst.kGlobalPadding,
       childAspectRatio: screenSize.width * 0.002,
     );
   }

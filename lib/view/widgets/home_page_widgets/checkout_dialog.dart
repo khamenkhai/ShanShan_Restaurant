@@ -6,6 +6,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/view/payment/cash.dart';
 import 'package:shan_shan/view/payment/multi_payment_page.dart';
@@ -29,8 +30,8 @@ class CheckoutDialog extends StatefulWidget {
 
 class _CheckoutDialogState extends State<CheckoutDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _tableCtrl = TextEditingController();
-  final _remarkCtrl = TextEditingController();
+  final _tableController = TextEditingController();
+  final _remarkController = TextEditingController();
 
   bool _isParcel = false;
   int _prawnCount = 0;
@@ -39,68 +40,200 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   @override
   void initState() {
     super.initState();
-    final cart = context.read<CartCubit>().state;
-    _prawnCount = cart.prawnCount;
-    _octopusCount = cart.octopusCount;
-    _remarkCtrl.text = cart.remark;
-    _isParcel = cart.dineInOrParcel == 0;
-    _tableCtrl.text = cart.tableNumber.toString();
+    _initializeFromCartState();
   }
 
   @override
   void dispose() {
-    _tableCtrl.dispose();
-    _remarkCtrl.dispose();
+    _tableController.dispose();
+    _remarkController.dispose();
     super.dispose();
+  }
+
+  void _initializeFromCartState() {
+    final cartState = context.read<CartCubit>().state;
+    setState(() {
+      _prawnCount = cartState.prawnCount;
+      _octopusCount = cartState.octopusCount;
+      _remarkController.text = cartState.remark;
+      _isParcel = cartState.dineInOrParcel == 0;
+      _tableController.text = cartState.tableNumber.toString();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final cartCubit = context.read<CartCubit>();
+    final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
-      backgroundColor: Theme.of(context).cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: SizeConst.kBorderRadius,
+      ),
+      backgroundColor: theme.cardColor,
       child: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: widget.width ?? screenWidth / 2.5,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeader(theme),
+                const SizedBox(height: 24),
+                _buildTableNumberField(),
+                const SizedBox(height: 20),
+                _buildOrderTypeSection(),
+                const SizedBox(height: 20),
+                _buildRemarkField(),
+                const SizedBox(height: 16),
+                _buildCounterRow(
+                  label: LocaleKeys.octopus.tr(),
+                  count: _octopusCount,
+                  onChanged: (count) => setState(() => _octopusCount = count),
+                ),
+                const SizedBox(height: 12),
+                _buildCounterRow(
+                  label: LocaleKeys.prawn.tr(),
+                  count: _prawnCount,
+                  onChanged: (count) => setState(() => _prawnCount = count),
+                ),
+                const SizedBox(height: 24),
+                _buildActionButtons(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              LocaleKeys.orderTitle.tr(),
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              widget.paidCash ? "(${tr(LocaleKeys.cash)})" : "(online)",
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.primaryColor,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Divider(color: theme.dividerColor),
+      ],
+    );
+  }
+
+  Widget _buildTableNumberField() {
+    return Form(
+      key: _formKey,
+      child: TextFormField(
+        controller: _tableController,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: LocaleKeys.tableNumber.tr(),
+          hintText: LocaleKeys.tableNumberHint.tr(),
+          border: OutlineInputBorder(
+            borderRadius: SizeConst.kBorderRadius,
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty || value == "0") {
+            return LocaleKeys.tableNumberRequired.tr();
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildOrderTypeSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LocaleKeys.dineInOrParcel.tr(),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            _buildOrderTypeToggle(
+              value: false,
+              label: LocaleKeys.dineIn.tr(),
+              icon: "🍴",
+            ),
+            const SizedBox(width: 16),
+            _buildOrderTypeToggle(
+              value: true,
+              label: LocaleKeys.parcel.tr(),
+              icon: "📦"
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOrderTypeToggle({
+    required bool value,
+    required String label,
+    required String icon,
+  }) {
+    final isSelected = _isParcel == value;
+    return Expanded(
+      child: InkWell(
+        onTap: () => setState(() => _isParcel = value),
+        borderRadius: SizeConst.kBorderRadius,
         child: Container(
-          width: widget.width ?? screenWidth / 3.8,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? Theme.of(context).primaryColor.withOpacity(0.1)
+                : Colors.transparent,
+            borderRadius: SizeConst.kBorderRadius,
+            border: Border.all(
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey.shade300,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _header(tr(LocaleKeys.orderTitle)),
-              const SizedBox(height: 15),
-              _formField(
-                tr(LocaleKeys.tableNumber),
-                _tableCtrl,
-                validator: (val) {
-                  return (val == null || val.isEmpty || val == "0")
-                      ? tr(LocaleKeys.tableNumberRequired)
-                      : null;
-                },
+              Text(
+                icon,
+                style: context.subTitle(
+                  color:
+                      isSelected ? Theme.of(context).primaryColor : Colors.grey,
+                ),
               ),
-              const SizedBox(height: 15),
-              _orderTypeSection(),
-              const SizedBox(height: 25),
-              _formField(tr(LocaleKeys.remark), _remarkCtrl, multiline: true),
-              const SizedBox(height: 5),
-              _CounterRow(
-                label: tr(LocaleKeys.octopus),
-                count: _octopusCount,
-                onIncrement: () => setState(() => _octopusCount++),
-                onDecrement: () => setState(() =>
-                    _octopusCount = (_octopusCount - 1).clamp(0, _octopusCount)),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  color:
+                      isSelected ? Theme.of(context).primaryColor : Colors.grey,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
               ),
-              _CounterRow(
-                label: tr(LocaleKeys.prawn),
-                count: _prawnCount,
-                onIncrement: () => setState(() => _prawnCount++),
-                onDecrement: () => setState(() =>
-                    _prawnCount = (_prawnCount - 1).clamp(0, _prawnCount)),
-              ),
-              const SizedBox(height: 20),
-              _actionButtons(cartCubit),
             ],
           ),
         ),
@@ -108,176 +241,97 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
     );
   }
 
-  Widget _header(String title) => Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      Text(
-            title,
-            style: const TextStyle(
-              fontSize: 19,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-      Text(
-            widget.paidCash ? " (Cash)" : " (Online)",
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-    ],
-  );
-
-  Widget _formField(
-    String label,
-    TextEditingController controller, {
-    FormFieldValidator<String>? validator,
-    bool multiline = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-        if (validator != null)
-          Form(
-            key: _formKey,
-            child: TextFormField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              validator: validator,
-              decoration: InputDecoration(
-                hintText: tr(LocaleKeys.tableNumberHint),
-                hintStyle: const TextStyle(fontSize: 13),
-              ),
-            ),
-          )
-        else
-          TextField(
-            controller: controller,
-            maxLines: multiline ? 3 : 1,
-            decoration: InputDecoration(
-              hintText: tr(LocaleKeys.remarkHint),
-              hintStyle: const TextStyle(fontSize: 13),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _orderTypeSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          tr(LocaleKeys.dineInOrParcel),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+  Widget _buildRemarkField() {
+    return TextField(
+      controller: _remarkController,
+      maxLines: 3,
+      decoration: InputDecoration(
+        hintText: LocaleKeys.remarkHint.tr(),
+        border: OutlineInputBorder(
+          borderRadius: SizeConst.kBorderRadius,
         ),
-        const SizedBox(height: 10),
-        ...[
-          _orderTypeOption(false, tr(LocaleKeys.dineIn)),
-          _orderTypeOption(true, tr(LocaleKeys.parcel)),
-        ]
-      ],
-    );
-  }
-
-  Widget _orderTypeOption(bool value, String label) {
-    final selected = _isParcel == value;
-    return InkWell(
-      onTap: () => setState(() => _isParcel = value),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          children: [
-            Icon(
-                selected ? Icons.radio_button_checked : Icons.radio_button_off),
-            const SizedBox(width: 10),
-            Text(label),
-          ],
-        ),
+        alignLabelWithHint: true,
       ),
     );
   }
 
-  Widget _actionButtons(CartCubit cartCubit) {
+  Widget _buildCounterRow({
+    required String label,
+    required int count,
+    required ValueChanged<int> onChanged,
+  }) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16),
+        ),
+        const Spacer(),
+        IconButton(
+          icon: const Icon(Icons.remove_circle_outline),
+          color: count == 0 ? Colors.grey : Colors.red,
+          onPressed: count == 0 ? null : () => onChanged(count - 1),
+        ),
+        Container(
+          width: 40,
+          alignment: Alignment.center,
+          child: Text(
+            '$count',
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.add_circle_outline),
+          color: Theme.of(context).primaryColor,
+          onPressed: () => onChanged(count + 1),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         CustomOutlineButton(
-          child: Text(tr(LocaleKeys.cancelOrder)),
+          child: Text(LocaleKeys.cancelOrder.tr()),
           onPressed: () => Navigator.pop(context),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         CustomElevatedButton(
-          child: Text(tr(LocaleKeys.confirmOrder)),
-          onPressed: () => _confirmOrder(cartCubit),
+          child: Text(LocaleKeys.confirmOrder.tr()),
+          onPressed: _handleConfirmOrder,
         ),
       ],
     );
   }
 
-  void _confirmOrder(CartCubit cartCubit) {
+  void _handleConfirmOrder() {
     if (!_formKey.currentState!.validate()) return;
 
-    final remark = _remarkCtrl.text;
+    final cartCubit = context.read<CartCubit>();
     cartCubit.addData(
       dineInOrParcel: _isParcel ? 0 : 1,
       octopusCount: _octopusCount,
       prawnCount: _prawnCount,
-      tableNumber: int.tryParse(_tableCtrl.text) ?? 0,
-      remark: remark,
+      tableNumber: int.tryParse(_tableController.text) ?? 0,
+      remark: _remarkController.text,
     );
 
-    final screen = _getPaymentScreen(cartCubit, remark);
-    if (screen != null) NavigationHelper.pushPage(context, screen);
-  }
-
-  Widget? _getPaymentScreen(CartCubit cartCubit, String remark) {
-    if (widget.paidCash && widget.paidOnline) {
-      return MultiPaymentPage();
-    } else if (widget.paidCash) {
-      return CashScreen(isEditState: false);
-    } else if (widget.paidOnline) {
-      return OnlinePaymentScreen();
+    final paymentScreen = _getPaymentScreen();
+    if (paymentScreen != null) {
+      NavigationHelper.pushPage(context, paymentScreen);
     }
-
-    return null;
   }
-}
 
-class _CounterRow extends StatelessWidget {
-  final String label;
-  final int count;
-  final VoidCallback onDecrement;
-  final VoidCallback onIncrement;
-
-  const _CounterRow({
-    required this.label,
-    required this.count,
-    required this.onDecrement,
-    required this.onIncrement,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(label, style: const TextStyle(fontSize: 16)),
-        const Spacer(),
-        IconButton(
-          onPressed: onDecrement,
-          icon: const Icon(Icons.remove_circle),
-        ),
-        Text(
-          "$count",
-          style: const TextStyle(fontSize: 16),
-        ),
-        IconButton(
-          onPressed: onIncrement,
-          icon: const Icon(Icons.add_circle),
-        ),
-      ],
-    );
+  Widget? _getPaymentScreen() {
+    if (widget.paidCash && widget.paidOnline) {
+      return const MultiPaymentPage();
+    } else if (widget.paidCash) {
+      return const CashScreen(isEditState: false);
+    } else if (widget.paidOnline) {
+      return const OnlinePaymentScreen();
+    }
+    return null;
   }
 }

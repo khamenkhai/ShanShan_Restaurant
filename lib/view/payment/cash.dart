@@ -103,7 +103,7 @@ class _CashScreenState extends State<CashScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _saleSummaryForm(screenSize, cartController),
-              const SizedBox(width: SizeConst.kHorizontalPadding),
+              const SizedBox(width: SizeConst.kGlobalPadding),
               _numberButtonsForm(screenSize),
             ],
           ),
@@ -116,8 +116,8 @@ class _CashScreenState extends State<CashScreen> {
   Widget _saleSummaryForm(Size screenSize, CartCubit cartController) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(SizeConst.kHorizontalPadding),
-        margin: EdgeInsets.only(left: SizeConst.kHorizontalPadding),
+        padding: const EdgeInsets.all(SizeConst.kGlobalPadding),
+        margin: EdgeInsets.only(left: SizeConst.kGlobalPadding),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: SizeConst.kBorderRadius,
@@ -179,7 +179,7 @@ class _CashScreenState extends State<CashScreen> {
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(
         bottom: 15,
-        right: SizeConst.kHorizontalPadding,
+        right: SizeConst.kGlobalPadding,
       ),
       width: screenSize.width * 0.5,
       decoration: BoxDecoration(

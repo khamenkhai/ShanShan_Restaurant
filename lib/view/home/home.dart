@@ -22,6 +22,7 @@ import 'package:shan_shan/view/home/widget/cart_list_widget.dart';
 import 'package:shan_shan/view/home/widget/date_action_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/checkout_dialog.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/menu_box_widget.dart';
+import 'package:shan_shan/view/widgets/home_page_widgets/taste_box_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/total_and_tax_widget.dart';
 import 'package:shan_shan/view/home/widget/home_drawer.dart';
 import 'package:shan_shan/view/widgets/payment_button.dart';
@@ -104,9 +105,11 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: HomeDrawer(
         onNavigate: () => setState(() => _defaultItem = null),
       ),
-      body: InternetCheckWidget(
-        onRefresh: _refreshData,
-        child: _buildBody(screenSize, cartCubit),
+      body: SafeArea(
+        child: InternetCheckWidget(
+          onRefresh: _refreshData,
+          child: _buildBody(screenSize, cartCubit),
+        ),
       ),
     );
   }
@@ -122,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildProductsSection(screenSize),
-        const SizedBox(width: SizeConst.kHorizontalPadding),
+        const SizedBox(width: SizeConst.kGlobalPadding),
         _buildCartSection(screenSize, cartCubit),
       ],
     );
@@ -130,23 +133,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildProductsSection(Size screenSize) {
     return Container(
-      width: screenSize.width * 0.675,
+      width: screenSize.width * 0.64,
       height: MediaQuery.of(context).size.height,
-      margin: EdgeInsets.only(left: SizeConst.kHorizontalPadding),
+      margin: EdgeInsets.only(
+        left: SizeConst.kGlobalPadding,
+        top: SizeConst.kGlobalMargin,
+      ),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 /// home drawer
                 ScaleOnTap(
                   onTap: () => _scaffoldKey.currentState?.openDrawer(),
                   child: Container(
-                    margin: const EdgeInsets.only(
-                      bottom: SizeConst.kVerticalSpacing,
-                      top: SizeConst.kVerticalSpacing,
-                    ),
                     height: 45,
                     width: 45,
                     decoration: BoxDecoration(
@@ -158,32 +161,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                // BlocBuilder<CartCubit, CartState>(
-                //   builder: (context, state) {
-                //     return Container(
-                //       height: 50,
-                //       padding: EdgeInsets.symmetric(horizontal: 15),
-                //       decoration: BoxDecoration(
-                //         // color: Colors.white,
-                //         borderRadius: SizeConst.kBorderRadius
-                //       ),
-                //       margin: EdgeInsets.only(
-                //         left: SizeConst.kHorizontalPadding
-                //       ),
-                //       child: Center(
-                //         child: Text(
-                //           state.tableNumber == 0 ? "Table Number : " :
-                //           "Table Number : ${state.tableNumber}",
-                //           style: AppTextStyles.kSubTitle(),
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // ),
+
                 Spacer(),
                 DateActionWidget()
               ],
             ),
+
+            ///
+            const SizedBox(height: SizeConst.kVerticalSpacing),
+
+            ///
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -194,6 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: BlocBuilder<CategoryCubit, CategoryState>(
                       builder: (context, state) {
                         return Skeletonizer(
+                          
                           enabled: state is CategoryLoadingState,
                           child: _buildCategoryList(
                             constraints,
@@ -208,10 +196,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              // child: copyRightWidget(),
-            )
           ],
         ),
       ),
@@ -222,24 +206,34 @@ class _HomeScreenState extends State<HomeScreen> {
     BoxConstraints constraints,
     List<CategoryModel> categories,
   ) {
-    return Wrap(
-      runSpacing: SizeConst.kHorizontalPadding,
-      spacing: SizeConst.kHorizontalPadding,
-      children: [
-        MenuBoxWidget(
-          constraints: constraints,
-          defaultItem: _defaultItem,
-          isEditState: false,
-        ),
-        ...categories.map(
-          (category) => CategoryBoxWidget(
+    return Container(
+      margin: EdgeInsets.only(
+        bottom: SizeConst.kVerticalSpacing
+      ),
+      child: Wrap(
+        runSpacing: SizeConst.kGlobalPadding,
+        spacing: SizeConst.kGlobalPadding,
+        children: [
+          MenuBoxWidget(
             constraints: constraints,
-            category: category,
             defaultItem: _defaultItem,
-            tableController: _tableController,
+            isEditState: false,
           ),
-        ),
-      ],
+          TasteBoxWidget(
+            constraints: constraints,
+            defaultItem: _defaultItem,
+            isEditState: false,
+          ),
+          ...categories.map(
+            (category) => CategoryBoxWidget(
+              constraints: constraints,
+              category: category,
+              defaultItem: _defaultItem,
+              tableController: _tableController,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -257,37 +251,48 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<CartCubit, CartState>(
       builder: (context, state) {
         return Expanded(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: SizeConst.kBorderRadius,
+          child: Card(
+            margin: EdgeInsets.only(
+              top: SizeConst.kGlobalMargin,
+              right: SizeConst.kGlobalMargin,
+              bottom: SizeConst.kGlobalMargin,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 1),
-                CartHeaderWidget(onClearOrder: _handleClearOrder),
-                const SizedBox(height: 5),
-                Expanded(
-                  child: CartListWidget(
-                    screenSize: screenSize,
-                    state: state,
+            shape:
+                RoundedRectangleBorder(borderRadius: SizeConst.kBorderRadius),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              padding: const EdgeInsets.symmetric(
+                vertical: SizeConst.kGlobalPadding,
+                horizontal: SizeConst.kGlobalPadding * 1.5,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: SizeConst.kBorderRadius,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CartHeaderWidget(onClearOrder: _handleClearOrder),
+                  const SizedBox(height: 5),
+                  Expanded(
+                    child: CartListWidget(
+                      screenSize: screenSize,
+                      state: state,
+                    ),
                   ),
-                ),
-                TotalAndTaxHomeWidget(),
-                const SizedBox(height: 15),
-                _buildPaymentOptions(),
-                const SizedBox(height: 15),
-                CustomElevatedButton(
-                  width: double.infinity,
-                  onPressed: () {
-                    _handlePlaceOrder(cartCubit, screenSize);
-                  },
-                  child: Text("Order"),
-                )
-              ],
+                  TotalAndTaxHomeWidget(),
+                  const SizedBox(height: 15),
+                  _buildPaymentOptions(),
+                  const SizedBox(height: 15),
+                  CustomElevatedButton(
+                    width: double.infinity,
+                    onPressed: () {
+                      _handlePlaceOrder(cartCubit, screenSize);
+                    },
+                    child: Text("Order"),
+                  )
+                ],
+              ),
             ),
           ),
         );
@@ -365,5 +370,4 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
   }
-
 }

@@ -32,8 +32,8 @@ class CustomElevatedButton extends StatelessWidget {
     return Container(
       height: height,
       constraints: BoxConstraints(minWidth: width),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
+      child: FilledButton(
+        style: FilledButton.styleFrom(
           textStyle: TextStyle(
             fontWeight: FontWeight.normal,
             fontSize: fontSize,

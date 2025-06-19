@@ -106,13 +106,13 @@ class ProductRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      highlightColor: ColorConstants.primaryColor.withValues(alpha:  0.3),
+      highlightColor: ColorConstants.primaryColor.withValues(alpha: 0.3),
       onTap: () {
         if (isEditState) {
           showDialog(
             context: context,
             builder: (context) => ProductWeightOrDetailControl(
-              produt: product,
+              product: product,
               isEditState: true,
             ),
           );
@@ -120,31 +120,15 @@ class ProductRowWidget extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => ProductWeightOrDetailControl(
-              produt: product,
+              product: product,
               isEditState: false,
             ),
           );
-          // if (cartCubit.state.tableNumber == 0) {
-          //   showDialog(
-          //     context: context,
-          //     builder: (context) => TableNumberDialog(
-          //       tableController: tableController,
-          //     ),
-          //   );
-          // } else {
-          //   showDialog(
-          //     context: context,
-          //     builder: (context) => ProductWeightOrDetailControl(
-          //       produt: product,
-          //       isEditState: false,
-          //     ),
-          //   );
-          // }
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(
-            horizontal: SizeConst.kHorizontalPadding),
+        padding:
+            const EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
         height: 50,
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 2),

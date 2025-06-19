@@ -5,6 +5,7 @@ import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.d
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
+import 'package:shan_shan/models/response_models/menu_model.dart';
 import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/quantity_dialog_control.dart';
 import 'package:shan_shan/view/widgets/home_page_widgets/weight_dialog_control.dart';
@@ -55,7 +56,7 @@ class EditCartListWidget extends StatelessWidget {
 
 class BaseCartListWidget extends StatelessWidget {
   final Size screenSize;
-  final dynamic menu;
+  final MenuModel? menu;
   final List<CartItem> items;
   final SpicyLevelModel? spicyLevel;
   final AhtoneLevelModel? athoneLevel;
@@ -75,10 +76,11 @@ class BaseCartListWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 8),
           if (menu != null)
             CartMenuWidget(
               tapDisabled: false,
-              menu: menu,
+              menu: menu!,
               spicyLevel: spicyLevel,
               athoneLevel: athoneLevel,
               onDelete: () => context.read<CartCubit>().addData(
@@ -88,13 +90,14 @@ class BaseCartListWidget extends StatelessWidget {
                   ),
               onEdit: () {},
             ),
+          // Divider(),
+          const SizedBox(height: 8),
           ...items.map(
             (e) => CartItemWidget(
               ontapDisable: false,
               cartItem: e,
               onEdit: () => _showEditDialog(context, e),
-              onDelete: () =>
-                  context.read<CartCubit>().removeFromCart(item: e),
+              onDelete: () => context.read<CartCubit>().removeFromCart(item: e),
             ),
           ),
         ],

@@ -41,7 +41,7 @@ class _ControlPanelState extends State<ControlPanel> {
   Container _mainForm(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.symmetric(horizontal: SizeConst.kHorizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
       child: Column(
         children: [
           Row(
@@ -54,7 +54,7 @@ class _ControlPanelState extends State<ControlPanel> {
                   size: 35,
                 ),
               ),
-              SizedBox(width: SizeConst.kHorizontalPadding),
+              SizedBox(width: SizeConst.kGlobalPadding),
               _cardWidget(
                 name: tr(LocaleKeys.categories),
                 redirectForm: CategoriesControlPage(),
@@ -65,7 +65,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
             ],
           ),
-          SizedBox(height: SizeConst.kHorizontalPadding),
+          SizedBox(height: SizeConst.kGlobalPadding),
           Row(
             children: [
               _cardWidget(
@@ -76,7 +76,7 @@ class _ControlPanelState extends State<ControlPanel> {
                   size: 35,
                 ),
               ),
-              SizedBox(width: SizeConst.kHorizontalPadding),
+              SizedBox(width: SizeConst.kGlobalPadding),
               _cardWidget(
                 name: tr(LocaleKeys.htoneLevel),
                 redirectForm: HtoneLevelControlPage(),
@@ -87,7 +87,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
             ],
           ),
-          SizedBox(height: SizeConst.kHorizontalPadding),
+          SizedBox(height: SizeConst.kGlobalPadding),
           Row(
             children: [
               _cardWidget(

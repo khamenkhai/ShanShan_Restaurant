@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/htone_level_cubit/htone_level_state.dart';
 import 'package:shan_shan/service/ahtone_level_service.dart';
 
-class HtoneLevelCubit extends Cubit<AhtoneLevelCrudState> {
+class HtoneLevelCubit extends Cubit<HtoneLevelState> {
   final AhtoneLevelService ahtoneLevelService;
 
   HtoneLevelCubit({required this.ahtoneLevelService})
@@ -82,7 +82,7 @@ class HtoneLevelCubit extends Cubit<AhtoneLevelCrudState> {
 
     result.fold(
       (failure) => emit(AhtoneLevelError(message: failure)),
-      (levels) => emit(AhtoneLevelLoaded(htoneLevels: levels)),
+      (levels) => emit(HtoneLevelLoaded(htoneLevels: levels)),
     );
   }
 }

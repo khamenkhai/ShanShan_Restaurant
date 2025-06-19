@@ -77,14 +77,14 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
       child: Container(
         width: screenSize.width / 2,
         padding: const EdgeInsets.symmetric(
-          horizontal: SizeConst.kHorizontalPadding,
+          horizontal: SizeConst.kGlobalPadding,
         ),
         margin: EdgeInsets.only(
           top: 5,
-          bottom: SizeConst.kHorizontalPadding,
+          bottom: SizeConst.kGlobalPadding,
         ),
         child: Container(
-          padding: const EdgeInsets.all(SizeConst.kHorizontalPadding),
+          padding: const EdgeInsets.all(SizeConst.kGlobalPadding),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: SizeConst.kBorderRadius,
