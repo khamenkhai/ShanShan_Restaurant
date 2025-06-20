@@ -33,7 +33,7 @@ class TotalAndTaxHomeWidget extends StatelessWidget {
       child: Divider(
         height: 1,
         thickness: 0.5,
-        color: ColorConstants.greyColor,
+        color: AppColors.greyColor,
       ),
     );
   }

@@ -15,7 +15,7 @@ class AppInputDecoration {
     return InputDecoration(
       labelText: labelText,
       labelStyle: TextStyle(
-        color: labelColor ?? ColorConstants.greyColor,
+        color: labelColor ?? AppColors.greyColor,
         fontSize: fontSize,
       ),
       floatingLabelBehavior:
@@ -35,14 +35,14 @@ class AppInputDecoration {
         borderRadius: SizeConst.kBorderRadius,
         borderSide: BorderSide(
           width: 0.5,
-          color: ColorConstants.greyColor,
+          color: AppColors.greyColor,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: SizeConst.kBorderRadius,
         borderSide: BorderSide(
           width: 0.5,
-          color: ColorConstants.greyColor,
+          color: AppColors.greyColor,
         ),
       ),
       errorBorder: OutlineInputBorder(
@@ -56,12 +56,12 @@ class AppInputDecoration {
         borderRadius: SizeConst.kBorderRadius,
         borderSide: BorderSide(
           width: 1,
-          color: ColorConstants.primaryColor,
+          color: AppColors.primaryColor,
         ),
       ),
       filled: true,
       fillColor: Colors.white,
-      focusColor: ColorConstants.greyColor,
+      focusColor: AppColors.greyColor,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 15,
         vertical: 0,

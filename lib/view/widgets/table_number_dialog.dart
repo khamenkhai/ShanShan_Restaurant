@@ -24,7 +24,7 @@ class TableNumberDialog extends StatelessWidget {
       onWillPop: () async {
         return false;
       },
-      child: CustomDialog(
+      child: DialogWrapper(
         child: BlocListener<CartCubit, CartState>(
           listener: (context, state) {
             if (state.tableNumber == 0) {

@@ -44,7 +44,7 @@ class _ProductWeightOrDetailControlState
 
   @override
   Widget build(BuildContext context) {
-    return CustomDialog(
+    return DialogWrapper(
       child: widget.product.isGram ?? false
           ? _buildGramControl(context)
           : _buildQuantityControl(),
@@ -107,8 +107,8 @@ class _ProductWeightOrDetailControlState
         ),
         const SizedBox(width: 12),
         CustomElevatedButton(
-          child: Text(LocaleKeys.confirm.tr()),
           onPressed: onConfirm,
+          child: Text(LocaleKeys.confirm.tr()),
         ),
       ],
     );

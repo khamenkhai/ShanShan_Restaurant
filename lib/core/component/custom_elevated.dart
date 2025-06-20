@@ -35,7 +35,7 @@ class CustomElevatedButton extends StatelessWidget {
       child: FilledButton(
         style: FilledButton.styleFrom(
           textStyle: TextStyle(
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.bold,
             fontSize: fontSize,
           ),
           // elevation: elevation,

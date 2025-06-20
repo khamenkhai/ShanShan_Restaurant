@@ -32,7 +32,7 @@ class _TasteChooseDialogState extends State<TasteChooseDialog> {
   @override
   Widget build(BuildContext context) {
     var dialogWidth = MediaQuery.of(context).size.width / 3;
-    return CustomDialog(
+    return DialogWrapper(
       width: dialogWidth,
       child: SingleChildScrollView(
         child: Column(

@@ -4,15 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_cubit.dart';
 import 'package:shan_shan/controller/menu_cubit/menu_state.dart';
 import 'package:shan_shan/core/component/app_bar_leading.dart';
+import 'package:shan_shan/core/component/custom_dialog.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
-import 'package:shan_shan/core/const/color_const.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/const/size_const.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/models/response_models/menu_model.dart';
 import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
+import 'package:shan_shan/view/widgets/control_panel_widgets/cancel_and_confirm_dialog_button.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class MenuCRUDScreen extends StatefulWidget {
@@ -142,7 +144,7 @@ class _MenuCRUDScreenState extends State<MenuCRUDScreen> {
                     children: [
                       CustomOutlineButton(
                         elevation: 0,
-                        child:  Text(tr(LocaleKeys.cancel)),
+                        child: Text(tr(LocaleKeys.cancel)),
                         onPressed: () => Navigator.pop(context),
                       ),
                       const SizedBox(width: 10),
@@ -203,128 +205,102 @@ class _MenuCRUDScreenDialogState extends State<MenuCRUDScreenDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: SizeConst.kBorderRadius,
-      ),
-      child: Container(
-        padding: EdgeInsets.all(15),
-        width: widget.screenSize.width / 3.8,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.25,
-              padding: EdgeInsets.all(SizeConst.kGlobalPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ///menu name
-                  Text(
-                    tr(LocaleKeys.menu),
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: menuNameController,
-                    validator: (value) {
-                      if (value == "") {
-                        return "Menu Name can't be empty";
-                      }
-                      return null;
-                    },
-                    decoration: customTextDecoration2(
-                        labelText: "မီနူးအမည်အသစ်tr(LocaleKeys.confirm)",
-                        primaryColor: Theme.of(context).primaryColor),
-                  ),
-
-                  SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      isTaseRequired = !isTaseRequired;
-                      resetPage();
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          isTaseRequired
-                              ? Icons.check_box
-                              : Icons.check_box_outline_blank,
-                          color: isTaseRequired
-                              ? ColorConstants.primaryColor
-                              : Colors.grey,
-                        ),
-                        SizedBox(width: 10),
-                        Text(tr(LocaleKeys.noChoosingTasteLevels))
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 15),
-
-                  BlocConsumer<MenuCubit, MenuState>(
-                    listener: (context, state) {},
-                    builder: (context, state) {
-                      if (state is MenuLoadingState) {
-                        return LoadingWidget();
-                      } else {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomOutlineButton(
-                              elevation: 0,
-                              child: Text(tr(LocaleKeys.cancel)),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            SizedBox(width: 10),
-                            CustomElevatedButton(
-                              child: Text(tr(LocaleKeys.confirm)),
-                              onPressed: () async {
-                                if (widget.menu != null) {
-                                  await context
-                                      .read<MenuCubit>()
-                                      .editMenu(
-                                          name: menuNameController.text,
-                                          isTaseRequired: isTaseRequired,
-                                          id: widget.menu!.id.toString())
-                                      .then(
-                                    (value) {
-                                      if (!context.mounted) return;
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                } else {
-                                  await context
-                                      .read<MenuCubit>()
-                                      .addMenu(
-                                        menuName: menuNameController.text,
-                                        isTaseRequired: isTaseRequired,
-                                      )
-                                      .then(
-                                    (value) {
-                                      if (!context.mounted) return;
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        );
-                      }
-                    },
-                  )
-                ],
+    return DialogWrapper(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ///menu name
+              Text(
+                tr(LocaleKeys.menu),
+                style: TextStyle(
+                  fontSize: 16,
+                ),
               ),
-            ),
-          ],
-        ),
+
+              SizedBox(height: 10),
+              TextFormField(
+                controller: menuNameController,
+                validator: (value) {
+                  if (value == "") {
+                    return "Menu Name can't be empty";
+                  }
+                  return null;
+                },
+                decoration: customTextDecoration2(
+                    labelText: "မီနူးအမည်အသစ်",
+                    primaryColor: Theme.of(context).primaryColor),
+              ),
+
+              SizedBox(height: 10),
+              InkWell(
+                onTap: () {
+                  isTaseRequired = !isTaseRequired;
+                  resetPage();
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      isTaseRequired
+                          ? Icons.check_box
+                          : Icons.check_box_outline_blank,
+                      color:
+                          isTaseRequired ? context.primaryColor : Colors.grey,
+                    ),
+                    SizedBox(width: 10),
+                    Text(tr(LocaleKeys.noChoosingTasteLevels))
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 15),
+
+              BlocConsumer<MenuCubit, MenuState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state is MenuLoadingState) {
+                    return LoadingWidget();
+                  } else {
+                    return CancelAndConfirmDialogButton(
+                      onConfirm: () async {
+                        if (widget.menu != null) {
+                          await context
+                              .read<MenuCubit>()
+                              .editMenu(
+                                  name: menuNameController.text,
+                                  isTaseRequired: isTaseRequired,
+                                  id: widget.menu!.id.toString())
+                              .then(
+                            (value) {
+                              if (!context.mounted) return;
+                              Navigator.pop(context);
+                            },
+                          );
+                        } else {
+                          await context
+                              .read<MenuCubit>()
+                              .addMenu(
+                                menuName: menuNameController.text,
+                                isTaseRequired: isTaseRequired,
+                              )
+                              .then(
+                            (value) {
+                              if (!context.mounted) return;
+                              Navigator.pop(context);
+                            },
+                          );
+                        }
+                      },
+                    );
+                  }
+                },
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

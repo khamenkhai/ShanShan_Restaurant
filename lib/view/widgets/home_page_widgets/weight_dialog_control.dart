@@ -40,7 +40,7 @@ class _CartItemWeightControlDialogState
 
   @override
   Widget build(BuildContext context) {
-    return CustomDialog(
+    return DialogWrapper(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

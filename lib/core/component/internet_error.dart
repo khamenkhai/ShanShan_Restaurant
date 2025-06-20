@@ -17,7 +17,7 @@ class InternetErrorWidget extends StatelessWidget {
             const Icon(
               Icons.wifi_off_sharp,
               size: 36,
-              color: ColorConstants.errorColor,
+              color: AppColors.errorColor,
             ),
             const SizedBox(height: 10),
             const Text("No Internet Connection"),
@@ -25,8 +25,8 @@ class InternetErrorWidget extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: ColorConstants.backgroundColorLight,
-                foregroundColor: ColorConstants.primaryColor,
+                backgroundColor: AppColors.backgroundColorLight,
+                foregroundColor: AppColors.primaryColor,
                 elevation: 0.5,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(7),

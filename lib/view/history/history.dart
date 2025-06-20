@@ -13,7 +13,6 @@ import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/sale_history_model.dart';
-import 'package:shan_shan/view/history/edit_sale_page.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/voucher_widget.dart';
 import 'package:shimmer/shimmer.dart';
@@ -415,13 +414,13 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   }
 
   void _navigateToEditScreen(SaleHistoryModel history) {
-    redirectTo(
-      context: context,
-      form: EditSalePage(
-        saleHistory: history,
-        orderNo: history.orderNo,
-      ),
-    );
+    // redirectTo(
+    //   context: context,
+    //   form: EditSalePage(
+    //     saleHistory: history,
+    //     orderNo: history.orderNo,
+    //   ),
+    // );
   }
 
   String _getPaymentType(SaleHistoryModel sale) {

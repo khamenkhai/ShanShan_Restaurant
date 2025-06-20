@@ -43,7 +43,7 @@ class _AhtoneLevelCRUDDialogState extends State<AhtoneLevelCRUDDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomDialog(
+    return DialogWrapper(
       paddingInVertical: false,
       child: Form(
         key: _formKey,

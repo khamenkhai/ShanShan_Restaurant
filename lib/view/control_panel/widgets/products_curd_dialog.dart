@@ -185,7 +185,7 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
             ? Colors.red
             : focused
                 ? Theme.of(context).primaryColor
-                : ColorConstants.greyColor,
+                : AppColors.greyColor,
       ),
     );
   }

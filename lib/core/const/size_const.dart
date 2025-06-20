@@ -16,11 +16,7 @@ class SizeConst {
     Radius.circular(12),
   );
 
-  /// Margin for general spacing (can't be `const` for dynamic values)
-  static const EdgeInsets kMargin = EdgeInsets.symmetric(
-    horizontal: 16,
-    vertical: 12,
-  );
+
 
   /// Icon size constant
   static const double kIconSize = 24;

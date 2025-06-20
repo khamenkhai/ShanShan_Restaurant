@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/core/component/app_bar_leading.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
+import 'package:shan_shan/view/control_panel/widgets/common_crud_card.dart';
 import 'package:shan_shan/view/control_panel/widgets/products_curd_dialog.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shan_shan/controller/products_cubit/products_cubit.dart';
@@ -10,7 +11,6 @@ import 'package:shan_shan/core/const/size_const.dart';
 import 'package:shan_shan/models/response_models/product_model.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/cancel_and_delete_dialog_button.dart';
 import 'package:shan_shan/view/widgets/control_panel_widgets/delete_warning_dialog.dart';
-import 'package:shan_shan/view/widgets/control_panel_widgets/product_card_widget.dart';
 
 class ProductsControlPage extends StatefulWidget {
   const ProductsControlPage({super.key});
@@ -40,6 +40,7 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
         backgroundColor: Theme.of(context).primaryColor,
         label: Text(tr(LocaleKeys.addNewProduct)),
         icon: const Icon(Icons.add),
+        elevation: 0.1,
         onPressed: () => showDialog(
           context: context,
           builder: (context) => ProductCRUDDialog(screenSize: screenSize),
@@ -68,17 +69,9 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
                 childAspectRatio: screenSize.width * 0.002,
               ),
               itemCount: 8, // Simulating 8 skeleton items
-              itemBuilder: (context, index) => ProductCardWidget(
-                product: ProductModel(
-                  category: "",
-                  categoryId: 1,
-                  id: 1,
-                  isDefault: true,
-                  isGram: false,
-                  name: "Testing Product",
-                  price: 100,
-                  qty: 1,
-                ),
+              itemBuilder: (context, index) => CrudCard(
+                title: "Product title",
+                description: "product description",
                 onDelete: () {},
                 onEdit: () {},
               ),
@@ -96,8 +89,9 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
             itemCount: state.products.length,
             itemBuilder: (context, index) {
               ProductModel product = state.products[index];
-              return ProductCardWidget(
-                product: product,
+              return CrudCard(
+                title: product.name ?? "",
+                description: "${product.price} MMK",
                 onEdit: () => showDialog(
                   context: context,
                   builder: (context) => ProductCRUDDialog(
@@ -111,6 +105,7 @@ class _ProductsControlPageState extends State<ProductsControlPage> {
                   product.id.toString(),
                 ),
               );
+              
             },
           );
         }

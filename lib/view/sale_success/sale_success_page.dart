@@ -11,6 +11,7 @@ import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
@@ -129,10 +130,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
   }
 
   Widget _saleSuccessPage(Size screenSize) {
-    return Container(
-      width: screenSize.width / 1.8,
-      padding: const EdgeInsets.all(35),
-      color: Theme.of(context).cardColor,
+    return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -174,7 +172,11 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
           width: buttonWidth,
           child: CustomOutlineButton(
             height: 60,
-            child: Text(LocaleKeys.editPayment.tr()),
+            child: Text(
+              LocaleKeys.editPayment.tr(),
+              style: context.smallFont(
+                  fontWeight: FontWeight.bold, color: context.textColor),
+            ),
             onPressed: () async {
               final result = await showCupertinoDialog<String>(
                 context: context,
@@ -205,16 +207,26 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
           height: 60,
           child: widget.isEditSale
               ? CustomOutlineButton(
-                  child: Text(LocaleKeys.backToHistory.tr()),
+                  child: Text(
+                    LocaleKeys.backToHistory.tr(),
+                    style: context.smallFont(
+                        fontWeight: FontWeight.bold, color: context.textColor),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
-                    context.read<SalesHistoryCubit>().getHistoryByPagination(page: 1);
+                    context
+                        .read<SalesHistoryCubit>()
+                        .getHistoryByPagination(page: 1);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
                 )
               : CustomOutlineButton(
-                  child: Text(LocaleKeys.makeNewOrder.tr()),
+                  child: Text(
+                    LocaleKeys.makeNewOrder.tr(),
+                    style: context.smallFont(
+                        fontWeight: FontWeight.bold, color: context.textColor),
+                  ),
                   onPressed: () {
                     pushAndRemoveUntil(form: HomeScreen(), context: context);
                   },
@@ -229,45 +241,48 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
     required SaleModel saleData,
     required CartCubit cartCubit,
   }) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 35,
-          vertical: SizeConst.kGlobalPadding,
-        ),
-        child: BlocBuilder<SaleProcessCubit, SaleProcessState>(
-          builder: (context, state) {
-            if (state is SaleProcessSuccessState) {
-              return SingleChildScrollView(
-                child: VoucherWidget(
-                  showEditButton: true,
-                  paymentType: widget.paymentType,
-                  tableNumber: saleData.tableNumber,
-                  remark: widget.saleData.remark ?? "",
-                  discount: saleData.discount ?? 0,
-                  cashAmount: saleData.paidCash,
-                  bankAmount: saleData.paidOnline ?? 0,
-                  refund: saleData.refund,
-                  subTotal: saleData.subTotal,
-                  cartItems: widget.cartItems,
-                  menu: widget.menuTitle,
-                  date: widget.dateTime,
-                  grandTotal: saleData.grandTotal,
-                  orderNumber: saleData.orderNo,
-                  octopusCount: widget.saleData.prawnCount ?? 0,
-                  prawnAmount: widget.saleData.octopusCount ?? 0,
-                  dineInOrParcel: widget.saleData.dineInOrParcel,
-                  ahtoneLevel: widget.ahtoneLevel,
-                  spicyLevel: widget.spicyLevel,
+    return SizedBox(
+      width: screenSize.width / 2.2,
+      child: BlocBuilder<SaleProcessCubit, SaleProcessState>(
+        builder: (context, state) {
+          if (state is SaleProcessSuccessState) {
+            return SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.all(SizeConst.kGlobalMargin),
+                child: Card(
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    child: VoucherWidget(
+                      showEditButton: true,
+                      paymentType: widget.paymentType,
+                      tableNumber: saleData.tableNumber,
+                      remark: widget.saleData.remark ?? "",
+                      discount: saleData.discount ?? 0,
+                      cashAmount: saleData.paidCash,
+                      bankAmount: saleData.paidOnline ?? 0,
+                      refund: saleData.refund,
+                      subTotal: saleData.subTotal,
+                      cartItems: widget.cartItems,
+                      menu: widget.menuTitle,
+                      date: widget.dateTime,
+                      grandTotal: saleData.grandTotal,
+                      orderNumber: saleData.orderNo,
+                      octopusCount: widget.saleData.prawnCount ?? 0,
+                      prawnAmount: widget.saleData.octopusCount ?? 0,
+                      dineInOrParcel: widget.saleData.dineInOrParcel,
+                      ahtoneLevel: widget.ahtoneLevel,
+                      spicyLevel: widget.spicyLevel,
+                    ),
+                  ),
                 ),
-              );
-            } else if (state is SaleProcessLoadingState) {
-              return const LoadingWidget();
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),
+              ),
+            );
+          } else if (state is SaleProcessLoadingState) {
+            return const LoadingWidget();
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
       ),
     );
   }

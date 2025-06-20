@@ -10,6 +10,7 @@ import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/view/auth/login.dart';
@@ -116,7 +117,6 @@ class HomeDrawer extends StatelessWidget {
 
             SizedBox(height: 10),
 
-            ///logout
             ListTile(
               onTap: () async {
                 Navigator.pop(context);
@@ -139,79 +139,30 @@ class HomeDrawer extends StatelessWidget {
   }
 
   ///logout dialog box
-  Dialog _logoutDialogBox(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: SizeConst.kBorderRadius,
-      ),
-      backgroundColor: Theme.of(context).cardColor,
-      child: Container(
-        width: MediaQuery.of(context).size.width / 2.85,
-        padding: EdgeInsets.only(
-          left: SizeConst.kGlobalPadding,
-          right: SizeConst.kGlobalPadding,
-          bottom: SizeConst.kGlobalPadding,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+  AlertDialog _logoutDialogBox(BuildContext context) {
+    return AlertDialog(
+      title: Text("Confirm logout", style: context.subTitle()),
+      content: Text("Are you sure you want to logout?"),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(
-                    Icons.clear,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
+            TextButton(
+              child: Text(tr(LocaleKeys.cancel)),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-            Container(
-              padding: EdgeInsets.only(bottom: 25, top: 15),
-              child: Text(
-                "Are you sure to logout?",
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: CustomOutlineButton(
-                    bgColor: Colors.white,
-                    elevation: 0,
-                    height: 60,
-                    child: Text(tr(LocaleKeys.cancel)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: CustomElevatedButton(
-                    bgColor: Theme.of(context).primaryColor,
-                    elevation: 0,
-                    height: 60,
-                    child: Text(tr(LocaleKeys.confirm)),
-                    onPressed: () async {
-                      logout(context);
-                    },
-                  ),
-                )
-              ],
-            ),
+            SizedBox(width: 10),
+            TextButton(
+              child: Text(tr(LocaleKeys.confirm)),
+              onPressed: () async {
+                logout(context);
+              },
+            )
           ],
         ),
-      ),
+      ],
     );
   }
 
@@ -226,6 +177,5 @@ class HomeDrawer extends StatelessWidget {
       context.read<CartCubit>().clearOrder();
       context.read<EditSaleCartCubit>().clearOrder();
     }
-
   }
 }

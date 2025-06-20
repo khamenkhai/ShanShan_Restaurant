@@ -33,6 +33,10 @@ extension ThemeContextExtension on BuildContext {
   Color get cardColor => Theme.of(this).cardColor;
   Color get hintColor => Theme.of(this).hintColor;
 
+    // Text color depending on theme mode
+  Color get textColor => isDarkMode ? Colors.white : Colors.black;
+
+
   // Theme data shortcuts
   ThemeData get theme => Theme.of(this);
   TextTheme get textTheme => Theme.of(this).textTheme;

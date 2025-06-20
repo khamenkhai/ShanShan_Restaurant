@@ -31,7 +31,7 @@ class _ControlPanelState extends State<ControlPanel> {
             Navigator.pop(context);
           },
         ),
-        title: Text("ထိန်းချုပ်ရာနေရာ"),
+        title: Text(tr(LocaleKeys.controlPanel)),
       ),
       body: _mainForm(context),
     );
@@ -120,24 +120,23 @@ class _ControlPanelState extends State<ControlPanel> {
         onTap: () {
           NavigationHelper.pushPage(context, redirectForm);
         },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: SizeConst.kBorderRadius,
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 35,
-                child: widget,
-              ),
-              SizedBox(width: 15),
-              Text(
-                name,
-                style: TextStyle(fontSize: 20),
-              ),
-            ],
+        child: Card(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+            
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 35,
+                  child: widget,
+                ),
+                SizedBox(width: 15),
+                Text(
+                  name,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
           ),
         ),
       ),

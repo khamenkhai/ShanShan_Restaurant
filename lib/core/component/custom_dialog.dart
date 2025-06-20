@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 
 // ignore: must_be_immutable
-class CustomDialog extends StatelessWidget {
-   CustomDialog({
+class DialogWrapper extends StatelessWidget {
+   DialogWrapper({
     super.key,
     required this.child,
     this.width,
@@ -23,8 +23,8 @@ class CustomDialog extends StatelessWidget {
       backgroundColor: Theme.of(context).cardColor,
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical:paddingInVertical ? 15 : 0,
-          horizontal: 15,
+          vertical:paddingInVertical ? 24 : 0,
+          horizontal: 24,
         ),
         width: width ?? size.width / 3.8,
         child: child,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 @immutable
-class ColorConstants {
+class AppColors {
   static const Color primaryColor = Color(0xFFFF6347);
   static const Color secondaryColor = Color(0xFFED1C24);
   static const Color contrast = Color(0xFF9E9E9E);
@@ -9,8 +9,6 @@ class ColorConstants {
   static const Color border = Color(0xFFD6D6D6);
   static const Color scaffoldBackground = Color(0xFFF6F6F6);
   static const Color inputBackground = Color(0xFFECECEC);
-  // static const Color backgroundColorLight = Color(0xFFF5F5F5);
-  // static const Color backgroundColorDark = Color(0xFF212121);
   static const Color textPrimaryColor = Color(0xFF333333);
   static const Color textSecondaryColor = Color(0xFF666666);
   static const Color textOnLightBackground = Color(0xFF000000);

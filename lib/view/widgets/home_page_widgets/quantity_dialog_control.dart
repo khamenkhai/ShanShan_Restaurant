@@ -32,7 +32,7 @@ class CartItemQtyDialogControl extends StatefulWidget {
 class _CartItemQtyDialogControlState extends State<CartItemQtyDialogControl> {
   @override
   Widget build(BuildContext context) {
-    return CustomDialog(
+    return DialogWrapper(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

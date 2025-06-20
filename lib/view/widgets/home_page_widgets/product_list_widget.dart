@@ -106,7 +106,7 @@ class ProductRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      highlightColor: ColorConstants.primaryColor.withValues(alpha: 0.3),
+      highlightColor: AppColors.primaryColor.withValues(alpha: 0.3),
       onTap: () {
         if (isEditState) {
           showDialog(

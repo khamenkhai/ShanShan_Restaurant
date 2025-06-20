@@ -211,7 +211,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
                       "Summary",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: ColorConstants.primaryColor,
+                        color: AppColors.primaryColor,
                         fontSize: 20,
                       ),
                     ),
@@ -237,7 +237,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
                     children: [
                       Checkbox(
                         value: _customerTakeVoucher,
-                        activeColor: ColorConstants.primaryColor,
+                        activeColor: AppColors.primaryColor,
                         onChanged: (value) {
                           setState(() {
                             _customerTakeVoucher = value!;
@@ -370,7 +370,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
             child: const Divider(
               height: 1,
               thickness: 0.5,
-              color: ColorConstants.greyColor,
+              color: AppColors.greyColor,
             ),
           ),
           const SizedBox(height: 5),

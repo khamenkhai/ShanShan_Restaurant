@@ -111,7 +111,7 @@ class MenuRowWidget extends StatelessWidget {
     return BlocBuilder<ProductsCubit, ProductsState>(
       builder: (context, state) {
         return InkWell(
-          highlightColor: ColorConstants.primaryColor.withOpacity(0.3),
+          highlightColor: AppColors.primaryColor.withOpacity(0.3),
           onTap: () => context.read<CartCubit>().addData(menu: menu),
           // onTap: () => _handleMenuTap(context, state),
           child: Container(

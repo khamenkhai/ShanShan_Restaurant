@@ -175,7 +175,7 @@ class CartMenuWidget extends StatelessWidget {
             ),
           ),
         ),
-        if (!tapDisabled) _buildDeleteButton(),
+        // if (!tapDisabled) _buildDeleteButton(),
       ],
     );
   }
@@ -228,15 +228,15 @@ class CartMenuWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDeleteButton() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 10),
-      child: InkWell(
-        onTap: onDelete,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        child: const Icon(IconlyLight.delete, size: 20),
-      ),
-    );
-  }
+  // Widget _buildDeleteButton() {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(left: 10, top: 10),
+  //     child: InkWell(
+  //       onTap: onDelete,
+  //       splashColor: Colors.transparent,
+  //       highlightColor: Colors.transparent,
+  //       child: const Icon(IconlyLight.delete, size: 20),
+  //     ),
+  //   );
+  // }
 }

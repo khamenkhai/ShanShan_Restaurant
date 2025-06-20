@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shan_shan/core/const/const_export.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 
 class CustomOutlineButton extends StatelessWidget {
   final Color? fgColor;
@@ -31,11 +32,18 @@ class CustomOutlineButton extends StatelessWidget {
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           elevation: elevation,
-          foregroundColor: fgColor ?? ColorConstants.greyColor,
+          foregroundColor: fgColor ?? AppColors.greyColor,
           backgroundColor: bgColor ?? Theme.of(context).cardColor,
           shape: RoundedRectangleBorder(
             borderRadius: SizeConst.kBorderRadius,
           ),
+          // textStyle: context.smallFont(
+          //   fontWeight: FontWeight.bold,
+          //   color: context.textColor
+          // ),
+          side: BorderSide(
+            color: context.primaryColor.withOpacity(0.5)
+          )
         ),
         onPressed: onPressed,
         child: child,

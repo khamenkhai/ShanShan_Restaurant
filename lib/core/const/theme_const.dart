@@ -6,7 +6,7 @@ import 'package:shan_shan/core/const/const_export.dart';
 
 @immutable
 sealed class ThemeConstants {
-  // Common styles and themes (all const to reduce runtime overhead)
+  // System UI Styles
   static const SystemUiOverlayStyle _lightSystemOverlayStyle =
       SystemUiOverlayStyle(
     statusBarIconBrightness: Brightness.dark,
@@ -19,14 +19,16 @@ sealed class ThemeConstants {
     statusBarColor: Colors.transparent,
   );
 
+  // Common Text Styles
   static TextStyle _appBarTitleTextStyle(Color color) => TextStyle(
         color: color,
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: FontWeight.bold,
       );
 
   static const TextStyle _bodyMediumTextStyle = TextStyle(fontSize: 16);
 
+  // Switch Theme
   static SwitchThemeData _switchTheme(Color primaryColor) => SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
           if (states.contains(WidgetState.selected)) {
@@ -43,6 +45,7 @@ sealed class ThemeConstants {
         splashRadius: 10,
       );
 
+  // Bottom Navigation Bar Themes
   static BottomNavigationBarThemeData _bottomNavigationBarTheme(
           Color primaryColor) =>
       BottomNavigationBarThemeData(
@@ -56,7 +59,7 @@ sealed class ThemeConstants {
       BottomNavigationBarThemeData(
         selectedItemColor: primaryColor,
         unselectedItemColor: Colors.grey[400]!,
-        backgroundColor: ColorConstants.backgroundColorDark,
+        backgroundColor: AppColors.backgroundColorDark,
       );
 
   /// Light theme
@@ -64,39 +67,38 @@ sealed class ThemeConstants {
     required String fontFamily,
     Color? primaryColor,
   }) {
-    final color = primaryColor ?? ColorConstants.primaryColor;
+    final color = primaryColor ?? AppColors.primaryColor;
     final onPrimary =
         color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: color,
-      
       colorScheme: ColorScheme.light(
         primary: color,
         onPrimary: onPrimary,
         secondary: color.withOpacity(0.8),
         surface: Colors.white,
-        background: ColorConstants.backgroundColorLight,
+        background: AppColors.backgroundColorLight,
       ),
       appBarTheme: AppBarTheme(
         systemOverlayStyle: _lightSystemOverlayStyle,
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: color,
-        titleTextStyle: _appBarTitleTextStyle(Colors.black)
-            .copyWith(fontFamily: fontFamily),
         centerTitle: false,
         surfaceTintColor: Colors.transparent,
         iconTheme: IconThemeData(color: color),
+        titleTextStyle: _appBarTitleTextStyle(Colors.black)
+            .copyWith(fontFamily: fontFamily),
       ),
       textTheme: TextTheme(
         bodyMedium: _bodyMediumTextStyle.copyWith(color: Colors.black87),
         titleMedium:
             TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-        labelLarge: TextStyle(color: Colors.white), // For buttons
+        labelLarge: TextStyle(color: Colors.white),
       ),
-      scaffoldBackgroundColor: ColorConstants.backgroundColorLight,
+      scaffoldBackgroundColor: AppColors.backgroundColorLight,
       switchTheme: _switchTheme(color),
       iconTheme: IconThemeData(color: color),
       dialogTheme: DialogTheme(
@@ -108,6 +110,7 @@ sealed class ThemeConstants {
         ),
         contentTextStyle: TextStyle(color: Colors.black87),
       ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(elevation: 0),
       bottomNavigationBarTheme: _bottomNavigationBarTheme(color),
       cardTheme: CardTheme(
         color: Colors.white,
@@ -133,7 +136,7 @@ sealed class ThemeConstants {
           ),
         ),
       ),
-      cardColor: ColorConstants.cardColorLight,
+      cardColor: AppColors.cardColorLight,
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -168,30 +171,30 @@ sealed class ThemeConstants {
         primary: color,
         onPrimary: onPrimary,
         secondary: color.withOpacity(0.8),
-        surface: ColorConstants.backgroundColorDark,
+        surface: AppColors.backgroundColorDark,
       ),
       appBarTheme: AppBarTheme(
         systemOverlayStyle: _darkSystemOverlayStyle,
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.white,
-        titleTextStyle: _appBarTitleTextStyle(Colors.white)
-            .copyWith(fontFamily: fontFamily),
         centerTitle: false,
         iconTheme: IconThemeData(color: color),
+        titleTextStyle: _appBarTitleTextStyle(Colors.white)
+            .copyWith(fontFamily: fontFamily),
       ),
       textTheme: TextTheme(
-        bodyMedium: _bodyMediumTextStyle.copyWith(
-            color: Colors.white.withOpacity(0.87)),
+        bodyMedium:
+            _bodyMediumTextStyle.copyWith(color: Colors.white.withOpacity(0.87)),
         titleMedium:
             TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        labelLarge: TextStyle(color: Colors.black), // For buttons
+        labelLarge: TextStyle(color: Colors.black),
       ),
-      scaffoldBackgroundColor: ColorConstants.backgroundColorDark,
+      scaffoldBackgroundColor: AppColors.backgroundColorDark,
       switchTheme: _switchTheme(color),
       iconTheme: IconThemeData(color: color),
       dialogTheme: DialogTheme(
-        backgroundColor: ColorConstants.backgroundColorDark,
+        backgroundColor: AppColors.backgroundColorDark,
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 20,
@@ -203,19 +206,19 @@ sealed class ThemeConstants {
         ),
       ),
       popupMenuTheme: PopupMenuThemeData(
-        color: ColorConstants.backgroundColorDark,
+        color: AppColors.backgroundColorDark,
         textStyle: TextStyle(color: Colors.white),
       ),
       bottomNavigationBarTheme: _darkBottomNavigationBarTheme(color),
       cardTheme: CardTheme(
-        color: ColorConstants.cardColorDark,
+        color: AppColors.cardColorDark,
         elevation: 1,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      cardColor: ColorConstants.cardColorDark,
+      cardColor: AppColors.cardColorDark,
       buttonTheme: ButtonThemeData(
         buttonColor: color,
         textTheme: ButtonTextTheme.primary,
@@ -246,7 +249,7 @@ sealed class ThemeConstants {
           borderSide: BorderSide(color: color, width: 2),
         ),
         labelStyle: TextStyle(color: Colors.grey.shade400),
-        fillColor: ColorConstants.cardColorDark,
+        fillColor: AppColors.cardColorDark,
         filled: true,
       ),
       dividerTheme: DividerThemeData(

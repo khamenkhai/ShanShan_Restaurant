@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
@@ -58,7 +59,7 @@ class VoucherWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(),
+          _buildHeader(context),
           _buildBasicInfoSection(),
           const SizedBox(height: 15),
           _buildMenuSection(),
@@ -74,10 +75,43 @@ class VoucherWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return const Text(
-      "📋 Order Summary",
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  Widget _buildHeader(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          "📋 Order Receipt",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        Spacer(),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: context.primaryColor,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Text(
+            dineInOrParcel == 1 ? "Dine In" : "Parcel",
+            style: context.smallFont(
+                color: context.cardColor, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: context.cardColor,
+            border: Border.all(width: 1, color: context.primaryColor),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Text(
+            "Table : $tableNumber",
+            style: context.smallFont(
+              color: context.textColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -89,7 +123,6 @@ class VoucherWidget extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 10),
-        _buildInfoRow("Table Number", "$tableNumber", style: style),
         _buildInfoRow("Slip Number", orderNumber, style: style),
         _buildInfoRow("Date", date, style: style),
       ]
@@ -108,7 +141,6 @@ class VoucherWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(dineInOrParcel == 1 ? "ထိုင်စား" : "ပါဆယ်"),
             Text("Remark: $remark", textAlign: TextAlign.right),
           ],
         ),

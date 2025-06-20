@@ -16,14 +16,14 @@ class CustomErrorWidget extends StatelessWidget {
         Icon(
           Icons.warning_amber_rounded,
           size: 60,
-          color: ColorConstants.secondaryColor,
+          color: AppColors.secondaryColor,
         ),
         SizedBox(height: 15),
         Text("Something went wrong"),
         SizedBox(height: 15),
         Center(
           child: CustomElevatedButton(
-            bgColor: ColorConstants.secondaryColor,
+            bgColor: AppColors.secondaryColor,
             onPressed: onPressed,
             child: Text("Try Again"),
           ),

@@ -20,51 +20,53 @@ class CrudCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: SizeConst.kGlobalPadding - 3,
-        horizontal: 15,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: SizeConst.kBorderRadius,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                if (description.isNotEmpty) ...[
-                  const SizedBox(height: 5),
+    return Card(
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: SizeConst.kGlobalPadding - 3,
+          horizontal: 15,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: SizeConst.kBorderRadius,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Text(
-                    description,
-                    style: TextStyle(
-                      fontSize: 14,
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
                     ),
                   ),
-                ]
-              ],
+                  if (description.isNotEmpty) ...[
+                    const SizedBox(height: 5),
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ]
+                ],
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: onEdit,
-            icon: Icon(Icons.edit, size: 20, color: Theme.of(context).primaryColor),
-          ),
-          IconButton(
-            onPressed: onDelete,
-            icon:
-                const Icon(CupertinoIcons.delete, size: 20, color: Colors.red),
-          ),
-        ],
+            IconButton(
+              onPressed: onEdit,
+              icon: Icon(Icons.edit, size: 20, color: Theme.of(context).primaryColor),
+            ),
+            IconButton(
+              onPressed: onDelete,
+              icon:
+                  const Icon(CupertinoIcons.delete, size: 20, color: Colors.red),
+            ),
+          ],
+        ),
       ),
     );
   }

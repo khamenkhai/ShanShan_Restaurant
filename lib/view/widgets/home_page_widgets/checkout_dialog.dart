@@ -8,9 +8,8 @@ import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
-import 'package:shan_shan/view/payment/cash.dart';
+import 'package:shan_shan/view/payment/payment.dart';
 import 'package:shan_shan/view/payment/multi_payment_page.dart';
-import 'package:shan_shan/view/payment/online_payment.dart';
 
 class CheckoutDialog extends StatefulWidget {
   final bool paidOnline;
@@ -57,7 +56,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
       _octopusCount = cartState.octopusCount;
       _remarkController.text = cartState.remark;
       _isParcel = cartState.dineInOrParcel == 0;
-      _tableController.text = cartState.tableNumber.toString();
+      _tableController.text = cartState.tableNumber == 0 ? "" : cartState.tableNumber.toString();
     });
   }
 
@@ -133,7 +132,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
           ],
         ),
         const SizedBox(height: 8),
-        Divider(color: theme.dividerColor),
+        // Divider(color: theme.dividerColor, thickness: 0.5),
       ],
     );
   }
@@ -299,8 +298,8 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
         ),
         const SizedBox(width: 12),
         CustomElevatedButton(
-          child: Text(LocaleKeys.confirmOrder.tr()),
           onPressed: _handleConfirmOrder,
+          child: Text(LocaleKeys.confirmOrder.tr()),
         ),
       ],
     );
@@ -328,9 +327,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
     if (widget.paidCash && widget.paidOnline) {
       return const MultiPaymentPage();
     } else if (widget.paidCash) {
-      return const CashScreen(isEditState: false);
+      return const PaymentScreen(isEditState: false);
     } else if (widget.paidOnline) {
-      return const OnlinePaymentScreen();
+      return const PaymentScreen(isEditState: false);
     }
     return null;
   }

@@ -322,41 +322,43 @@ class ReportSummaryWidget extends StatelessWidget {
     bool isTotalSales = false,
   }) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          borderRadius: SizeConst.kBorderRadius,
-          color: cardColor,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 32,
-                  child: icon,
-                ),
-                const SizedBox(width: 20),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.w500,
+      child: Card(
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            borderRadius: SizeConst.kBorderRadius,
+            color: cardColor,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 32,
+                    child: icon,
                   ),
-                )
-              ],
-            ),
-            const SizedBox(height: 15),
-            Text(
-              isTotalSales ? "$amount" : "${formatNumber(amount)} MMK",
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+                  const SizedBox(width: 20),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
+              const SizedBox(height: 15),
+              Text(
+                isTotalSales ? "$amount" : "${formatNumber(amount)} MMK",
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
