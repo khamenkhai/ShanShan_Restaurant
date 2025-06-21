@@ -47,7 +47,7 @@ void primaryInit() {
   getIt.registerFactory(() => HtoneLevelCubit(ahtoneLevelService: getIt.call()));
   getIt.registerFactory(() => SpicyLevelCubit(spicyLevelService: getIt.call()));
   getIt.registerFactory(() => SaleReportCubit(reportService: getIt.call()));
-  getIt.registerFactory(() => EditSaleCartCubit());
+  getIt.registerFactory(() => OrderEditCubit());
   getIt.registerFactory(() => ThemeCubit(sharedPref: getIt.call()));
 
   //services

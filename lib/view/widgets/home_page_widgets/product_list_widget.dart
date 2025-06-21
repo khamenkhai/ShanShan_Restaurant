@@ -113,7 +113,7 @@ class ProductRowWidget extends StatelessWidget {
             context: context,
             builder: (context) => ProductWeightOrDetailControl(
               product: product,
-              isEditState: true,
+              isEditState: isEditState,
             ),
           );
         } else {
@@ -121,7 +121,7 @@ class ProductRowWidget extends StatelessWidget {
             context: context,
             builder: (context) => ProductWeightOrDetailControl(
               product: product,
-              isEditState: false,
+              isEditState: isEditState,
             ),
           );
         }

@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => ic.getIt<HtoneLevelCubit>()),
         BlocProvider(create: (context) => ic.getIt<SpicyLevelCubit>()),
         BlocProvider(create: (context) => ic.getIt<SaleReportCubit>()),
-        BlocProvider(create: (context) => ic.getIt<EditSaleCartCubit>()),
+        BlocProvider(create: (context) => ic.getIt<OrderEditCubit>()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {

@@ -69,7 +69,6 @@ int get5percentage(int totalAmount) {
 
 ///show custom snackbar
 void showCustomSnackbar({
-  required BuildContext context,
   required String message,
 }) {
   Fluttertoast.showToast(

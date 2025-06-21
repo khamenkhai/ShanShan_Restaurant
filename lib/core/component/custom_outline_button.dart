@@ -42,7 +42,7 @@ class CustomOutlineButton extends StatelessWidget {
           //   color: context.textColor
           // ),
           side: BorderSide(
-            color: context.primaryColor.withOpacity(0.5)
+            color: context.hintColor
           )
         ),
         onPressed: onPressed,

@@ -44,11 +44,11 @@ class _SpicyLevelScreenState extends State<SpicyLevelScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text("အစပ် Level"),
+        title: Text(tr(LocaleKeys.spicyLevel)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        label: Text("အစပ်Levelအသစ်tr(LocaleKeys.confirm)"),
+        label: Text(tr(LocaleKeys.addNewSpicyLevel)),
         icon: Icon(Icons.add),
         onPressed: () {
           showDialog(

@@ -6,9 +6,6 @@ import 'package:iconly/iconly.dart';
 import 'package:shan_shan/controller/auth_cubit/auth_cubit.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
-import 'package:shan_shan/core/component/custom_elevated.dart';
-import 'package:shan_shan/core/component/custom_outline_button.dart';
-import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
 import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/navigation_helper.dart';
@@ -141,8 +138,8 @@ class HomeDrawer extends StatelessWidget {
   ///logout dialog box
   AlertDialog _logoutDialogBox(BuildContext context) {
     return AlertDialog(
-      title: Text("Confirm logout", style: context.subTitle()),
-      content: Text("Are you sure you want to logout?"),
+      title: Text(tr(LocaleKeys.confirmLogout), style: context.subTitle()),
+      content: Text(tr(LocaleKeys.areYouSureToLogout)),
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -175,7 +172,7 @@ class HomeDrawer extends StatelessWidget {
     if (logoutStatus) {
       if (!context.mounted) return;
       context.read<CartCubit>().clearOrder();
-      context.read<EditSaleCartCubit>().clearOrder();
+      context.read<OrderEditCubit>().clearOrder();
     }
   }
 }

@@ -6,21 +6,21 @@ import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/menu_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
 
-class EditSaleCartCubit extends Cubit<EditSaleCartState> {
-  EditSaleCartCubit()
+class OrderEditCubit extends Cubit<EditSaleCartState> {
+  OrderEditCubit()
       : super(
           EditSaleCartState(
-            remark: "",
-            items: [],
-            menu: null,
-            spicyLevel: null,
-            athoneLevel: null,
-            octopusCount: 0,
-            prawnCount: 0,
-            tableNumber: 0,
-            dineInOrParcel: 1,
-            orderNo: "",
-          ),
+              remark: "",
+              items: [],
+              menu: null,
+              spicyLevel: null,
+              athoneLevel: null,
+              octopusCount: 0,
+              prawnCount: 0,
+              tableNumber: 0,
+              dineInOrParcel: 1,
+              orderNo: "",
+              date: ""),
         );
 
   ///add menu model
@@ -35,6 +35,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
     int? octopusCount,
     int? prawnCount,
     String? orderNo,
+    String? date,
   }) {
     emit(
       EditSaleCartState(
@@ -48,6 +49,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
         octopusCount: octopusCount ?? state.octopusCount,
         prawnCount: prawnCount ?? state.prawnCount,
         orderNo: orderNo ?? state.orderNo,
+        date: date ?? state.date,
       ),
     );
   }
@@ -78,6 +80,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
           octopusCount: state.octopusCount,
           prawnCount: state.prawnCount,
           orderNo: state.orderNo,
+          date: state.date,
         ),
       );
     } else {
@@ -101,6 +104,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
           octopusCount: state.octopusCount,
           prawnCount: state.prawnCount,
           orderNo: state.orderNo,
+          date: state.date,
         ),
       );
     }
@@ -135,6 +139,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
           octopusCount: state.octopusCount,
           prawnCount: state.prawnCount,
           orderNo: state.orderNo,
+          date: state.date,
         ),
       );
     } else {
@@ -158,6 +163,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
           octopusCount: state.octopusCount,
           prawnCount: state.prawnCount,
           orderNo: state.orderNo,
+          date: state.date,
         ),
       );
     }
@@ -189,6 +195,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
           octopusCount: state.octopusCount,
           prawnCount: state.prawnCount,
           orderNo: state.orderNo,
+          date: state.date,
         ),
       );
     } else {
@@ -212,6 +219,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
           octopusCount: state.octopusCount,
           prawnCount: state.prawnCount,
           orderNo: state.orderNo,
+          date: state.date,
         ),
       );
     }
@@ -239,6 +247,7 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
         octopusCount: state.octopusCount,
         prawnCount: state.prawnCount,
         orderNo: state.orderNo,
+        date: state.date,
       ),
     );
   }
@@ -247,17 +256,17 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
   void clearOrder() {
     emit(
       EditSaleCartState(
-        dineInOrParcel: 1,
-        remark: "",
-        tableNumber: 0,
-        items: [],
-        menu: null,
-        spicyLevel: null,
-        athoneLevel: null,
-        octopusCount: 0,
-        prawnCount: 0,
-        orderNo: "",
-      ),
+          dineInOrParcel: 1,
+          remark: "",
+          tableNumber: 0,
+          items: [],
+          menu: null,
+          spicyLevel: null,
+          athoneLevel: null,
+          octopusCount: 0,
+          prawnCount: 0,
+          orderNo: "",
+          date: state.date),
     );
   }
 
@@ -265,8 +274,8 @@ class EditSaleCartCubit extends Cubit<EditSaleCartState> {
   int getTotalAmount() {
     int totalAmount = 0;
     for (var element in state.items) {
-      //totalAmount += element.qty * num.parse(element.price);
-      totalAmount += element.totalPrice;
+      totalAmount += element.qty * element.price;
+      // totalAmount += element.totalPrice;
     }
 
     return totalAmount;

@@ -71,7 +71,7 @@ class _CartItemWeightControlDialogState
                 child: Text("အပ်ဒိတ်လုပ်ရန်"),
                 onPressed: () {
                   if (widget.isEditState) {
-                    context.read<EditSaleCartCubit>().addToCartByGram(
+                    context.read<OrderEditCubit>().addToCartByGram(
                           item: widget.cartItem,
                           gram: int.parse(gram.text),
                         );

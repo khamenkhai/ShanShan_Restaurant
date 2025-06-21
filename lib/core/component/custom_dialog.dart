@@ -26,7 +26,7 @@ class DialogWrapper extends StatelessWidget {
           vertical:paddingInVertical ? 24 : 0,
           horizontal: 24,
         ),
-        width: width ?? size.width / 3.8,
+        width: width ?? size.width / 3.6,
         child: child,
       ),
     );

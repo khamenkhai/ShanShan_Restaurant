@@ -161,7 +161,7 @@ class DefaultProductChecker {
       );
 
       if (isEditState) {
-        context.read<EditSaleCartCubit>().addToCartByQuantity(
+        context.read<OrderEditCubit>().addToCartByQuantity(
               item: defaultItem,
               quantity: 1,
             );

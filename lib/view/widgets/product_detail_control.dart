@@ -75,24 +75,21 @@ class _ProductWeightOrDetailControlState
     required Widget controlWidget,
     required VoidCallback onConfirm,
   }) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
-          const SizedBox(height: 24),
-          Center(child: controlWidget),
-          const SizedBox(height: 24),
-          _buildActionButtons(context, onConfirm),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+        const SizedBox(height: 24),
+        Center(child: controlWidget),
+        const SizedBox(height: 24),
+        _buildActionButtons(context, onConfirm),
+      ],
     );
   }
 
@@ -132,7 +129,7 @@ class _ProductWeightOrDetailControlState
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              suffixText: 'g',
+              suffixText: 'g  ',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -239,7 +236,7 @@ class _ProductWeightOrDetailControlState
     );
 
     if (widget.isEditState) {
-      context.read<EditSaleCartCubit>().addToCartByGram(
+      context.read<OrderEditCubit>().addToCartByGram(
             item: cartItem,
             gram: gramValue.toInt(),
           );
@@ -263,7 +260,7 @@ class _ProductWeightOrDetailControlState
     );
 
     if (widget.isEditState) {
-      context.read<EditSaleCartCubit>().addToCartByQuantity(
+      context.read<OrderEditCubit>().addToCartByQuantity(
             item: cartItem,
             quantity: _quantity,
           );

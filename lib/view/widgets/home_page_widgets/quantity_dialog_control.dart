@@ -65,7 +65,7 @@ class _CartItemQtyDialogControlState extends State<CartItemQtyDialogControl> {
                 child: Text("အပ်ဒိတ်လုပ်ရန်"),
                 onPressed: () {
                   if (widget.isEditState) {
-                    context.read<EditSaleCartCubit>().changeQuantity(
+                    context.read<OrderEditCubit>().changeQuantity(
                           item: widget.cartItem,
                           quantity: widget.quantity,
                         );

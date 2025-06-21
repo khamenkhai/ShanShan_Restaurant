@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/custom_outline_button.dart';
 import 'package:shan_shan/core/const/const_export.dart';
@@ -11,12 +11,12 @@ import 'package:shan_shan/core/utils/navigation_helper.dart';
 import 'package:shan_shan/view/payment/payment.dart';
 import 'package:shan_shan/view/payment/multi_payment_page.dart';
 
-class CheckoutDialog extends StatefulWidget {
+class EditSaleCheckoutDialog extends StatefulWidget {
   final bool paidOnline;
   final bool paidCash;
   final double? width;
 
-  const CheckoutDialog({
+  const EditSaleCheckoutDialog({
     super.key,
     required this.paidOnline,
     required this.paidCash,
@@ -24,10 +24,10 @@ class CheckoutDialog extends StatefulWidget {
   });
 
   @override
-  State<CheckoutDialog> createState() => _CheckoutDialogState();
+  State<EditSaleCheckoutDialog> createState() => _EditSaleCheckoutDialogState();
 }
 
-class _CheckoutDialogState extends State<CheckoutDialog> {
+class _EditSaleCheckoutDialogState extends State<EditSaleCheckoutDialog> {
   final _formKey = GlobalKey<FormState>();
   final _tableController = TextEditingController();
   final _remarkController = TextEditingController();
@@ -50,7 +50,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   }
 
   void _initializeFromCartState() {
-    final cartState = context.read<CartCubit>().state;
+    final cartState = context.read<OrderEditCubit>().state;
     setState(() {
       _prawnCount = cartState.prawnCount;
       _octopusCount = cartState.octopusCount;
@@ -306,8 +306,8 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   void _handleConfirmOrder() {
     if (!_formKey.currentState!.validate()) return;
 
-    final cartCubit = context.read<CartCubit>();
-    cartCubit.addData(
+    final orderCubit = context.read<OrderEditCubit>();
+    orderCubit.addData(
       dineInOrParcel: _isParcel ? 0 : 1,
       octopusCount: _octopusCount,
       prawnCount: _prawnCount,
@@ -324,12 +324,11 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   Widget? _getPaymentScreen() {
     if (widget.paidCash && widget.paidOnline) {
       return const MultiPaymentPage();
-    } else if (widget.paidCash) {
-      return const PaymentScreen(isEditState: false);
-    } else if (widget.paidOnline) {
-      return const PaymentScreen(isEditState: false);
+    } else if (widget.paidCash || widget.paidOnline) {
+      return const PaymentScreen(isEditState: true);
+    } else{
+      return null; // No payment required
     }
-    return null;
   }
 
   String _paidOptions() {

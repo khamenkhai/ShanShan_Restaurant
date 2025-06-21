@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_state.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
@@ -28,6 +29,7 @@ class CartListWidget extends StatelessWidget {
       items: state.items,
       spicyLevel: state.spicyLevel,
       athoneLevel: state.athoneLevel,
+      isEdit: false,
     );
   }
 }
@@ -50,6 +52,7 @@ class EditCartListWidget extends StatelessWidget {
       items: state.items,
       spicyLevel: state.spicyLevel,
       athoneLevel: state.athoneLevel,
+      isEdit: true,
     );
   }
 }
@@ -60,15 +63,16 @@ class BaseCartListWidget extends StatelessWidget {
   final List<CartItem> items;
   final SpicyLevelModel? spicyLevel;
   final AhtoneLevelModel? athoneLevel;
+  final bool isEdit;
 
-  const BaseCartListWidget({
-    super.key,
-    required this.screenSize,
-    required this.menu,
-    required this.items,
-    this.spicyLevel,
-    this.athoneLevel,
-  });
+  const BaseCartListWidget(
+      {super.key,
+      required this.screenSize,
+      required this.menu,
+      required this.items,
+      this.spicyLevel,
+      this.athoneLevel,
+      required this.isEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +100,10 @@ class BaseCartListWidget extends StatelessWidget {
             (e) => CartItemWidget(
               ontapDisable: false,
               cartItem: e,
-              onEdit: () => _showEditDialog(context, e),
-              onDelete: () => context.read<CartCubit>().removeFromCart(item: e),
+              onEdit: () => _showEditDialog(context, e, isEdit),
+              onDelete: () => isEdit
+                  ? context.read<OrderEditCubit>().removeFromCart(item: e)
+                  : context.read<CartCubit>().removeFromCart(item: e),
             ),
           ),
         ],
@@ -105,7 +111,8 @@ class BaseCartListWidget extends StatelessWidget {
     );
   }
 
-  static void _showEditDialog(BuildContext context, CartItem e) {
+  static void _showEditDialog(
+      BuildContext context, CartItem e, bool isEditState) {
     showDialog(
       context: context,
       builder: (context) {
@@ -114,13 +121,13 @@ class BaseCartListWidget extends StatelessWidget {
                 screenSizeWidth: MediaQuery.of(context).size.width,
                 weightGram: e.qty,
                 cartItem: e,
-                isEditState: false,
+                isEditState: isEditState,
               )
             : CartItemQtyDialogControl(
                 screenSizeWidth: MediaQuery.of(context).size.width,
                 quantity: e.qty,
                 cartItem: e,
-                isEditState: false,
+                isEditState: isEditState,
               );
       },
     );

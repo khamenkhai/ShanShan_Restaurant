@@ -2,7 +2,6 @@ class LocaleKeys {
   // General
   static const String greeting = 'greeting'; // မင်္ဂလာပါ
 
-
   static const String appName = 'appName'; // ရှန်းရှန်း
   static const String logout = 'logout'; // ထွက်မည်
   static const String error = 'error'; // အမှား
@@ -81,7 +80,8 @@ class LocaleKeys {
   // Checkout Dialog
   static const String orderTitle = 'orderTitle'; // မှာယူမှု
   static const String tableNumberHint = 'tableNumberHint'; // စားပွဲနံပါတ်ရေးရန်
-  static const String tableNumberRequired = 'tableNumberRequired'; // စားပွဲနံပါတ် လိုအပ်ပါသည်။!
+  static const String tableNumberRequired =
+      'tableNumberRequired'; // စားပွဲနံပါတ် လိုအပ်ပါသည်။!
   static const String remark = 'remark'; // မှတ်ချက်
   static const String remarkHint = 'remarkHint'; // မှတ်ချက်ရေးရန်
   static const String dineInOrParcel = 'dineInOrParcel'; // ထိုင်စား or ပါဆယ်
@@ -93,27 +93,63 @@ class LocaleKeys {
   static const String confirmOrder = 'confirmOrder'; // အတည်ပြုရန်
 
   //levels
-   static const String level = 'level'; 
-   static const String position = 'position'; 
-   static const String description = 'description'; 
+  static const String level = 'level';
+  static const String position = 'position';
+  static const String description = 'description';
 
-     static const String cashTitle = 'cashTitle'; // ငွေသားဖြင့်ပေးချေရန်
+  static const String cashTitle = 'cashTitle'; // ငွေသားဖြင့်ပေးချေရန်
   static const String cashNotEnough = 'cashNotEnough'; // ငွေသားက မလုံလောက်ပါ
   static const String takeVoucher = 'takeVoucher'; // ဘောက်ချာယူမည်
   static const String summary = 'summary'; // Summary
   static const String paymentMethod = 'paymentMethod'; // ငွေပေးချေမှုနည်းလမ်း :
   static const String cash = 'cash'; // Cash
+
   static const String editOrder = 'editOrder'; // အော်ဒါပြင်ရန်
   static const String checkoutNow = 'checkoutNow'; // ငွေရှင်းရန်လုပ်ဆောင်ပါ
   static const String refund = 'refund'; // Refund
   static const String grandTotal = 'grandTotal'; // GrandTotal
   static const String checkoutFailed = 'checkoutFailed'; // Checkout Failed!
   static const String saleSuccess = 'saleSuccess'; // Sale Success!
-  static const String cashInsufficient = 'cashInsufficient'; // ငွေသားမလုံလောက်ပါ
+  static const String cashInsufficient =
+      'cashInsufficient'; // ငွေသားမလုံလောက်ပါ
   static const String printVoucher = "printVoucher";
   static const String backToHistory = "backToHistory";
   static const String makeNewOrder = "makeNewOrder";
   static const String editPayment = "editPayment";
+
+  static const String lblOrder = "lblOrder";
+  static const String clearCart = "clearCart";
+  static const String onlinePay = 'onlinePay';
+  static const String enterProductName = 'enterProductName';
+  static const String enterPrice = 'enterPrice';
+  static const String confirmLogout = 'confirmLogout';
+  static const String areYouSureToLogout = 'areYouSureToLogout';
+
+  // payment screen
+  //  static const cashInsufficient = 'cashInsufficient';
+  // static const saleSuccess = 'saleSuccess';
+  // static const checkoutFailed = 'checkoutFailed';
+  static const orderSummary = 'orderSummary';
+  static const menuType = 'menuType';
+  static const table = 'table';
+  static const spicy = 'spicy';
+  static const numbness = 'numbness';
+  static const orderItems = 'orderItems';
+  static const items = 'items';
+  static const piece = 'piece';
+  static const subtotal = 'subtotal';
+  static const tax = 'tax';
+  static const paymentDetails = 'paymentDetails';
+  static const applyVoucher = 'applyVoucher';
+  static const voucherTaxNote = 'voucherTaxNote';
+  static const cashPayment = 'cashPayment';
+  static const cashPaymentDesc = 'cashPaymentDesc';
+  static const onlinePayment = 'onlinePayment';
+  static const onlinePaymentDesc = 'onlinePaymentDesc';
+  static const amountReceived = 'amountReceived';
+
+  static const changeAmount = 'changeAmount';
+  static const update = 'update';
+  static const checkout = 'checkout';
+  static const loading = 'loading';
 }
-
-

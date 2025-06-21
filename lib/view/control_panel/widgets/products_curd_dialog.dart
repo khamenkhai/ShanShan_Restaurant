@@ -110,7 +110,7 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
           validator: (value) =>
               value?.isEmpty ?? true ? tr(LocaleKeys.productNameValidation) : null,
           decoration: customTextDecoration2(
-            labelText: "Enter new product name",
+            labelText: tr(LocaleKeys.enterProductName),
             primaryColor: Theme.of(context).primaryColor,
           ),
         ),
@@ -129,7 +129,7 @@ class _ProductCRUDDialogState extends State<ProductCRUDDialog> {
           validator: (value) =>
               value?.isEmpty ?? true ? tr(LocaleKeys.priceValidation) : null,
           decoration: customTextDecoration2(
-              labelText: "Enter price",
+              labelText: tr(LocaleKeys.enterPrice),
               primaryColor: Theme.of(context).primaryColor),
         ),
       ],

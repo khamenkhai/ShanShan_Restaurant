@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
 import 'package:shan_shan/controller/sales_history_cubit/sales_history_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
@@ -59,6 +60,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage> {
   void initState() {
     super.initState();
     context.read<CartCubit>().clearOrder();
+    context.read<OrderEditCubit>().clearOrder();
     _initializePrinter();
 
     if (widget.customerTakevoucher) {

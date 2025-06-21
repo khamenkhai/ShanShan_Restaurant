@@ -14,9 +14,11 @@ class EditSaleCartState {
   String remark;
   int dineInOrParcel;
   String orderNo;
+  String date;
 
   EditSaleCartState({
     required this.items,
+    required this.date,
     this.menu,
     required this.spicyLevel,
     required this.athoneLevel,

@@ -336,7 +336,7 @@ class _NumberButtonsState extends State<NumberButtons> {
       widget.numberController.text = "$barCode$numberAmount";
       setState(() {});
     } else {
-      showCustomSnackbar(context: context, message: 'Limit length is 15');
+      showCustomSnackbar(message: 'Limit length is 15');
     }
   }
 }

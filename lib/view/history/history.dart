@@ -13,6 +13,7 @@ import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/data_models/spicy_level.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/models/response_models/sale_history_model.dart';
+import 'package:shan_shan/view/update_sale_ui/update_sale_home.dart';
 import 'package:shan_shan/view/widgets/common_widget.dart';
 import 'package:shan_shan/view/widgets/voucher_widget.dart';
 import 'package:shimmer/shimmer.dart';
@@ -113,17 +114,16 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
           _buildSearchField(),
           const SizedBox(height: 15),
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: SizeConst.kBorderRadius),
-              child: Column(
-                children: [
-                  const _HistoryHeaderRow(),
-                  const SizedBox(height: 25),
-                  _buildHistoryList(),
-                ],
+            child: Card(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    const _HistoryHeaderRow(),
+                    const SizedBox(height: 25),
+                    _buildHistoryList(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -165,7 +165,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     return Expanded(
       child: ListView.builder(
         itemCount: 15,
-        itemBuilder: (context, index) => _buildHistoryShimmer(),
+        itemBuilder: (context, index) => _buildHistoryShimmer(context),
       ),
     );
   }
@@ -211,30 +211,34 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
-  Widget _buildHistoryShimmer() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey.shade100,
-      highlightColor: Colors.grey.shade300,
-      child: Container(
-        height: 30,
-        margin: const EdgeInsets.only(bottom: 25),
-        decoration: BoxDecoration(color: Colors.grey),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "category shimer",
-              style: TextStyle(
-                color: Colors.transparent,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
+  Widget _buildHistoryShimmer(BuildContext context) {
+  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  
+  return Shimmer.fromColors(
+    baseColor: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade100,
+    highlightColor: isDarkMode ? Colors.grey.shade600 : Colors.grey.shade300,
+    child: Container(
+      height: 30,
+      margin: const EdgeInsets.only(bottom: 25),
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(4), // Optional: add some border radius
       ),
-    );
-  }
-
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Loading...", // You can keep this or make it empty
+            style: TextStyle(
+              color: Colors.transparent,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
   Widget _buildHistoryRow({
     required SaleHistoryModel history,
     required int index,
@@ -414,13 +418,12 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   }
 
   void _navigateToEditScreen(SaleHistoryModel history) {
-    // redirectTo(
-    //   context: context,
-    //   form: EditSalePage(
-    //     saleHistory: history,
-    //     orderNo: history.orderNo,
-    //   ),
-    // );
+    redirectTo(
+      context: context,
+      form: EditOrderScreen(
+        saleHistory: history,
+      ),
+    );
   }
 
   String _getPaymentType(SaleHistoryModel sale) {

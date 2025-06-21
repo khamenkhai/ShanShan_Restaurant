@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconly/iconly.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
+import 'package:shan_shan/controller/edit_sale_cart_cubit/edit_sale_cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
 import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
@@ -47,7 +48,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     super.initState();
-    calculateAmounts();
+    _init();
+  }
+
+  void _init() {
+    if (widget.isEditState) {
+      calculateAmountsForEditState();
+    } else {
+      calculateAmounts();
+    }
+    setState(() {});
   }
 
   void calculateAmounts() {
@@ -63,16 +73,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
+  void calculateAmountsForEditState() {
+    final cart = context.read<OrderEditCubit>();
+    subTotal = cart.getTotalAmount();
+    taxAmount = customerTakesVoucher ? get5percentage(subTotal) : 0;
+    grandTotal = subTotal + taxAmount;
+
+    if (cashAmount > grandTotal) {
+      refundAmount = cashAmount - grandTotal;
+    } else {
+      refundAmount = 0;
+    }
+  }
+
   void enterClickProcess() {
     final enteredCash = int.tryParse(cashController.text) ?? 0;
-
-    // if (enteredCash < grandTotal) {
-    //   showCustomSnackbar(
-    //     message: LocaleKeys.cashNotEnough.tr(),
-    //     context: context,
-    //   );
-    //   return;
-    // }
 
     setState(() {
       cashAmount = enteredCash;
@@ -92,15 +107,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final cartController = BlocProvider.of<CartCubit>(context);
+    final editCart = BlocProvider.of<OrderEditCubit>(context);
 
-    calculateAmounts();
+    // ...
+    if (widget.isEditState) {
+      calculateAmountsForEditState();
+    } else {
+      calculateAmounts();
+    }
 
     return Scaffold(
       body: SafeArea(
         child: InternetCheckWidget(
           child: Container(
             margin: EdgeInsets.all(SizeConst.kGlobalMargin),
-            // padding: const EdgeInsets.all(32.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -109,12 +129,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     Navigator.pop(context);
                   },
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 16),
                 Expanded(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(child: _buildOrderSummary(cartController)),
+                      Expanded(
+                        child: _buildOrderSummary(
+                          items: widget.isEditState
+                              ? editCart.state.items
+                              : cartController.state.items,
+                          menuName: widget.isEditState
+                              ? editCart.state.menu?.name ?? ""
+                              : cartController.state.menu?.name ?? "",
+                          tableNumber: widget.isEditState
+                              ? editCart.state.tableNumber.toString()
+                              : cartController.state.tableNumber.toString(),
+                          spicyLevel: widget.isEditState
+                              ? editCart.state.spicyLevel?.name ?? ""
+                              : cartController.state.spicyLevel?.name ?? "",
+                          htoneLevel: widget.isEditState
+                              ? editCart.state.athoneLevel?.name ?? ""
+                              : cartController.state.athoneLevel?.name ?? "",
+                        ),
+                      ),
                       const SizedBox(width: SizeConst.kGlobalMargin),
                       Expanded(child: _buildPaymentDetails(screenSize)),
                     ],
@@ -129,35 +167,42 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildOrderSummary(CartCubit cartController) {
+  Widget _buildOrderSummary({
+    required String menuName,
+    required String tableNumber,
+    required String spicyLevel,
+    required String htoneLevel,
+    required List<CartItem> items,
+  }) {
     return Card(
-      child: BlocBuilder<CartCubit, CartState>(
-        builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildSectionHeader("Order Summary", Icons.receipt_long),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _buildMenuDetails(cartController),
-                        const SizedBox(height: 16),
-                        _buildOrderItems(state.items),
-                      ],
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildSectionHeader(tr(LocaleKeys.summary), Icons.receipt_long),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildMenuDetails(
+                      htoneLevel: htoneLevel,
+                      menuName: menuName,
+                      spicyLevel: spicyLevel,
+                      tableNumber: tableNumber,
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    _buildOrderItems(items),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                _buildPricingSummary(),
-              ],
+              ),
             ),
-          );
-        },
+            const SizedBox(height: 16),
+            _buildPricingSummary(),
+          ],
+        ),
       ),
     );
   }
@@ -170,7 +215,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionHeader("Payment Details", Icons.payment),
+              _buildSectionHeader(tr(LocaleKeys.paymentDetails), Icons.payment),
               const SizedBox(height: 16),
               _buildVoucherSection(),
               const SizedBox(height: 16),
@@ -211,13 +256,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildMenuDetails(CartCubit cartController) {
+  Widget _buildMenuDetails({
+    required String menuName,
+    required String tableNumber,
+    required String spicyLevel,
+    required String htoneLevel,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.primaryColor.withOpacity(0.05),
         borderRadius: SizeConst.kBorderRadius,
-        border: Border.all(color: context.primaryColor.withOpacity(0.1), width: 1),
+        border:
+            Border.all(color: context.primaryColor.withOpacity(0.1), width: 1),
       ),
       child: Column(
         children: [
@@ -232,7 +283,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   color: context.primaryColor,
                   borderRadius: SizeConst.kBorderRadius,
                 ),
-                child: Text(cartController.state.menu?.name ?? "Mala Xiang Guo",
+                child: Text(menuName,
                     style: context.verySmall(
                         fontWeight: FontWeight.bold, color: context.cardColor)),
               ),
@@ -247,7 +298,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                cartController.state.tableNumber.toString(),
+                tableNumber,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -269,7 +320,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                cartController.state.spicyLevel?.name ?? "Medium",
+                spicyLevel,
                 style: TextStyle(
                   fontSize: 14,
                   color: context.hintColor,
@@ -286,7 +337,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                cartController.state.athoneLevel?.name ?? "Medium",
+                htoneLevel,
                 style: TextStyle(
                   fontSize: 14,
                   color: context.hintColor,
@@ -306,7 +357,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Row(
           children: [
             Text(
-              "Order Items",
+              tr(LocaleKeys.orderItems),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -395,7 +446,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.isDarkMode ? Colors.transparent: Color(0xFFF7FAFC),
+        color: context.isDarkMode ? Colors.transparent : Color(0xFFF7FAFC),
         borderRadius: SizeConst.kBorderRadius,
       ),
       child: Column(
@@ -403,7 +454,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Subtotal:", style: context.normalFont()),
+              Text("${tr(LocaleKeys.subtotal)}:", style: context.normalFont()),
               Text(
                 "${(subTotal).toStringAsFixed(0)} MMK",
                 style: context.normalFont(),
@@ -434,7 +485,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Grand Total:",
+                "${tr(LocaleKeys.grandTotal)}:",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -479,7 +530,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Apply Voucher",
+                  tr(LocaleKeys.applyVoucher),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -487,7 +538,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ),
                 Text(
-                  "Includes 5% tax when voucher is applied",
+                  tr(LocaleKeys.voucherTaxNote),
                   style: TextStyle(
                     fontSize: 12,
                     color: textSecondary,
@@ -506,7 +557,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Payment Method",
+          tr(LocaleKeys.paymentMethod),
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -518,7 +569,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           children: [
             _buildPaymentOption(
               "cash",
-              "Cash Payment",
+              tr(LocaleKeys.cash),
               "Pay with physical cash",
               Icons.payments,
               const Color(0xFF48BB78),
@@ -527,7 +578,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             const SizedBox(width: 12),
             _buildPaymentOption(
               "online",
-              "Online Payment",
+              tr(LocaleKeys.onlinePay),
               "Card or digital wallet",
               Icons.credit_card,
               const Color(0xFF4299E1),
@@ -551,7 +602,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? context.primaryColor.withOpacity(0.05) : Colors.transparent,
+          color: isSelected
+              ? context.primaryColor.withOpacity(0.05)
+              : Colors.transparent,
           borderRadius: SizeConst.kBorderRadius,
           border: Border.all(
             color: isSelected
@@ -567,13 +620,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
               value: value,
               groupValue: selectedPaymentMethod,
               onChanged: (newValue) {
-                 selectedPaymentMethod = newValue!;
-                 if(selectedPaymentMethod == "online"){
+                selectedPaymentMethod = newValue!;
+                if (selectedPaymentMethod == "online") {
                   refundAmount = 0;
-                 }
-                setState(() {
-                 
-                });
+                }
+                setState(() {});
               },
               activeColor: context.primaryColor,
             ),
@@ -609,7 +660,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Amount Received",
+          tr(LocaleKeys.amountReceived),
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -623,7 +674,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
           onSubmitted: (value) {
             enterClickProcess();
           },
-         
           decoration: InputDecoration(
             hintText: "Cash: $cashAmount MMK",
             hintStyle: TextStyle(color: textSecondary),
@@ -659,7 +709,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Change Amount:",
+                  "${tr(LocaleKeys.changeAmount)}:",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -705,9 +755,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
           width: double.infinity,
           height: 56,
           onPressed: () {
-            _checkout(cartController.state.items, cartController);
+            if (widget.isEditState) {
+              _editSale(
+                context.read<OrderEditCubit>(),
+              );
+            } else {
+              _checkout(cartController.state.items, cartController);
+            }
           },
-          child: Text("Checkout"),
+          child: Text(widget.isEditState
+              ? tr(LocaleKeys.update)
+              : tr(LocaleKeys.checkout)),
         );
       },
     );
@@ -732,12 +790,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
       orderNo: "SS-${generateRandomId(6)}",
       paidCash: selectedPaymentMethod == "cash" ? cashAmount : 0,
       products: cartItems
-          .map((e) => Product(
-                productId: e.id,
-                qty: e.qty,
-                price: e.price,
-                totalPrice: e.totalPrice,
-              ))
+          .map(
+            (e) => Product(
+              productId: e.id,
+              qty: e.qty,
+              price: e.price,
+              totalPrice: e.totalPrice,
+            ),
+          )
           .toList(),
       tableNumber: cartController.state.tableNumber,
       refund: refundAmount,
@@ -772,9 +832,80 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } else {
       showCustomSnackbar(
         message: LocaleKeys.checkoutFailed.tr(),
-        context: context,
       );
     }
+  }
+
+  void _editSale(OrderEditCubit editCart) async {
+    if (selectedPaymentMethod == "cash" && cashAmount < grandTotal) {
+      showSnackBar(text: LocaleKeys.cashInsufficient.tr(), context: context);
+      return;
+    }
+
+    ///check conditions that if the curret sale process items is from pending orders or not
+    final cart = editCart.state;
+    SaleModel saleModel = SaleModel(
+      octopusCount: cart.octopusCount,
+      prawnCount: cart.prawnCount,
+      remark: cart.remark,
+      ahtoneLevelId: cart.athoneLevel?.id,
+      spicyLevelId: cart.spicyLevel?.id,
+      dineInOrParcel: cart.dineInOrParcel,
+      grandTotal: grandTotal,
+      menuId: cart.menu?.id ?? 0,
+      orderNo: cart.orderNo,
+      paidCash: grandTotal,
+      products: context
+          .read<OrderEditCubit>()
+          .state
+          .items
+          .map(
+            (e) => Product(
+              productId: e.id,
+              qty: e.qty,
+              price: e.price,
+              totalPrice: e.totalPrice,
+            ),
+          )
+          .toList(),
+      tableNumber: cart.tableNumber,
+      refund: 0,
+      subTotal: subTotal,
+      tax: taxAmount,
+      discount: 0,
+      paidOnline: 0,
+    );
+
+    await context
+        .read<SaleProcessCubit>()
+        .updateSale(
+          saleRequest: saleModel,
+        )
+        .then(
+      (value) {
+        if (value) {
+          if (!mounted) return;
+          NavigationHelper.pushReplacement(
+            context,
+            SaleSuccessPage(
+              customerTakevoucher: customerTakesVoucher,
+              taxAmount: taxAmount,
+              saleData: saleModel,
+              cartItems: cart.items,
+              paymentType: selectedPaymentMethod,
+              dateTime: cart.date,
+              menuTitle: cart.menu?.name.toString() ?? "",
+              ahtoneLevel: cart.athoneLevel,
+              spicyLevel: cart.spicyLevel,
+              isEditSale: true,
+            ),
+          );
+        } else {
+          if (!context.mounted) return;
+          showCustomSnackbar(message: tr(LocaleKeys.checkoutFailed));
+        }
+      },
+    );
   }
 
   String generateRandomId(int length) {
@@ -782,7 +913,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return List.generate(length, (_) => random.nextInt(10).toString()).join();
   }
 }
-
 
 class AppBarLeading extends StatelessWidget {
   const AppBarLeading({
@@ -798,19 +928,15 @@ class AppBarLeading extends StatelessWidget {
     return ScaleOnTap(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.only(top: 5, bottom: 5),
-        child: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: SizeConst.kBorderRadius,
-          ),
-          child: Center(
-            child: Icon(
-              IconlyBold.arrow_left_2,
-              // size: 15,
-            ),
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: SizeConst.kBorderRadius,
+        ),
+        child: Center(
+          child: Icon(
+            IconlyBold.arrow_left_2,
           ),
         ),
       ),
