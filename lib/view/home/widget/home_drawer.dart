@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconly/iconly.dart';
@@ -53,7 +52,7 @@ class HomeDrawer extends StatelessWidget {
 
                 onNavigate();
               },
-              leading: CircleAvatar(child: Icon(CupertinoIcons.settings)),
+              leading: CircleAvatar(child: Icon(IconlyLight.setting)),
               title: Text(tr(LocaleKeys.controlPanel)),
             ),
             SizedBox(height: 10),
@@ -65,7 +64,7 @@ class HomeDrawer extends StatelessWidget {
                 redirectTo(context: context, form: ReportPage());
                 onNavigate();
               },
-              leading: CircleAvatar(child: Icon(CupertinoIcons.square_stack)),
+              leading: CircleAvatar(child: Icon(IconlyBold.chart)),
               title: Text(tr(LocaleKeys.saleReport)),
             ),
             SizedBox(height: 10),
@@ -79,7 +78,7 @@ class HomeDrawer extends StatelessWidget {
                   form: SalesHistoryPage(),
                 );
               },
-              leading: CircleAvatar(child: Icon(CupertinoIcons.doc)),
+              leading: CircleAvatar(child: Icon(IconlyLight.document)),
               title: Text(tr(LocaleKeys.saleHistory)),
             ),
 
@@ -94,7 +93,7 @@ class HomeDrawer extends StatelessWidget {
                   form: LocalizationPage(),
                 );
               },
-              leading: CircleAvatar(child: Icon(CupertinoIcons.globe)),
+              leading: CircleAvatar(child: Icon(IconlyLight.more_circle)),
               title: Text(tr(LocaleKeys.language)),
             ),
             SizedBox(height: 10),
@@ -108,7 +107,7 @@ class HomeDrawer extends StatelessWidget {
                   form: ColorPickerScreen(),
                 );
               },
-              leading: CircleAvatar(child: Icon(CupertinoIcons.color_filter)),
+              leading: CircleAvatar(child: Icon(IconlyLight.category )),
               title: Text(tr(LocaleKeys.themeColor)),
             ),
 

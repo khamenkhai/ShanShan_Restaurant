@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/models/data_models/ahtone_level_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
@@ -60,10 +61,45 @@ class VoucherWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(context),
-          _buildBasicInfoSection(),
           const SizedBox(height: 15),
-          _buildMenuSection(),
-          _buildLevelSection(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Menu Box Widget
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(SizeConst.kGlobalPadding),
+                  decoration: BoxDecoration(
+                      borderRadius: SizeConst.kBorderRadius,
+                      color: context.primaryColor.withOpacity(0.05),
+                      border: Border.all(
+                          width: 1,
+                          color: context.primaryColor.withOpacity(0.1))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildMenuSection(),
+                      _buildLevelSection(),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Info
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(SizeConst.kGlobalPadding),
+                  decoration: BoxDecoration(
+                      borderRadius: SizeConst.kBorderRadius,
+                      color: context.primaryColor.withOpacity(0.05),
+                      border: Border.all(
+                          width: 1,
+                          color: context.primaryColor.withOpacity(0.1))),
+                  child: _buildBasicInfoSection(),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 10),
           _buildProductsTitleRow(),
           const SizedBox(height: 15),
@@ -122,7 +158,6 @@ class VoucherWidget extends StatelessWidget {
     );
     return Column(
       children: [
-        SizedBox(height: 10),
         _buildInfoRow("Slip Number", orderNumber, style: style),
         _buildInfoRow("Date", date, style: style),
       ]
@@ -138,12 +173,6 @@ class VoucherWidget extends StatelessWidget {
       children: [
         Text(menu, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Remark: $remark", textAlign: TextAlign.right),
-          ],
-        ),
       ],
     );
   }
@@ -188,7 +217,7 @@ class VoucherWidget extends StatelessWidget {
           Expanded(flex: 1, child: Text(e.name)),
           Expanded(
             flex: 1,
-            child: Text(e.isGram ? "${e.qty} gram" : "${e.qty}",
+            child: Text(e.isGram ? "${e.qty}/g" : "${e.qty}",
                 textAlign: TextAlign.right),
           ),
           Expanded(

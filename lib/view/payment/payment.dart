@@ -181,7 +181,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildSectionHeader(tr(LocaleKeys.summary), Icons.receipt_long),
+            _buildSectionHeader(tr(LocaleKeys.summary), IconlyLight.document),
             const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
@@ -215,7 +215,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionHeader(tr(LocaleKeys.paymentDetails), Icons.payment),
+              _buildSectionHeader(
+                  tr(LocaleKeys.paymentDetails), IconlyLight.wallet),
               const SizedBox(height: 16),
               _buildVoucherSection(),
               const SizedBox(height: 16),
@@ -415,6 +416,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
+                            item.isGram ? "${item.qty} gram × ${(item.price).toStringAsFixed(0)} MMK":
                             "${item.qty} piece × ${(item.price).toStringAsFixed(0)} MMK",
                             style: TextStyle(
                               fontSize: 12,
@@ -571,7 +573,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               "cash",
               tr(LocaleKeys.cash),
               "Pay with physical cash",
-              Icons.payments,
               const Color(0xFF48BB78),
               selectedPaymentMethod == "cash",
             ),
@@ -580,7 +581,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               "online",
               tr(LocaleKeys.onlinePay),
               "Card or digital wallet",
-              Icons.credit_card,
               const Color(0xFF4299E1),
               selectedPaymentMethod == "online",
             ),
@@ -594,7 +594,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     String value,
     String title,
     String subtitle,
-    IconData icon,
     Color iconColor,
     bool isSelected,
   ) {

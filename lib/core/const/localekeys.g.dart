@@ -152,4 +152,5 @@ class LocaleKeys {
   static const update = 'update';
   static const checkout = 'checkout';
   static const loading = 'loading';
+  static const toOrder = 'toOrder';
 }

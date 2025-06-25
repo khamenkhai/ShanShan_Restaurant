@@ -274,8 +274,8 @@ class OrderEditCubit extends Cubit<EditSaleCartState> {
   int getTotalAmount() {
     int totalAmount = 0;
     for (var element in state.items) {
-      totalAmount += element.qty * element.price;
-      // totalAmount += element.totalPrice;
+      // totalAmount += element.qty * element.price;
+      totalAmount += element.totalPrice;
     }
 
     return totalAmount;

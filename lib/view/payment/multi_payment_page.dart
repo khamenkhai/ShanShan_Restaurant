@@ -1,19 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconly/iconly.dart';
 import 'package:shan_shan/controller/cart_cubit/cart_cubit.dart';
 import 'package:shan_shan/controller/sale_process_cubit/sale_process_cubit.dart';
 import 'package:shan_shan/core/component/app_bar_leading.dart';
-import 'package:shan_shan/core/component/custom_elevated.dart';
 import 'package:shan_shan/core/component/internet_check.dart';
-import 'package:shan_shan/core/component/loading_widget.dart';
 import 'package:shan_shan/core/const/const_export.dart';
 import 'package:shan_shan/core/const/localekeys.g.dart';
+import 'package:shan_shan/core/utils/context_extension.dart';
 import 'package:shan_shan/core/utils/utils.dart';
 import 'package:shan_shan/models/request_models/sale_request_model.dart';
 import 'package:shan_shan/models/response_models/cart_item_model.dart';
 import 'package:shan_shan/view/sale_success/sale_success_page.dart';
-import 'package:shan_shan/view/home/widget/cart_item_widget.dart';
 import 'package:shan_shan/view/widgets/date_action_widget.dart';
 import 'package:shan_shan/view/widgets/number_buttons.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -56,12 +55,11 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
     final grandTotal =
         _customerTakeVoucher ? _subTotal + _taxAmount : _subTotal;
     customPrint("grand total : $_grandTotal");
-    customPrint("paid total : ${(_paidOnline + _cashAmount) }");
+    customPrint("paid total : ${(_paidOnline + _cashAmount)}");
     customPrint("r : ${(_paidOnline + _cashAmount) - grandTotal}");
     if ((_paidOnline + _cashAmount) > grandTotal) {
-     
       _refundAmount = (_paidOnline + _cashAmount) - grandTotal;
-       customPrint("hello world $_refundAmount");
+      customPrint("hello world $_refundAmount");
     } else {
       _refundAmount = 0;
     }
@@ -148,7 +146,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final cartCubit = context.read<CartCubit>();
+    final cartController = BlocProvider.of<CartCubit>(context);
 
     _calculateAmounts();
 
@@ -158,6 +156,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leadingWidth: 160,
+        toolbarHeight: 56,
         leading: AppBarLeading(onTap: () => Navigator.pop(context)),
         actions: const [
           DateActionWidget(),
@@ -166,168 +165,84 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
         title: const Text("Cash & Online Pay"),
       ),
       body: InternetCheckWidget(
-        child: _buildPaymentForm(screenSize, cartCubit),
+        child: Container(
+          margin: EdgeInsets.fromLTRB(
+            SizeConst.kGlobalMargin,
+            SizeConst.kGlobalMargin / 2,
+            SizeConst.kGlobalMargin,
+            SizeConst.kGlobalMargin,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _buildOrderSummary(
+                  items: cartController.state.items,
+                  menuName: cartController.state.menu?.name ?? "",
+                  tableNumber: cartController.state.tableNumber.toString(),
+                  spicyLevel: cartController.state.spicyLevel?.name ?? "",
+                  htoneLevel: cartController.state.athoneLevel?.name ?? "",
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(child: _buildPaymentTabs(screenSize)),
+            ],
+          ),
+        ),
         onRefresh: () {},
       ),
     );
   }
 
-  Widget _buildPaymentForm(Size screenSize, CartCubit cartCubit) {
-    return Container(
-      padding: const EdgeInsets.only(top: 5),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSaleSummary(screenSize, cartCubit),
-          _buildPaymentTabs(screenSize),
-          const SizedBox(width: 5),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSaleSummary(Size screenSize, CartCubit cartCubit) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: SizeConst.kGlobalPadding,
-          bottom: SizeConst.kGlobalPadding,
-          right: SizeConst.kGlobalPadding,
-        ),
-        child: Container(
-          padding: EdgeInsets.all(SizeConst.kGlobalPadding),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: SizeConst.kBorderRadius,
-          ),
-          child: BlocBuilder<CartCubit, CartState>(
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      "Summary",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryColor,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.38,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: state.items
-                            .map((e) => CartItemWidget(
-                                  ontapDisable: true,
-                                  cartItem: e,
-                                  onDelete: () {},
-                                  onEdit: () {},
-                                ))
-                            .toList(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  _buildPaymentSummary(cartCubit),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: _customerTakeVoucher,
-                        activeColor: AppColors.primaryColor,
-                        onChanged: (value) {
-                          setState(() {
-                            _customerTakeVoucher = value!;
-                            _calculateRefund();
-                          });
-                        },
-                      ),
-                      Text(tr(LocaleKeys.takeVoucher)),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  _buildCheckoutButton(state.items, cartCubit),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildPaymentTabs(Size screenSize) {
-    return Container(
-      padding: const EdgeInsets.only(
-        top: 15,
-        right: 15,
-        left: 15,
-        bottom: 20,
-      ),
-      margin: EdgeInsets.only(bottom: 15, right: SizeConst.kGlobalPadding),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      width: screenSize.width * 0.5,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Text(
-                    "Payment methods :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+    return Card(
+      child: Container(
+        padding: const EdgeInsets.all(SizeConst.kGlobalPadding),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: SizeConst.kBorderRadius,
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildVoucherSection(),
+                Row(
+                  children: [
+                    const Text(
+                      "Payment methods :",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  ToggleSwitch(
-                    minWidth: 90.0,
-                    cornerRadius: 20.0,
-                    activeFgColor: Colors.white,
-                    inactiveBgColor: Colors.grey,
-                    inactiveFgColor: Colors.white,
-                    initialLabelIndex: _paymentIndex,
-                    totalSwitches: 2,
-                    labels: ['Cash', 'Online Pay'],
-                    radiusStyle: true,
-                    onToggle: (index) {
-                      setState(() {
-                        _paymentIndex = index!;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              // Container(
-              //   width: 200,
-              //   height: 40,
-              //   margin: const EdgeInsets.only(right: 15, top: 10),
-              //   child: CustomElevatedButton(
-              //     child:  Row(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         Icon(Icons.edit,color: Colors.white,),
-              //         SizedBox(width: 7),
-              //         Text(tr(LocaleKeys.editOrder)),
-              //       ],
-              //     ),
-              //     onPressed: () => Navigator.pop(context),
-              //   ),
-              // ),
-              _paymentIndex == 0
-                  ? _buildCashPaymentButtons(constraints)
-                  : _buildKpayPaymentButtons(constraints),
-            ],
-          );
-        },
+                    const SizedBox(width: 10),
+                    ToggleSwitch(
+                      minWidth: 90.0,
+                      cornerRadius: 20.0,
+                      activeFgColor: Colors.white,
+                      inactiveBgColor: Colors.grey,
+                      inactiveFgColor: Colors.white,
+                      initialLabelIndex: _paymentIndex,
+                      totalSwitches: 2,
+                      labels: ['Cash', 'Online Pay'],
+                      radiusStyle: true,
+                      onToggle: (index) {
+                        setState(() {
+                          _paymentIndex = index!;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                _paymentIndex == 0
+                    ? _buildCashPaymentButtons(constraints)
+                    : _buildKpayPaymentButtons(constraints),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -341,7 +256,7 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
         enterClick: _handleCashPayment,
         numberController: _cashController,
         fullWidth: constraints.maxWidth,
-        gridHeight: 90,
+        gridHeight: 76,
       ),
     );
   }
@@ -360,81 +275,399 @@ class _MultiPaymentPageState extends State<MultiPaymentPage> {
     );
   }
 
-  Widget _buildPaymentSummary(CartCubit cartCubit) {
+  Widget _buildOrderSummary({
+    required String menuName,
+    required String tableNumber,
+    required String spicyLevel,
+    required String htoneLevel,
+    required List<CartItem> items,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildSectionHeader(tr(LocaleKeys.summary), IconlyLight.document),
+            const SizedBox(height: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildMenuDetails(
+                      htoneLevel: htoneLevel,
+                      menuName: menuName,
+                      spicyLevel: spicyLevel,
+                      tableNumber: tableNumber,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildOrderItems(items),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildPricingSummary(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: context.primaryColor,
+      ),
+    );
+  }
+
+  Widget _buildMenuDetails({
+    required String menuName,
+    required String tableNumber,
+    required String spicyLevel,
+    required String htoneLevel,
+  }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConst.kGlobalPadding),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.primaryColor.withOpacity(0.05),
+        borderRadius: SizeConst.kBorderRadius,
+        border:
+            Border.all(color: context.primaryColor.withOpacity(0.1), width: 1),
+      ),
       child: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 5, top: 5),
-            child: const Divider(
-              height: 1,
-              thickness: 0.5,
-              color: AppColors.greyColor,
-            ),
+          Row(
+            children: [
+              Text("Menu Type:", style: context.smallFont()),
+              const SizedBox(width: 12),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: context.primaryColor,
+                  borderRadius: SizeConst.kBorderRadius,
+                ),
+                child: Text(menuName,
+                    style: context.verySmall(
+                        fontWeight: FontWeight.bold, color: context.cardColor)),
+              ),
+              const Spacer(),
+              Text(
+                "Table:",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: context.hintColor,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                tableNumber,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: context.primaryColor,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 5),
-          _buildAmountRow("Online Pay", _paidOnline),
-          const SizedBox(height: 5),
-          _buildAmountRow("Cash", _cashAmount),
-          const SizedBox(height: 5),
-          _buildAmountRow("Refund", _refundAmount, isChange: true),
-          Container(
-            padding: const EdgeInsets.only(top: 10, bottom: 10),
-            child: const Divider(height: 0.5),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Text(
+                "Spicy:",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: context.hintColor,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                spicyLevel,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: context.hintColor,
+                ),
+              ),
+              const SizedBox(width: 32),
+              Text(
+                "Numbness:",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: context.hintColor,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                htoneLevel,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: context.hintColor,
+                ),
+              ),
+            ],
           ),
-          _buildAmountRow("GrandTotal", _grandTotal),
         ],
       ),
     );
   }
 
-  Widget _buildAmountRow(String title, num amount, {bool isChange = false}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildOrderItems(List<CartItem> items) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 2,
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              "${formatNumber(amount)} MMK",
+        Row(
+          children: [
+            Text(
+              tr(LocaleKeys.orderItems),
               style: TextStyle(
-                fontWeight: FontWeight.bold,
                 fontSize: 16,
-                color: isChange ? Colors.red : Colors.black,
+                fontWeight: FontWeight.w600,
+                color: context.hintColor,
               ),
             ),
-          ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF7FAFC),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Text(
+                "${items.length} items",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: context.hintColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            ...items.map(
+              (item) => Container(
+                width: 270,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: context.cardColor,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: context.hintColor.withOpacity(0.1),
+                    width: 0.5,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.name,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: context.hintColor,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            item.isGram
+                                ? "${item.qty} gram × ${(item.price).toStringAsFixed(0)} MMK"
+                                : "${item.qty} piece × ${(item.price).toStringAsFixed(0)} MMK",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: context.hintColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      "${(item.totalPrice).toStringAsFixed(2)} MMK",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: context.primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildCheckoutButton(List<CartItem> cartItems, CartCubit cartCubit) {
-    return BlocBuilder<SaleProcessCubit, SaleProcessState>(
-      builder: (context, state) {
-        if (state is SaleProcessLoadingState) {
-          return const LoadingWidget();
-        }
-        return CustomElevatedButton(
-          isEnabled: _isCheckoutEnabled(),
-          width: double.infinity,
-          elevation: 0,
-          height: 70,
-          child: Text(tr(LocaleKeys.checkoutNow)),
-          onPressed: () => _processCheckout(cartItems, cartCubit),
-        );
-      },
+  Widget _buildPricingSummary() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.isDarkMode ? Colors.transparent : Color(0xFFF7FAFC),
+        borderRadius: SizeConst.kBorderRadius,
+      ),
+      child: Column(
+        children: [
+          // Grand Total at the top for immediate visibility
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "${tr(LocaleKeys.grandTotal)}:",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: context.hintColor,
+                ),
+              ),
+              Text(
+                "$_grandTotal MMK",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: context.primaryColor,
+                ),
+              )
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Refund at the end
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${tr(LocaleKeys.refund)}:", style: context.normalFont()),
+              Text(
+                "${(_refundAmount).toStringAsFixed(0)} MMK",
+                style: context.normalFont(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Divider(
+            color: context.hintColor,
+            thickness: 0.5,
+            height: 1,
+          ),
+          const SizedBox(height: 8),
+
+          // Subtotal
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${tr(LocaleKeys.subtotal)}:", style: context.normalFont()),
+              Text(
+                "${(_subTotal).toStringAsFixed(0)} MMK",
+                style: context.normalFont(),
+              ),
+            ],
+          ),
+
+          // Tax (conditional)
+
+          _customerTakeVoucher
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("${tr(LocaleKeys.tax)}:", style: context.normalFont()),
+                    Text(
+                      "${get5percentage(_subTotal)} MMK",
+                      style: context.normalFont(),
+                    ),
+                  ],
+                )
+              : Container(),
+
+          // Payment breakdown
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${tr(LocaleKeys.onlinePay)}:", style: context.normalFont()),
+              Text(
+                "${(_paidOnline).toStringAsFixed(0)} MMK",
+                style: context.normalFont(),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${tr(LocaleKeys.cash)}:", style: context.normalFont()),
+              Text(
+                "${(_cashAmount).toStringAsFixed(0)} MMK",
+                style: context.normalFont(),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
+  }
+
+  Widget _buildVoucherSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.primaryColor.withOpacity(0.05),
+        borderRadius: SizeConst.kBorderRadius,
+        border: Border.all(color: context.primaryColor.withOpacity(0.1)),
+      ),
+      child: Row(
+        children: [
+          Checkbox(
+            value: _customerTakeVoucher,
+            onChanged: (value) => toggleVoucher(value),
+            activeColor: context.primaryColor,
+          ),
+          const SizedBox(width: 8),
+          Icon(Icons.local_offer, color: context.primaryColor, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tr(LocaleKeys.applyVoucher),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: context.hintColor,
+                  ),
+                ),
+                Text(
+                  tr(LocaleKeys.voucherTaxNote),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.hintColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+ void toggleVoucher(bool? value) {
+    setState(() {
+      _customerTakeVoucher = value ?? false;
+      _calculateAmounts();
+    });
   }
 }

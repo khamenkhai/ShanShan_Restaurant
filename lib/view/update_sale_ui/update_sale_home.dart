@@ -329,7 +329,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                       state: state,
                     ),
                   ),
-                  TotalAndTaxHomeWidget(),
+                  TotalAndTaxHomeWidget(isEditState: true),
                   const SizedBox(height: 15),
                   _buildPaymentOptions(),
                   const SizedBox(height: 15),

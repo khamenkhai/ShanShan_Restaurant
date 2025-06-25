@@ -279,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       state: state,
                     ),
                   ),
-                  TotalAndTaxHomeWidget(),
+                  TotalAndTaxHomeWidget(isEditState: false,),
                   const SizedBox(height: 15),
                   _buildPaymentOptions(),
                   const SizedBox(height: 15),
@@ -288,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       _handlePlaceOrder(cartCubit, screenSize);
                     },
-                    child: Text("Order"),
+                    child: Text(tr(LocaleKeys.toOrder)),
                   )
                 ],
               ),

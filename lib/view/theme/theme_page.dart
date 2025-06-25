@@ -6,6 +6,7 @@ import 'package:shan_shan/core/const/const_export.dart';
 
 class ColorPickerScreen extends StatelessWidget {
   final List<Color> colorOptions = [
+    Color(0xffd53732),
     Colors.red,
     Colors.pink,
     Colors.purple,
@@ -17,8 +18,6 @@ class ColorPickerScreen extends StatelessWidget {
     Colors.teal,
     Colors.green,
     Colors.lightGreen,
-    Colors.lime,
-    Colors.yellow,
     Colors.amber,
     Colors.orange,
     Colors.deepOrange,
@@ -90,6 +89,7 @@ class ColorPickerScreen extends StatelessWidget {
             crossAxisCount: 6,
             crossAxisSpacing: 25,
             mainAxisSpacing: 25,
+            childAspectRatio: 1.3
           ),
           itemCount: colorOptions.length,
           itemBuilder: (context, index) {
@@ -102,7 +102,7 @@ class ColorPickerScreen extends StatelessWidget {
               },
               child: CircleAvatar(
                 backgroundColor: colorOptions[index],
-                radius: 15,
+                radius: 12,
               ),
             );
           },

@@ -129,5 +129,6 @@
   "changeAmount": "Change Amount",
   "update": "Update",
   "checkout": "Checkout",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "toOrder": "Order"
 }
